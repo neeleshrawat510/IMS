@@ -1,0 +1,28 @@
+product, contact, invoice- pagination, search
+
+invoice search dropdown in contact and product fields - done
+invoice - format -add multiple products (bullets)  - DONE (bullets missing)
+invoice - fetch data from db  -  done
+print and save invoice - not done yet
+dashboard - total numbers   - not done yet
+search - name number email - DONE
+
+
+
+
+
+
+all fields are required in invoice -validation
+store - invoice in DB and print it in same format + CRUD
+search field in contacts and product page
+view all invoice
+save button - saves data in db + print (show data in print format).
+view page: invoice no., name, date, show invoice button.
+PDF download
+search -all pages
+edit - invoice
+pagination
+
+// learning
+parseFloat - converts string to numbers
+
