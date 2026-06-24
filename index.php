@@ -8,62 +8,23 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
     <style>
-        body {
-            background: linear-gradient(to right, #4facfe, #00f2fe);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
+        .rounded-t-5 {
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
         }
 
-        .register-card {
-            width: 100%;
-            max-width: 420px;
-            background: #fff;
-            padding: 35px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
+        @media (min-width: 992px) {
+            .rounded-tr-lg-0 {
+                border-top-right-radius: 0;
+            }
 
-        .register-card h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            font-weight: bold;
-            color: #333;
+            .rounded-bl-lg-5 {
+                border-bottom-left-radius: 0.5rem;
+            }
         }
-
-        .form-control {
-            height: 45px;
-            border-radius: 10px;
-        }
-
-        .btn-register {
-            width: 100%;
-            height: 45px;
-            border-radius: 10px;
-            background: #0d6efd;
-            border: none;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .btn-register:hover {
-            background: #084298;
-        }
-
-        .login-link {
-            text-align: center;
-            margin-top: 15px;
-        }
-
-        .login-link a {
-            text-decoration: none;
-        }
-
-        .error {
+      
+        label.error{
             color: red;
         }
     </style>
@@ -71,50 +32,62 @@
 
 <body>
 
-    <!-- Register Card -->
-    <div class="register-card">
-        <h2>Login</h2>
+    <!-- Login Card -->
+    <section class=" text-center text-lg-start vh-100">
 
-        <form method="post" id="login">
+        <div class="card mb-3">
+            <div class="row g-0 d-flex align-items-center">
+                <div class="col-lg-4 d-none d-lg-flex">
+                    <img src="uploads/login_img1.jpg" alt="Login Image"
+                        class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+                </div>
+                <div class="col-lg-8">
+                    <div class="card-body py-5 px-md-5">
 
-            <!-- Email -->
-            <div class="mb-3">
-                <label for="email" class="form-label">Email Address</label>
-                <input type="email"
-                    class="form-control"
-                    name="email"
-                    id="email"
-                    placeholder="Enter your email">
+                        <form method="post" id="login">
+                            <h3 class="text-primary text-center mb-5">LOGIN</h3>
+                            <!-- Email input -->
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="email">Email address</label>
+                                <input type="email" id="email" class="form-control" name="email" placeholder="Enter your Email" />
+                            </div>
+
+                            <!-- Password input -->
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <label class="form-label" for="password">Password</label>
+                                <input type="password" id="password" class="form-control" name="password" placeholder="Enter your Password" />
+                            </div>
+
+
+                            <!-- Remember me & forgot password -->
+                            <div class="row mb-4">
+                                <div class="col d-flex justify-content-start">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe" />
+                                        <label class="form-check-label" for="rememberMe">
+                                            Remember me
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col text-end">
+                                    <a href="forgot_password.php">Forgot password?</a>
+                                </div>
+                            </div>
+
+                            <!-- Submit button -->
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
+
+                        </form>
+
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
+    <!-- Section: Design Block -->
 
-            <!-- Password -->
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password"
-                    class="form-control"
-                    name="password"
-                    id="password"
-                    placeholder="Enter password">
-            </div>
 
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary btn-register">
-                Login
-            </button>
-
-            <!-- Login Link -->
-            <div class="login-link">
-                <p class="mt-3">
-                    Not registered yet?
-                    <a href="register.php">Register</a>
-                </p>
-            </div>
-        </form>
-    </div>
-
-    <script>
-
-    </script>
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
@@ -125,6 +98,15 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function() {
+
+            //load saved data
+            if (localStorage.getItem("rememberMe") === "true") {
+
+                $("#email").val(localStorage.getItem("email"));
+                $("#password").val(localStorage.getItem("password"));
+                $("#rememberMe").prop("checked", true);
+            }
+            // validation
             $("#login").validate({
                 rules: {
                     email: {
@@ -146,8 +128,22 @@
                 },
 
                 submitHandler: function(form) {
+                    // save login details
+                    if ($("#rememberMe").is(":checked")) {
+
+                        localStorage.setItem("rememberMe", true);
+                        localStorage.setItem("email", $("#email").val());
+                        localStorage.setItem("password", $("#password").val());
+
+                    } else {
+
+                        localStorage.removeItem("rememberMe");
+                        localStorage.removeItem("email");
+                        localStorage.removeItem("password");
+                    }
+
                     let formData = new FormData(form);
-                    $.ajax ({
+                    $.ajax({
                         url: "php/login_user.php",
                         type: "POST",
                         data: formData,
@@ -155,24 +151,25 @@
                         contentType: false,
 
                         success: function(response) {
-                            if (response == 'success') {
+                            if (response.trim() == 'success') {
                                 Swal.fire({
                                     position: "center",
                                     icon: "success",
                                     title: "You are successfully logged In",
                                     showConfirmButton: false,
                                     timer: 1500
+                                }).then(() => {
+                                    window.location.href = "dashboard.php";
                                 });
-                                window.location.href= "dashboard.php";
-                            } else{
+                            } else {
 
-                            Swal.fire({
-                                icon: "error",
-                                title: "Login Failed",
-                                text: "Invalid email or password"
-                            });
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Login Failed",
+                                    text: "Invalid email or password"
+                                });
 
-                        }
+                            }
                         },
                         error: function(response) {
                             Swal.fire({
@@ -180,7 +177,7 @@
                                 title: "Oops...",
                                 text: "Something went wrong!"
                             });
-                          
+
                         }
                     });
                 }

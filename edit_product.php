@@ -9,27 +9,17 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Update Product</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Invoice management System">
+    <title>Add Product | Invoice Management System</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        #updateForm {
-            width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-family: Arial, sans-serif;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
         label {
             display: block;
             margin-bottom: 5px;
@@ -70,53 +60,88 @@ if (!isset($_SESSION['user_id'])) {
 
 <body class="bg-light">
 
-    <!-- HEADER NAVBAR -->
-    <?php include("includes/header.php");  ?>
+    <div class="admin-shell">
+        <div class="sidebar-backdrop" data-sidebar-close></div>
 
-    <!-- MAIN DASHBOARD -->
-    <div class="container py-4">
+        <!-- INCLUDE SIDEBAR -->
+        <?php include("includes/sidebar.php"); ?>
 
-        <form id="updateForm">
-            <h3>Update Product</h3>
-            <input type="hidden" name="id" id="productId">
-            <div class="form-group">
-                <label for="productCode">Product Code</label>
-                <input type="text" id="productCode" name="product_code" placeholder="">
-            </div>
+        <div class="admin-main">
 
-            <div class="form-group">
-                <label for="productName">Product Name</label>
-                <input type="text" id="productName" name="product_name" placeholder="">
-            </div>
+            <!-- INCLUDE HEADER -->
+            <?php include("includes/header.php"); ?>
 
-            <div class="form-group">
-                <label for="costPrice">Cost Price ($)</label>
-                <input type="text" id="costPrice" name="cost_price" placeholder="">
-            </div>
+            <!-- MAIN CONTENT -->
+            <main class="dashboard-content">
+                <div class="container-fluid px-3 px-lg-4 py-4">
+                    <form class="panel needs-validation" id="updateForm">
+                        <div class="panel-header">
+                            <input type="hidden" name="id" id="productId">
+                            <div>
+                                <h2 class="h5 mb-1 section-title">
+                                    <i class="bi bi-ui-checks-grid" aria-hidden="true"></i>
+                                    <span>Product</span>
+                                </h2>
+                                <p class="text-muted mb-0">Add new product</p>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="product_code">Product Code</label>
+                                <input type="text" class="" name="product_code" id="productCode" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="product_name">Product Name</label>
+                                <input type="text" class="" name="product_name" id="productName" />
+                            </div>
 
-            <div class="form-group">
-                <label for="sellingPrice">Selling Price ($)</label>
-                <input type="text" id="sellingPrice" name="selling_price" placeholder="">
-            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="cost_price">Cost Price</label>
+                                <input type="text" class="" name="cost_price" id="costPrice" />
+                            </div>
 
-            <button type="submit" id="submit">Update Product</button>
-        </form>
+                            <div class="col-md-6">
+                                <label class="form-label" for="selling_price">Selling Price</label>
+                                <input type="text" class="" name="selling_price" id="sellingPrice" />
+                            </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label" for="tax">Tax %</label>
+                                <select class="form-select" name="tax" id="tax">
+                                    <option selected disabled>Choose</option>
+                                    <option value="0">0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="18">18%</option>
+                                </select>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-4">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-send" aria-hidden="true"></i> Edit Product</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+        </div>
+        </main>
     </div>
 
+
+    <script src="assets/js/main.js"></script>
+
+
+    <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- jQuery Validation Plugin -->
+    <!--  jQuery validation plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-    <!-- Sweet alert cdn -->
+    <!-- SweetAlert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- LOGOUT Redirect -->
+    <!-- LOGOUT scripts -->
     <script src="controller/logout.js"></script>
+
 
     <script>
         $(document).ready(function() {
@@ -135,6 +160,7 @@ if (!isset($_SESSION['user_id'])) {
                     $("#productName").val(data.product_name);
                     $("#costPrice").val(data.cost_price);
                     $("#sellingPrice").val(data.selling_price);
+                    $("#tax").val(data.tax);
                 }
 
             });
@@ -146,7 +172,7 @@ if (!isset($_SESSION['user_id'])) {
                             url: "controller/check_product.php",
                             type: "POST",
                             data: {
-                                id: function(){
+                                id: function() {
                                     return $("#productId").val();
                                 }
                             }
@@ -162,23 +188,29 @@ if (!isset($_SESSION['user_id'])) {
                     selling_price: {
                         required: true,
                         number: true
+                    },
+                    tax: {
+                        required: true
                     }
                 },
                 messages: {
                     product_code: {
-                        required: "This can't be empty",
+                        required: "This Field can't be empty",
                         remote: "Not available! try different"
                     },
                     product_name: {
-                        required: "This can't be empty"
+                        required: "This Field can't be empty"
                     },
                     cost_price: {
-                        required: "This can't be empty",
+                        required: "This Field can't be empty",
                         number: "Only numbers allowed"
                     },
                     selling_price: {
-                        required: "This can't be empty",
+                        required: "This Field can't be empty",
                         number: "Only numbers allowed"
+                    },
+                    tax: {
+                        required: "This Field can't be empty"
                     }
                 },
 

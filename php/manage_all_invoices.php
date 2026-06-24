@@ -12,40 +12,46 @@ if(!isset($_SESSION['user_id'])){
 $sql = mysqli_query($conn, "
     SELECT 
         invoices.id,
-        contacts.fname,
+        contacts.name,
         contacts.number,
         invoices.invoice_date,
-        invoices.invoice_no
+        invoices.invoice_no,
+        invoices.status,
+        invoices.grand_total
     FROM invoices 
     INNER JOIN contacts 
         ON invoices.contact_id = contacts.id
+        WHERE invoices.remove = '0'
 ");
 
+$data = [];
+$sr = 1;
 if (mysqli_num_rows($sql) > 0) {
 
-    while ($data = mysqli_fetch_array($sql)) {
-?>
-        <tr>
-            <td><?= $data['fname'] ?></td>
-            <td><?= $data['number'] ?></td>
-            <td><?= $data['invoice_date'] ?></td>
-            <td><?= $data['invoice_no'] ?></td>
-
-            <td>
-                <a href="print_invoice.php?id=<?= $data['id']; ?>" class="btn btn-success">
-                    Print Invoice
-                </a>
-
-                <a href="delete_invoice.php?id=<?= $data['id'] ?>" class="btn btn-danger">
-                    Remove
-                </a>
-            </td>
-        </tr>
-
-<?php
+    while ($row = mysqli_fetch_array($sql)) {
+    $data[] = [
+                $row['id'],
+                $sr++,
+                $row['invoice_no'],
+                $row['name'],
+                $row['invoice_date'],
+                $row['grand_total'],
+                $row['status'],
+                    '<a href="php/view_invoice.php?id=' . $row['id'] . '" target="_blank" class="btn btn-success btn-sm me-1">
+                        <i class="bi bi-eye"></i> 
+                    </a>
+                    <a href="edit_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm">
+                        <i class="bi bi-pencil"></i> 
+                    </a>
+                    <a href="php/download_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm">
+                        <i class="bi bi-download"></i> 
+                    </a>
+                    <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="' . $row['id'] . '">                          <i class="bi bi-trash"></i>
+                    </a>'
+                ];
     }
 
-} else {
-    echo "<tr><td colspan='5'>No Data Found</td></tr>";
 }
+header('Content-Type: application/json');
+echo json_encode($data);
 ?>

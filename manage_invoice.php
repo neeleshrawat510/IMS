@@ -1,6 +1,6 @@
 <?php
 session_start();
-if(!isset($_SESSION['user_id'])){
+if (!isset($_SESSION['user_id'])) {
     header("location: index.php");
     exit();
 }
@@ -10,80 +10,353 @@ if(!isset($_SESSION['user_id'])){
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Manage Invoices</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Invoice management System">
+    <title>Manage Invoices | Invoice Management System</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
+    <!-- jQuery  -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
+<style>
+    #invoiceTable th,
+    #invoiceTable td {
+        text-align: center !important;
+        vertical-align: middle !important;
+    }
+</style>
 
-<body class="bg-light">
+<body>
+    <div class="admin-shell">
+        <div class="sidebar-backdrop" data-sidebar-close></div>
 
-    <!-- HEADER NAVBAR -->
-    <?php   include("includes/header.php");  ?>
+        <!-- INCLUDE SIDEBAR -->
+        <?php include("includes/sidebar.php"); ?>
 
-    <!-- MAIN DASHBOARD -->
-    <div class="container py-4">
+        <div class="admin-main">
 
-        
-        <!-- INVOICE TABLE -->
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white fw-bold">
-                Manage Invoices
-            </div>
+            <!-- INCLUDE HEADER -->
+            <?php include("includes/header.php"); ?>
 
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    
-                    <table class="table table-hover mb-0">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Customer</th>
-                                <th>Number</th>
-                                <th>Date</th>
-                                <th>Invoice No</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
 
-                        <tbody id="tableData">
-                            
-                        </tbody>
+            <!-- MAIN CONTENT -->
+            <main class="dashboard-content">
+                <div class="container-fluid px-3 px-lg-4 py-4">
 
-                    </table>
+                    <!-- INVOICE TABLE -->
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">Manage Invoices</span>
+                            <button class="btn btn-primary btn-sm" id="restoreInvoiceBtn">
+                                Restore All Invoices
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover nowrap w-100" id="invoiceTable" style="font-size: small;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th><input type="checkbox" id="selectAll">
+                                                <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected" title="Delete Selected">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                                <button class="btn btn-sm text-primary p-0 ms-2" id="downloadSelected" title="Download Selected">
+                                                    <i class="bi bi-download"></i>
+                                                </button>
+                                            </th>
+                                            <th>#</th>
+                                            <th>Invoice_no</th>
+                                            <th>Name</th>
+                                            <th>Invoice Date</th>
+                                            <th>Total Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </main>
         </div>
-
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- JQuery -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- LOGOUT Redirect -->
-     <script src="controller/logout.js"></script>
-    
+    <script src="controller/logout.js"></script>
+
+
     <script>
-        $(document).ready(function(){
-            loadData();
-            function loadData(){
-            $.ajax({
-                url: "php/manage_all_invoices.php",
-                type: "GET",
-                success: function(response){
-                    $("#tableData").html(response);
+        $(document).ready(function() {
+            //dataTable
+            let table = $('#invoiceTable').DataTable({
+                ajax: {
+                    url: "php/manage_all_invoices.php",
+                    dataSrc: ""
                 },
-                error: function(){
-                    $("#tableData").html("Something went wrong");
-                }
+                columns: [{
+                        data: 0, // id column FOR CHECKBOX
+                        orderable: false,
+                        render: function(data) {
+                            return `<input type="checkbox" class="row-check" data-id="${data}">`;
+                        }
+                    },
+                    {
+                        data: 1
+                    }, //serial no
+                    {
+                        data: 2
+                    }, //Invoice Number
+                    {
+                        data: 3
+                    }, //"Name"
+                    {
+                        data: 4
+                    }, //Invoice date
+                    {
+                        data: 5
+                    }, //Total Amount(grand total)
+                    {
+                        data: 6
+                    }, //status
+                    {
+                        data: 7
+                    } //action
+                ]
             });
 
-            }
-            
+            //select all rows
+            $(document).on('click', '#selectAll', function() {
+
+                let rows = table.rows({
+                    search: 'applied'
+                }).nodes();
+
+                $('input.row-check', rows).prop('checked', this.checked);
+            });
+
+            //individual select
+            $(document).on('change', '.row-check', function() {
+
+                let rows = table.rows({
+                    search: 'applied'
+                }).nodes();
+
+                let total = $('input.row-check', rows).length;
+                let checked = $('input.row-check:checked', rows).length;
+
+                $('#selectAll').prop('checked', total === checked);
+            });
+
+            //delete multiple 
+            $('#deleteSelected').on('click', function() {
+
+                let ids = [];
+
+                table.rows().every(function() {
+
+                    let row = this.node();
+                    let checkbox = $(row).find('.row-check');
+
+                    if (checkbox.prop('checked')) {
+                        ids.push(checkbox.data('id'));
+                    }
+                });
+
+                if (ids.length === 0) {
+                    Swal.fire("No selection", "Please select Invoices first", "info");
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Delete selected Invoices?",
+                    text: "This action cannot be undone!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    confirmButtonText: "Yes, delete"
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: "php/delete_multiple_invoices.php",
+                            type: "POST",
+                            data: {
+                                ids: ids
+                            },
+                            success: function(response) {
+
+                                if (response.trim() === "success") {
+
+                                    Swal.fire("Deleted!", "Invoice deleted successfully", "success");
+
+                                    table.ajax.reload();
+
+                                } else {
+                                    Swal.fire("Error", "Delete failed", "error");
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            //download multiple
+            $('#downloadSelected').on('click', function() {
+
+                let ids = [];
+
+                table.rows().every(function() {
+
+                    let row = this.node();
+                    let checkbox = $(row).find('.row-check');
+
+                    if (checkbox.prop('checked')) {
+                        ids.push(checkbox.data('id'));
+                    }
+                });
+
+                if (ids.length === 0) {
+                    Swal.fire("No selection", "Please select Invoices first", "info");
+                    return;
+                }
+
+                Swal.fire({
+                    title: "Download selected Invoices?",
+                    text: "Click yes to start download!",
+                    showCancelButton: true,
+                    confirmButtonColor: "rgb(11, 60, 133)",
+                    confirmButtonText: "Yes, download"
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+                    
+                        let form = $('<form>', {
+                            action: 'php/download_multiple_invoices.php',
+                            method: 'POST'
+                        });
+
+                        ids.forEach(id => {
+                            form.append(
+                                $('<input>', {
+                                    type: 'hidden',
+                                    name: 'ids[]',
+                                    value: id
+                                })
+                            );
+                        });
+
+                        $('body').append(form);
+
+                        form.submit();
+
+                        form.remove();
+                    }
+                });
+            });
+
+            //delete invoices
+            $(document).on('click', '.delete-btn', function(e) {
+                e.preventDefault();
+
+                let id = $(this).data('id');
+
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This Invoice will be permanently deleted!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+
+                    if (result.isConfirmed) {
+
+                        $.ajax({
+                            url: 'delete_invoice.php',
+                            type: 'POST',
+                            data: {
+                                id: id
+                            },
+                            success: function(response) {
+                                console.log("DELETE RESPONSE:", response);
+
+                                if (response.trim() === "success") {
+
+                                    Swal.fire({
+                                        title: "Deleted!",
+                                        text: "Invoice has been deleted.",
+                                        icon: "success",
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    });
+
+                                    // reload DataTable
+                                    $('#invoiceTable').DataTable().ajax.reload();
+
+                                } else {
+                                    Swal.fire("Error", "Delete failed!", "error");
+                                }
+                            },
+                            error: function() {
+                                Swal.fire("Error", "Something went wrong!", "error");
+                            }
+                        });
+
+                    }
+                });
+            });
+
+            //restore invoices
+            $("#restoreInvoiceBtn").on("click", function() {
+
+                $.ajax({
+                    url: "php/restore_invoices.php",
+                    type: "POST",
+
+                    success: function(response) {
+                        if (response.trim() === "success") {
+                            Swal.fire("Restored!", "All Invoices restored successfully", "success")
+                                .then(() => {
+                                    location.reload();
+                                });
+                        } else if (response === "no_changes") {
+                            Swal.fire("Info", "No Invoice needed restoring", "info");
+
+                        } else {
+                            Swal.fire("Failed", "Something went wrong", "error");
+                        }
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: "Could not process request."
+                        });
+                    }
+                });
+
+            });
+
         });
     </script>
 

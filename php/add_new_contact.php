@@ -8,14 +8,16 @@ if(!isset($_SESSION['user_id'])){
     exit();
 }
 
-$fname = trim(mysqli_real_escape_string($conn, $_POST['fname']  ??  ''));
-$lname = trim(mysqli_real_escape_string($conn, $_POST['lname']  ??  ''));
+$name = trim(mysqli_real_escape_string($conn, $_POST['name']  ??  ''));
 $number = trim(mysqli_real_escape_string($conn, $_POST['number']  ??  ''));
 $email = trim(mysqli_real_escape_string($conn, $_POST['email']  ??  ''));
+$company = trim(mysqli_real_escape_string($conn, $_POST['company']  ??  ''));
+$gst = trim(mysqli_real_escape_string($conn, $_POST['gst']  ??  ''));
 $address = trim(mysqli_real_escape_string($conn, $_POST['address']  ??  ''));
+$todayDate = date('Y-m-d H:i:s');
 
 
-$insert = mysqli_query($conn, "INSERT INTO `contacts` (`fname`, `lname`, `number`, `email`, `address`) VALUES('$fname', '$lname', '$number', '$email', '$address')");
+$insert = mysqli_query($conn, "INSERT INTO `contacts` (`name`, `number`, `email`,`company`, `gst`, `address`, `created_at`) VALUES('$name', '$number', '$email', '$company', '$gst', '$address', '$todayDate')");
 
 if($insert){
     echo "success";

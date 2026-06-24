@@ -1,242 +1,760 @@
-<?php 
-session_start();
+<?php
+    session_start();
 
-if (!isset($_SESSION['user_id'])) {
-    header("location: index.php");
-    exit();
-}
+    if (!isset($_SESSION['user_id'])) {
+        header("location: index.php");
+        exit();
+    }
 
-include("config/connection.php");
-date_default_timezone_set('Asia/Kolkata');
+    include("config/connection.php");
+    date_default_timezone_set('Asia/Kolkata');
 
-//invoice no and date to fetch 
+    //invoice no and date to fetch 
 
-$invoice_no = "INV-10001";
+    $invoice_no = "INV-10001";
 
-$getInvoice = mysqli_query($conn, "SELECT invoice_no FROM invoices ORDER BY id DESC LIMIT 1");
+    $getInvoice = mysqli_query($conn, "SELECT invoice_no FROM invoices ORDER BY id DESC LIMIT 1");
 
-if(mysqli_num_rows($getInvoice) > 0){
+    if (mysqli_num_rows($getInvoice) > 0) {
 
-    $row = mysqli_fetch_assoc($getInvoice);
+        $row = mysqli_fetch_assoc($getInvoice);
 
-    // Remove INV-
-    $last_number = str_replace("INV-", "", $row['invoice_no']);
+        // Remove INV-
+        $last_number = str_replace("INV-", "", $row['invoice_no']);
 
-    // Increment number
-    $new_number = (int)$last_number + 1;
+        // Increment number
+        $new_number = (int)$last_number + 1;
 
-    $invoice_no = "INV-" . $new_number;
-}
+        $invoice_no = "INV-" . $new_number;
+    }
 
 
-$invoice_date = date("Y-m-d");
+    $invoice_date = date("Y-m-d");
 
 ?>
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>INVOICE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Invoice management System">
+    <title>Add Invoice | Invoice Management System</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <style>
-        .search-dropdown {
-            position: absolute;
-            width: 100%;
-            background: #fff;
-            border: 1px solid #ddd;
-            z-index: 999;
-            max-height: 200px;
-            overflow-y: auto;
-            display: none;
+        body {
+            background: #f4f5f7;
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 14px;
         }
 
-        .contact-item,
-        .product-item {
+        .invoice-wrapper {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 1.75rem;
+            max-width: 1100px;
+            margin: 2rem auto;
+        }
+
+        .invoice-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-bottom: 1rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-header h5 {
+            font-weight: 600;
+            font-size: 17px;
+            margin: 0;
+            color: #1a1a2e;
+        }
+
+        .online-pay-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border: 1px solid #d0d5dd;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 12px;
+            color: #555;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .online-pay-btn:hover {
+            background: #f9f9f9;
+        }
+
+        .pay-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 19px;
+            border-radius: 3px;
+            font-size: 9px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .visa-badge {
+            background: #1434CB;
+        }
+
+        .mc-badge {
+            background: #EB001B;
+        }
+
+        /* Top Fields Row */
+        .fields-grid {
+            display: grid;
+            grid-template-columns: 2.2fr 1.1fr 1.1fr 1.1fr 1.1fr;
+            gap: 14px;
+            margin-bottom: 1rem;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field-group label {
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .field-group .,
+        .field-group .form-select {
+            height: 36px;
+            font-size: 13px;
+            border: 1px solid #dde1e7;
+            border-radius: 6px;
+            padding: 0 10px;
+            color: #1a1a2e;
+            background: #fff;
+        }
+
+        .field-group .:focus,
+        .field-group .form-select:focus {
+            border-color: #4a90d9;
+            box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.12);
+        }
+
+        .contact-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 36px;
+            padding: 0 10px;
+            border: 1px solid #dde1e7;
+            border-radius: 6px;
+            background: #fff;
+        }
+
+        .chip-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-size: 10px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .chip-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #1a1a2e;
+            flex: 1;
+        }
+
+        .chip-remove {
+            color: #aaa;
+            cursor: pointer;
+            font-size: 17px;
+            line-height: 1;
+            padding: 0 2px;
+        }
+
+        .chip-remove:hover {
+            color: #e53e3e;
+        }
+
+        .contact-sub {
+            font-size: 11px;
+            color: #999;
+            margin-top: 3px;
+        }
+
+        /* Currency Row */
+        .tax-inclusive {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+        }
+
+        .tax-inclusive .field-group {
+            width: 210px;
+        }
+
+        /* Table */
+        .invoice-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-bottom: 0;
+        }
+
+        .invoice-table thead tr {
+            border-bottom: 1px solid #eee;
+        }
+
+        .invoice-table thead th {
+            font-size: 11px;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 6px 8px;
+        }
+
+        .invoice-table thead th.text-end {
+            text-align: right;
+        }
+
+        .invoice-table tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .invoice-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .invoice-table tbody td {
+            padding: 9px 8px;
+            vertical-align: middle;
+        }
+
+        .drag-handle {
+            color: #ccc;
+            cursor: grab;
+            font-size: 15px;
+        }
+
+        .item-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            color: #888;
+            background: #f8f8f8;
+            white-space: nowrap;
+            margin-right: 5px;
+        }
+
+        .item-name {
+            font-size: 13px;
+            color: #1a1a2e;
+            font-weight: 500;
+        }
+
+        .desc-text {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .num-cell {
+            font-size: 13px;
+            color: #1a1a2e;
+            text-align: right;
+        }
+
+        .tax-cell {
+            font-size: 12px;
+            color: #777;
+            text-align: right;
+        }
+
+        /* Inline editable inputs inside table */
+        .table-input {
+            height: 32px;
+            padding: 0 8px;
+            border: 1px solid #dde1e7;
+            border-radius: 5px;
+            font-size: 13px;
+            color: #1a1a2e;
+            background: #fff;
+            width: 100%;
+        }
+
+        .table-input:focus {
+            outline: none;
+            border-color: #4a90d9;
+            box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.1);
+        }
+
+        .table-select {
+            height: 32px;
+            padding: 0 6px;
+            border: 1px solid #dde1e7;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #555;
+            background: #fff;
+            width: 100%;
+        }
+
+        .table-select:focus {
+            outline: none;
+            border-color: #4a90d9;
+        }
+
+        .search-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 1px solid #dde1e7;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: none;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .dropdown-item-custom {
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .dropdown-item-custom:hover {
+            background: #f0f4ff;
+        }
+
+        .del-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #ccc;
+            padding: 4px 6px;
+            border-radius: 5px;
+            font-size: 16px;
+            line-height: 1;
+            transition: all 0.15s;
+        }
+
+        .del-btn:hover {
+            background: #fff0f0;
+            color: #e53e3e;
+        }
+
+        /* Add line buttons */
+        .add-line-row {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .add-line-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 14px;
+            border: 1px dashed #bbb;
+            border-radius: 6px;
+            background: none;
+            font-size: 12px;
+            color: #777;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .add-line-btn:hover {
+            background: #f0f4ff;
+            color: #1a4ed8;
+            border-color: #4a90d9;
+        }
+
+        /* Totals */
+        .totals-section {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .totals-box {
+            min-width: 300px;
+        }
+
+        .totals-box table {
+            width: 100%;
+        }
+
+        .totals-box td {
+            padding: 5px 0;
+            font-size: 13px;
+        }
+
+        .totals-box td:last-child {
+            text-align: right;
+            font-weight: 500;
+            color: #1a1a2e;
+        }
+
+        .totals-box .muted-row td {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .grand-row {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .grand-row td {
+            padding-top: 12px !important;
+            font-size: 16px !important;
+            font-weight: 700 !important;
+            color: #1a1a2e !important;
+        }
+
+        .currency-label {
+            font-size: 12px;
+            font-weight: 400;
+            color: #888;
+            margin-right: 5px;
+        }
+
+        /* Actions */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            padding-top: 1rem;
+            margin-top: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-cancel {
+            height: 36px;
+            padding: 0 18px;
+            border: 1px solid #d0d5dd;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 13px;
+            color: #555;
             cursor: pointer;
         }
 
-        .contact-item:hover,
-        .product-item:hover {
-            background: #f1f1f1;
+        .btn-cancel:hover {
+            background: #f5f5f5;
         }
 
+        .btn-more {
+            height: 36px;
+            width: 36px;
+            border: 1px solid #d0d5dd;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 18px;
+            color: #555;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        /* print page */
+        .btn-more:hover {
+            background: #f5f5f5;
+        }
+
+        .btn-save {
+            height: 36px;
+            padding: 0 22px;
+            border: none;
+            border-radius: 6px;
+            background: #1a5abe;
+            color: #fff;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .btn-save:hover {
+            background: #1348a0;
+        }
+
+        label.error {
+            color: red;
+
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .fields-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .tax-inclusive {
+                flex-wrap: wrap;
+            }
+
+            .invoice-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+
         @media print {
-            @page {
-                margin: 0;
-                size: auto;
+            body * {
+                visibility: hidden;
             }
 
-            body {
-                margin: 1.5cm;
-            }
-
-            body>*:not(#printInvoice) {
-                display: none !important;
+            #printInvoice,
+            #printInvoice * {
+                visibility: visible;
             }
 
             #printInvoice {
-                display: block !important;
-                position: fixed;
-                top: 0;
+                position: absolute;
                 left: 0;
+                top: 0;
                 width: 100%;
-                padding: 30px;
             }
         }
     </style>
 </head>
 
+<body>
+    <div class="admin-shell">
+        <div class="sidebar-backdrop" data-sidebar-close></div>
 
-<body class="bg-light">
+        <!-- INCLUDE SIDEBAR -->
+        <?php include("includes/sidebar.php"); ?>
 
-    <!-- HEADER NAVBAR -->
-    <?php include("includes/header.php");  ?>
+        <div class="admin-main">
 
-    <!-- MAIN DASHBOARD -->
-    <div class="container py-4">
+            <!-- INCLUDE HEADER -->
+            <?php include("includes/header.php"); ?>
 
-        <div class="container py-4">
-            <div class="invoice-wrapper">
-                <form method="POST" id="invoiceForm">
-                    <h4>Invoice#</h4>
-                    <!-- Top Row -->
-                    <div class="row align-items-end mb-4">
-                        <!-- Contact -->
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">
-                                Contact
-                            </label>
-                            <div class="position-relative">
-                                <input type="text" id=contactSearch class="form-control" placeholder="Search Contact">
-                                <input type="hidden" name="contact_id" id="contactId">
-                                <div id="contactDropdown" class="search-dropdown">
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Invoice Number -->
-                        <div class="col-md-2">
-                            <label class="form-label fw-semibold">
-                                Invoice No.
-                            </label>
-                            <input type="text" class="form-control" name="invoice_no" value="<?= $invoice_no ?>" readonly>
-                        </div>
-                        <!-- Date -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">
-                                Invoice Date
-                            </label>
-                            <input type="text" class="form-control" name="invoice_date" value="<?= $invoice_date ?>" readonly>
-                        </div>
-                        <!-- Due Date -->
-                        <div class="col-md-3">
-                            <label class="form-label fw-semibold">
-                                Due Date
-                            </label>
-                            <input type="date" class="form-control" name="due_date">
-                        </div>
-                    </div>
-                    <!-- Table -->
-                    <div class="">
-                        <table class="table invoice-table align-middle">
-                            <thead>
-                                <tr>
-                                    <th width="22%">Product</th>
-                                    <th width="28%">Description</th>
-                                    <th width="10%">Qty</th>
-                                    <th width="12%">Price</th>
-                                    <th width="10%">Tax%</th>
-                                    <th width="13%">Amount</th>
-                                    <th width="5%">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="invoiceItems">
-                                <!-- Default Row -->
-                                <tr>
-                                    <!-- Product -->
-                                    <td>
-                                        <div class="position-relative">
-                                            <input type="text" class="form-control productSearch" placeholder="Search Product">
-                                            <input type="hidden" class="productId" name="product_id[]">
-                                            <div class="product-dropdown search-dropdown productDropdown" id="">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <!-- Description -->
-                                    <td>
-                                        <textarea class="form-control description" name="description[]" rows="1" readonly></textarea>
-                                    </td>
-                                    <!-- Qty -->
-                                    <td>
-                                        <input type="number" class="form-control qty" name="qty[]" value="1">
-                                    </td>
-                                    <!-- Price -->
-                                    <td>
-                                        <input type="number" class="form-control price" name="price[]" readonly>
-                                    </td>
-                                    <!-- Tax -->
-                                    <td>
-                                        <select class="form-control tax" name="tax[]">
-                                            <option value="" disabled selected>Tax %</option>
-                                            <option value="0">0%</option>
-                                            <option value="5">5%</option>
-                                            <option value="12">12%</option>
-                                            <option value="18">18%</option>
-                                        </select>
-                                    </td>
-                                    <!-- Amount -->
-                                    <td>
-                                        <input type="text" class="form-control amount" name="amount[]" readonly>
-                                    </td>
-                                    <!-- Remove -->
-                                    <td>
-                                        <button type="button" id="" class="btn btn-danger remove-row"> × </button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button type="button" id="addRow" class="btn btn-success add-row"> + </button>
-                    </div>
+            <!-- MAIN CONTENT -->
 
+            <form method="POST" id="invoiceForm">
+                <div class="invoice-wrapper">
 
-                    <!-- Totals -->
-                    <div class="row justify-content-end">
-                        <div class="col-md-4">
-                            <div class="card total-card">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <strong>Subtotal</strong>
-                                        <input type="text" name="subtotal" id="subTotal" class="form-control total-input" readonly>
-                                    </div>
-                                    <div class="d-flex justify-content-between mb-3">
-                                        <strong>Tax Total</strong>
-                                        <input type="text" name="tax_total" id="tax_total" class="form-control total-input" readonly>
-                                    </div>
-                                    <div class="d-flex justify-content-between">
-                                        <strong>Grand Total</strong>
-                                        <input type="text" name="grand_total" id="grand_total" class="form-control total-input total-grand" readonly>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Save -->
-                    <div class="text-end mt-4">
-                        <button type="submit"
-                            class="btn btn-success px-5" id="saveBtn">
-                            Save Invoice
+                    <!-- Header -->
+                    <div class="invoice-header">
+                        <h5>New Invoice</h5>
+                        <button type="button" class="online-pay-btn">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="1" y="4" width="22" height="16" rx="2" />
+                                <line x1="1" y1="10" x2="23" y2="10" />
+                            </svg>
+                            Set up online payments
+                            <span class="pay-badge visa-badge">VISA</span>
+                            <span class="pay-badge mc-badge">MC</span>
                         </button>
                     </div>
-                </form>
-            </div>
+
+                    <!-- Top Fields -->
+                    <div class="fields-grid">
+                        <!-- Contact -->
+                        <div class="field-group">
+                            <label>To</label>
+                            <div class="position-relative">
+                                <input type="text" id="contactSearch" class="" placeholder="Search contact…">
+                                <input type="hidden" name="contact_id" id="contactId">
+                                <div class="search-dropdown" id="contactDropdown"></div>
+                            </div>
+                        </div>
+
+
+                        <!-- Issue Date -->
+                        <div class="field-group">
+                            <label>Issue Date</label>
+                            <input type="date" class="" name="invoice_date" id="invoiceDate" value="<?= $invoice_date ?>" readonly>
+                        </div>
+
+                        <!-- Due Date -->
+                        <div class="field-group">
+                            <label>Due Date</label>
+                            <input type="date" class="" id="dueDate" name="due_date">
+                        </div>
+
+                        <!-- Invoice Number -->
+                        <div class="field-group">
+                            <label>Invoice Number</label>
+                            <input type="text" class="" name="invoice_no" value="<?= $invoice_no ?>" readonly>
+                        </div>
+
+                        <!-- Reference -->
+                        <!-- <div class="field-group">
+                            <label>Reference</label>
+                            <input type="text" class="" name="reference" placeholder="">
+                        </div> -->
+                    </div>
+
+                    <!-- Bill Status -->
+                    <div class="tax-inclusive">
+                        <div class="field-group">
+                            <label>Status</label>
+                            <select class="form-select" id="status" name="status">
+                                <option selected disabled class="text-center">Select Status</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Unpaid">Unpaid</option>
+                            </select>
+                        </div>
+                        <!-- <div class="field-group">
+                            <label>Tax Type</label>
+                            <select class="form-select" name="tax_type">
+                                <option selected disabled class="text-center">Select tax</option>
+                                <option value="inclusive">Tax inclusive</option>
+                                <option value="exclusive">Tax exclusive</option>
+                                <option value="notax">No tax</option>
+                            </select>
+                        </div> -->
+                    </div>
+
+                    <!-- Line Items Table -->
+                    <table class="invoice-table">
+                        <thead>
+                            <tr>
+                                <th style="width:3%"></th>
+                                <th style="width:17%">Product Code</th>
+                                <th style="width:25%">Product Name</th>
+                                <th style="width:7%" class="text-end">Qty.</th>
+                                <th style="width:9%" class="text-end">Price</th>
+                                <th style="width:14%" class="text-end">Tax Rate</th>
+                                <th style="width:9%" class="text-end">Amount</th>
+                                <th style="width:3%"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoiceItems">
+                            <!-- Default Row -->
+                            <tr>
+                                <td><span class="drag-handle">⠿</span></td>
+                                <td>
+                                    <div class="position-relative">
+                                        <input type="text" class="table-input productSearch" placeholder="Search product…">
+                                        <input type="hidden" class="productId" name="product_id[]">
+                                        <span class="product-error text-danger"></span>
+                                        <div class="search-dropdown productDropdown"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" class="table-input description" name="description[]" placeholder="Description" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1" min="1">
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input price text-end" name="price[]" value="0" step="0.01">
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="table-input amount text-end" name="amount[]" value="0.00" readonly>
+                                </td>
+                                <td>
+                                    <button type="button" class="del-btn remove-row" title="Remove">&times;</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Add Line Buttons -->
+                    <div class="add-line-row">
+                        <button type="button" class="add-line-btn" id="addRow">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Add a line item
+                        </button>
+                        <!-- <button type="button" class="add-line-btn">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <rect x="3" y="3" width="18" height="18" rx="2" />
+                                <line x1="3" y1="9" x2="21" y2="9" />
+                                <line x1="9" y1="21" x2="9" y2="9" />
+                            </svg>
+                            Show/hide fields
+                        </button>
+                        <button type="button" class="add-line-btn">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
+                            </svg>
+                            Attach files
+                        </button> -->
+                    </div>
+
+                    <!-- Totals -->
+                    <div class="totals-section">
+                        <div class="totals-box">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td style="color:#777">Subtotal</td>
+                                        <td><input type="hidden" name="subtotal" id="subTotal"><span id="displaySubtotal">0.00</span></td>
+                                    </tr>
+                                    <tr class="muted-row">
+                                        <td>Includes tax</td>
+                                        <td><input type="hidden" name="tax_total" id="tax_total">
+                                            <span id="displayTaxTotal">0.00</span>
+                                        </td>
+                                    </tr>
+                                    <tr class="grand-row">
+                                        <td>Total</td>
+                                        <td>
+                                            <input type="hidden" name="grand_total" id="grand_total">
+                                            <span class="currency-label">INR</span>
+                                            <span id="displayGrandTotal">0.00</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="form-actions">
+                        <!-- <button type="button" class="btn-cancel">Cancel</button>
+                        <button type="button" class="btn-more" title="More options">&#8943;</button> -->
+                        <button type="submit" class="btn-save" id="saveBtn">Save Invoice</button>
+                    </div>
+
+                </div>
+            </form>
+
         </div>
     </div>
+
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -254,6 +772,12 @@ $invoice_date = date("Y-m-d");
 
     <script>
         $(document).ready(function() {
+            //DUE DATE VALIDATION
+
+            let today = new Date().toISOString().split('T')[0];
+            $("#dueDate").attr("min", today);
+
+
             //FOR DYNAMIC CONTACTS
             $("#contactSearch").keyup(function() {
                 let keyword = $(this).val();
@@ -269,6 +793,7 @@ $invoice_date = date("Y-m-d");
                         keyword: keyword
                     },
                     success: function(response) {
+
                         let data = JSON.parse(response);
                         let html = '';
                         //add contact dropdown
@@ -279,10 +804,10 @@ $invoice_date = date("Y-m-d");
                             $.each(data, function(index, row) {
 
                                 html += `<div class="contact-item p-2 border-bottom"
-                                data-id ="${row.id}" data-name = "${row.fname} ${row.lname}">
-                                ${row.fname} ${row.lname}
+                                data-id ="${row.id}" data-name = "${row.name}">
+                                ${row.name}
                                 <br>
-                                <small>${row.number} | ${row.email}</small>
+                                <small>${row.company} | ${row.gst}</small>
                                 </div>`;
 
                             });
@@ -337,7 +862,8 @@ $invoice_date = date("Y-m-d");
                                 html += `<div class="product-item p-2 border-bottom"
                                             data-id = "${row.id}" 
                                             data-code = "${row.product_code}" 
-                                            data-name = "${row.product_name}" 
+                                            data-name = "${row.product_name}"
+                                            data-tax = "${row.tax}" 
                                             data-sell = "${row.selling_price}"
                                             >
                                            <small> ${row.product_code} | ${row.product_name}</small>
@@ -362,64 +888,92 @@ $invoice_date = date("Y-m-d");
                 let code = $(this).data("code");
                 let name = $(this).data("name");
                 let sell = $(this).data("sell");
+                let tax = $(this).data("tax");
 
-                let row = $(this).closest("tr");
 
-                row.find(".productId").val(id);
-                row.find(".productSearch").val(code);
-                row.find(".description").val(name);
-                row.find(".price").val(sell);
+                let currentRow = $(this).closest("tr");
 
-                row.find(".productDropdown").hide();
+                //check if already selected
+                let existingRow = null;
 
-                calculateRow(row);
+                $("#invoiceItems tr").each(function() {
+                    if ($(this).find(".productId").val() == id) {
+                        existingRow = $(this);
+                    }
+
+                });
+
+                if (existingRow && existingRow.length && existingRow[0] !== currentRow[0]) {
+                    let qtyInput = existingRow.find(".qty");
+                    let qty = parseFloat(qtyInput.val()) || 0;
+                    qtyInput.val(qty + 1);
+
+                    calculateRow(existingRow);
+                    calculateTotals();
+
+                    //clear current row
+                    currentRow.find(".productId, .productSearch, .description, .tax, .price").val("");
+                    currentRow.find(".productDropdown").hide();
+
+                    return;
+                }
+
+                currentRow.find(".productId, .productSearch, .description, .tax, .price").val("");
+
+                currentRow.find(".productId").val(id);
+                currentRow.find(".productSearch").val(code);
+                currentRow.find(".description").val(name);
+                currentRow.find(".tax").val(tax);
+                currentRow.find(".price").val(sell);
+
+                currentRow.find(".productDropdown").hide();
+
+                calculateRow(currentRow);
                 calculateTotals();
 
             });
 
             //add new row
             $("#addRow").click(function() {
+
+                //no new row until last row filled
+                let lastRow = $("#invoiceItems tr:last");
+                let lastProduct = lastRow.find(".productId").val();
+
+                if (!lastProduct) {
+                    alert("Please fill the current row first.");
+                    return;
+                }
+
                 let newRow = ` <tr>
-                                    <!-- Product -->
-                                    <td>
-                                        <div class="position-relative">
-                                            <input type="text" class="form-control productSearch" placeholder="Search Product">
-                                            <input type="hidden" class="productId" name="product_id[]">
-                                            <div class="product-dropdown search-dropdown productDropdown" id="">
-                                            </div>
-                                        </div>
-                                    </td>
-                                    <!-- Description -->
-                                    <td>
-                                        <textarea class="form-control description" name="description[]" rows="1" readonly></textarea>
-                                    </td>
-                                    <!-- Qty -->
-                                    <td>
-                                        <input type="number" class="form-control qty" name="qty[]" value="1">
-                                    </td>
-                                    <!-- Price -->
-                                    <td>
-                                        <input type="number" class="form-control price" name="price[]" readonly>
-                                    </td>
-                                    <!-- Tax -->
-                                    <td>
-                                        <select class="form-control tax" name="tax[]">
-                                            <option value="" disabled selected>Tax %</option>
-                                            <option value="0">0%</option>
-                                            <option value="5">5%</option>
-                                            <option value="12">12%</option>
-                                            <option value="18">18%</option>
-                                        </select>
-                                    </td>
-                                    <!-- Amount -->
-                                    <td>
-                                        <input type="text" class="form-control amount" name="amount[]" readonly>
-                                    </td>
-                                    <!-- Remove -->
-                                    <td>
-                                        <button type="button" id="" class="btn btn-danger remove-row"> × </button>
-                                    </td>
-                                </tr>`;
+                                <td><span class="drag-handle">⠿</span></td>
+                                <td>
+                                    <div class="position-relative">
+                                        <input type="text" class="table-input productSearch" placeholder="Search product…">
+                                        <input type="hidden" class="productId" name="product_id[]">
+                                        <span class="product-error text-danger"></span>
+                                        <div class="search-dropdown productDropdown"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <input type="text" class="table-input description" name="description[]" placeholder="Description" readonly>
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1" min="1">
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input price text-end" name="price[]" value="0" step="0.01">
+                                </td>
+                                <td>
+                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00" readonly>
+                                </td>
+                                <td>
+                                    <input type="text" class="table-input amount text-end" name="amount[]" readonly>
+                                </td>
+                                <td>
+                                    <button type="button" class="del-btn remove-row" title="Remove">&times;</button>
+                                </td>
+                            </tr>`;
                 $("#invoiceItems").append(newRow);
 
             });
@@ -435,7 +989,7 @@ $invoice_date = date("Y-m-d");
                 }
             });
 
-            //CALCULATION
+            //CALCULATE ROW
             function calculateRow(row) {
                 let qty = parseFloat(row.find(".qty").val()) || 0;
                 let price = parseFloat(row.find(".price").val()) || 0;
@@ -470,7 +1024,11 @@ $invoice_date = date("Y-m-d");
                 $("#tax_total").val(taxTotal.toFixed(2));
                 $("#grand_total").val(grandTotal.toFixed(2));
 
-                console.log(grandTotal);
+                //display total in forms
+                $("#displaySubtotal").text(subTotal.toFixed(2));
+                $("#displayTaxTotal").text(taxTotal.toFixed(2));
+                $("#displayGrandTotal").text(grandTotal.toFixed(2));
+
             }
 
             // Total
@@ -483,158 +1041,121 @@ $invoice_date = date("Y-m-d");
                 calculateTotals();
             });
 
-            //funciton to fetch values for print
-            function generatePrintInvoice() {
-                $("#printCustomer").text($("#contactSearch").val());
-                $(".printInvoiceNo").text($("input[name='invoice_no']").val());
-                $("#printDate").text($("input[name='invoice_date']").val());
-
-                let itemsHtml = '';
-
-                $("#invoiceItems tr").each(function() {
-                    let product = $(this).find('.productSearch').val();
-                    let description = $(this).find('.description').val();
-                    let qty = $(this).find('.qty').val();
-                    let price = $(this).find('.price').val();
-                    let tax = $(this).find('.tax').val();
-                    let amount = $(this).find('.amount').val();
-
-                    itemsHtml += `
-                                <tr>
-                                    <td>${product}</td>
-                                    <td>${description}</td>
-                                    <td>${qty}</td>
-                                    <td>${price}</td>
-                                    <td>${tax}</td>
-                                    <td>${amount}</td>
-                                   
-                                </tr>
-                            `;
-                });
-                $("#printItems").html(itemsHtml);
-                $("#printSubtotal").text($("#subTotal").val());
-                $("#printTax").text($("#tax_total").val());
-                $("#printGrand").text($("#grand_total").val());
-
-            }
 
             //Form Submission
-            $("#invoiceForm").submit(function(e) {
-                e.preventDefault();
-                let formData = new FormData(this);
-                $.ajax({
-                    url: "php/save_invoice.php",
-                    type: "POST",
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    success: function(response) {
-                        if (response.trim() == 'success') {
+            $("#invoiceForm").validate({
+                ignore: [],
+                rules: {
+                    contact_id: {
+                        required: true
+                    },
+                    invoice_date: {
+                        required: true
+                    },
+                    status: {
+                        required: true
+                    }
+                },
+                messages: {
+                    contact_id: {
+                        required: "This field is required"
+                    },
+                    invoice_date: {
+                        required: "This field is required"
+                    },
+                    status: {
+                        required: "This field is required"
+                    }
+                },
 
-                            generatePrintInvoice();
+                submitHandler: function(form) {
 
-                            Swal.fire({
-                                title: "Successful",
-                                text: "Invoice saved",
-                                icon: "success",
-                                confirmButtonText: "Print Invoice",
-                                showCancelButton: "Cancel"
+                    //validate dynamic row - Product
 
-                            }).then((result) => {
-                                if (result.isConfirmed) {
-                                    $("#printInvoice").show();
+                    let valid = true;
+                    $(".product-error").text("");
+                    $("#invoiceItems tr").each(function(index) {
+                        let productId = $(this).find(".productId").val();
 
-                                    setTimeout(function() {
-                                        window.print();
-                                        $("#printInvoice").hide();
-                                        $("#invoiceForm")[0].reset();
-                                          location.reload();
-                                    }, 300);
-                                }else{
-                                    $("#invoiceForm")[0].reset();
-                                      location.reload();
-                                }
 
-                            });
 
+                        if (!productId) {
+
+                            $(this).find(".product-error")
+                                .text("Please select a product");
+
+                            valid = false;
+                            return false;
                         }
 
-                    },
-                    error: function() {
-                        Swal.fire({
-                            title: "error",
-                            text: "An error occured",
-                            icon: "error"
-                        });
+                    });
+                    if (!valid) {
+                        return false;
                     }
 
-                });
+                    let formData = new FormData(form);
+                    $.ajax({
+                        url: "php/save_invoice.php",
+                        type: "POST",
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+
+                        success: function(response) {
+
+                            let res = JSON.parse(response);
+
+                            if (res.status === 'success') {
+
+                                Swal.fire({
+                                    title: "Successful",
+                                    text: "Invoice saved",
+                                    icon: "success",
+                                    confirmButtonText: "View/Print Invoice",
+                                    showCancelButton: true
+                                }).then((result) => {
+
+                                    if (result.isConfirmed) {
+                                        window.open(res.pdf, '_blank'); // OPEN PDF
+                                        location.reload();
+                                    } else {
+                                        location.reload();
+                                    }
+
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: "error",
+                                text: "An error occured",
+                                icon: "error"
+                            });
+                        }
+
+                    });
+
+                }
+
+
             });
 
+            //close dropdown when user click on screen
+            $(document).on("click", function(e) {
+
+                // Contact dropdown
+                if (!$(e.target).closest("#contactSearch, #contactDropdown").length) {
+                    $("#contactDropdown").hide();
+                }
+
+                // Product dropdowns
+                if (!$(e.target).closest(".productSearch, .productDropdown").length) {
+                    $(".productDropdown").hide();
+                }
+
+            });
         });
     </script>
-
-
-    <!-- PRINT INVOICE FORMAT -->
-    <div id="printInvoice" style="display:none; padding:30px; font-family:Arial;">
-
-        <div style="text-align:center; margin-bottom:20px;">
-            <h2>INVOICE</h2>
-            <p><strong class="printInvoiceNo">#</strong></p>
-        </div>
-
-        <table width="100%" style="margin-bottom:20px;">
-            <tr>
-                <td>
-                    <strong>Customer:</strong>
-                    <div id="printCustomer"></div>
-                </td>
-
-                <td align="right">
-                    <strong>Invoice No:</strong>
-                    <div class="printInvoiceNo"></div>
-
-                    <strong>Date:</strong>
-                    <div id="printDate"></div>
-                </td>
-            </tr>
-        </table>
-
-        <table width="100%" border="1" cellspacing="0" cellpadding="8">
-            <thead style="background:#f2f2f2;">
-                <tr>
-                    <th>Product</th>
-                    <th>Description</th>
-                    <th>Qty</th>
-                    <th>Price</th>
-                    <th>Tax</th>
-                    <th>Total</th>
-                </tr>
-            </thead>
-
-            <tbody id="printItems"></tbody>
-        </table>
-
-        <br>
-
-        <table width="300" align="right" border="1" cellspacing="0" cellpadding="8">
-            <tr>
-                <th>Subtotal</th>
-                <td id="printSubtotal"></td>
-            </tr>
-
-            <tr>
-                <th>Tax Total</th>
-                <td id="printTax"></td>
-            </tr>
-
-            <tr>
-                <th>Grand Total</th>
-                <td id="printGrand"></td>
-            </tr>
-        </table>
-
-    </div>
 
 </body>
 

@@ -6,10 +6,12 @@ include("../config/connection.php");
 $keyword = $_GET['keyword'];
 
 $sql = mysqli_query($conn, "SELECT * FROM `contacts` WHERE
-                                                    `fname` LIKE '%$keyword%'
-                                                OR  `lname` LIKE '%$keyword%'
+                                                    `name` LIKE '%$keyword%'
                                                 OR  `number` LIKE '%$keyword%'
                                                 OR  `email` LIKE '%$keyword%'
+                                                OR  `company` LIKE '%$keyword%'
+                                                OR  `gst` LIKE '%$keyword%'
+                                            
                                             LIMIT 10
                                         ");
 

@@ -10,24 +10,35 @@ if(!isset($_SESSION['user_id'])){
 }
 
 
-$contactId = $_POST['id'];
-$fname = $_POST['fname'] ?? '';
-$lname = $_POST['lname'] ?? '';
-$number = $_POST['number'] ?? '';
-$email = $_POST['email'] ?? '';
-$address = $_POST['address'] ?? '';
+$contactId = $_POST['id'] ?? null;
+
+if (!$contactId) {
+    echo "missing id";
+    exit();
+}
+
+$name = trim(mysqli_real_escape_string($conn, $_POST['name']  ??  ''));
+$number = trim(mysqli_real_escape_string($conn, $_POST['number']  ??  ''));
+$email = trim(mysqli_real_escape_string($conn, $_POST['email']  ??  ''));
+$company = trim(mysqli_real_escape_string($conn, $_POST['company']  ??  ''));
+$gst = trim(mysqli_real_escape_string($conn, $_POST['gst']  ??  ''));
+$address = trim(mysqli_real_escape_string($conn, $_POST['address']  ??  ''));
+$todayDate = date('Y-m-d H:i:s'); //set update date & time
+
 
 $update = mysqli_query($conn, "UPDATE `contacts` SET
-                                                `fname` = '$fname',
-                                                `lname` = '$lname',
+                                                `name` = '$name',
                                                 `number` = '$number',
                                                 `email` = '$email',
-                                                `address` = '$address'
+                                                `company` = '$company',
+                                                `gst` = '$gst',
+                                                `address` = '$address',
+                                                `updated_at` = '$todayDate'
                                             WHERE `id` = '$contactId'");
 
-if($update){
+if ($update) {
     echo "success";
-}else{
+} else {
     echo "failed";
 }
 

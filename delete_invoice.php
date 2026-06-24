@@ -7,14 +7,14 @@ if (!isset($_SESSION['user_id'])) {
 }
 //conneciton setup
 include("config/connection.php");
-$invoice_id = $_GET['id'];
+$invoice_id = $_POST['id'];
 
-$deleteInvoice = mysqli_query($conn, "DELETE FROM `invoices` WHERE id='$invoice_id'");
+$deleteInvoice = mysqli_query($conn, "UPDATE `invoices` SET `remove` = '1' WHERE id='$invoice_id'");
 
 if($deleteInvoice){
     echo "success";
-    header("location: manage_invoice.php");
 }else{
     echo "failed";
 }
+
 ?>

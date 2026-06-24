@@ -9,27 +9,17 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Invoice management System">
+    <title>Add New Product | Invoice Management System</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        #productForm {
-            width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-family: Arial, sans-serif;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
         label {
             display: block;
             margin-bottom: 5px;
@@ -55,6 +45,7 @@ if (!isset($_SESSION['user_id'])) {
         button:hover {
             background-color: #0056b3;
         }
+
         label.error {
             color: red;
             font-size: 14px;
@@ -68,44 +59,75 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 
 <body class="bg-light">
+    <div class="admin-shell">
+        <div class="sidebar-backdrop" data-sidebar-close></div>
 
-    <!-- HEADER NAVBAR -->
-    <?php include("includes/header.php");  ?>
+        <!-- INCLUDE SIDEBAR -->
+        <?php include("includes/sidebar.php"); ?>
 
-    <!-- MAIN DASHBOARD -->
-    <div class="container py-4">
+        <div class="admin-main">
 
-        <form id="productForm">
-            <h3>Add Product</h3>
-            <div class="form-group">
-                <label for="product_code">Product Code</label>
-                <input type="text" id="product_code" name="product_code" placeholder="">
-            </div>
+            <!-- INCLUDE HEADER -->
+            <?php include("includes/header.php"); ?>
 
-            <div class="form-group">
-                <label for="product_name">Product Name</label>
-                <input type="text" id="product_name" name="product_name" placeholder="">
-            </div>
+            <!-- MAIN CONTENT -->
+            <main class="dashboard-content">
+                <div class="container-fluid px-3 px-lg-4 py-4">
+                    <form class="panel needs-validation" id="productForm">
+                        <div class="panel-header">
+                            <div>
+                                <h2 class="h5 mb-1 section-title">
+                                    <i class="bi bi-ui-checks-grid" aria-hidden="true"></i>
+                                    <span>Product</span>
+                                </h2>
+                                <p class="text-muted mb-0">Add new product</p>
+                            </div>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="product_code">Product Code</label>
+                                <input type="text" class="" name="product_code" id="product_code" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="product_name">Product Name</label>
+                                <input type="text" class="" name="product_name" id="product_name" />
+                            </div>
 
-            <div class="form-group">
-                <label for="cost_price">Cost Price ($)</label>
-                <input type="text" id="cost_price" name="cost_price" placeholder="">
-            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="cost_price">Cost Price</label>
+                                <input type="text" class="" name="cost_price" id="cost_price" />
+                            </div>
 
-            <div class="form-group">
-                <label for="selling_price">Selling Price($)</label>
-                <input type="text" id="selling_price" name="selling_price" placeholder="">
-            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="selling_price">Selling Price</label>
+                                <input type="text" class="" name="selling_price" id="selling_price" />
+                            </div>
 
-            <button type="submit" id="submit">Add Product</button>
-        </form>
+                            <div class="col-md-6">
+                                <label class="form-label" for="tax">Tax %</label>
+                                <select class="form-select" name="tax" id="tax">
+                                    <option selected disabled>Choose</option>
+                                    <option value="0">0%</option>
+                                    <option value="5">5%</option>
+                                    <option value="18">18%</option>
+                                </select>
+                            </div>
 
+                            <div class="d-flex justify-content-end mt-4">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-send" aria-hidden="true"></i> Add Product</button>
+                            </div>
+                    </form>
+                </div>
+        </div>
+        </main>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-   <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script src="assets/js/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- jQuery Validation Plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
@@ -118,8 +140,8 @@ if (!isset($_SESSION['user_id'])) {
 
     <script>
         $(document).ready(function() {
-           
-        //validation on Product Form
+
+            //validation on Product Form
             $("#productForm").validate({
                 rules: {
                     product_code: {
@@ -134,11 +156,14 @@ if (!isset($_SESSION['user_id'])) {
                     },
                     cost_price: {
                         required: true,
-                        number : true
+                        number: true
                     },
                     selling_price: {
                         required: true,
                         number: true
+                    },
+                    tax: {
+                        required: true
                     }
                 },
                 messages: {
@@ -156,11 +181,14 @@ if (!isset($_SESSION['user_id'])) {
                     selling_price: {
                         required: "This can't be empty",
                         number: "Only numbers allowed"
+                    },
+                    tax: {
+                        required: "This can't be empty"
                     }
                 },
 
                 submitHandler: function(form) {
-                     
+
                     let formData = new FormData(form);
                     $.ajax({
                         url: "php/add_new_product.php",
@@ -168,7 +196,7 @@ if (!isset($_SESSION['user_id'])) {
                         data: formData,
                         contentType: false,
                         processData: false,
-                        
+
 
                         success: function(response) {
                             if (response.trim() == 'success') {
@@ -176,10 +204,10 @@ if (!isset($_SESSION['user_id'])) {
                                     title: "Successful",
                                     text: "New Product added",
                                     icon: "success"
-
                                 });
+                                window.location.href= "manage_product.php"
                             }
-                             $("#productForm")[0].reset();
+                            $("#productForm")[0].reset();
                         },
                         error: function() {
                             Swal.fire({

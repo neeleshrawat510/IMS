@@ -9,27 +9,19 @@ if (!isset($_SESSION['user_id'])) {
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Edit Contacts</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Invoice management System">
+    <title>Edit Contacts | Invoice Management System</title>
 
-    <!-- Bootstrap 5 -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
-        #editForm {
-            width: 400px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-family: Arial, sans-serif;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
         label {
             display: block;
             margin-bottom: 5px;
@@ -68,50 +60,80 @@ if (!isset($_SESSION['user_id'])) {
     </style>
 </head>
 
-<body class="bg-light">
+<body>
+    <div class="admin-shell">
+        <div class="sidebar-backdrop" data-sidebar-close></div>
 
-    <!-- HEADER NAVBAR -->
-    <?php include("includes/header.php");  ?>
+        <!-- INCLUDE SIDEBAR -->
+        <?php include("includes/sidebar.php"); ?>
 
-    <!-- MAIN DASHBOARD -->
-    <div class="container py-4">
+        <div class="admin-main">
 
-        <form id="editForm" method="post">
-            <input type="hidden" id="editContactId" name="id">
-            <h3>Edit Contact</h3>
-            <div class="form-group">
-                <label for="fName">First Name</label>
-                <input type="text" id="fName" name="fname" placeholder="">
-            </div>
+            <!-- INCLUDE HEADER -->
+            <?php include("includes/header.php"); ?>
 
-            <div class="form-group">
-                <label for="lName">Last Name</label>
-                <input type="text" id="lName" name="lname" placeholder="">
-            </div>
+            <!-- MAIN CONTENT -->
+            <main class="dashboard-content">
+                <div class="container-fluid px-3 px-lg-4 py-4">
 
-            <div class="form-group">
-                <label for="number">Contact Number</label>
-                <input type="text" id="number" name="number" placeholder="">
-            </div>
+                    <form class="panel needs-validation" id="UpdateContactForm">
+                        <div class="panel-header">
+                            <input type="hidden" id="editContactId" name="id">
+                            <div>
+                                <h2 class="h5 mb-1 section-title">
+                                    <i class="bi bi-ui-checks-grid" aria-hidden="true"></i>
+                                    <span>Contacts</span>
+                                </h2>
+                                <p class="text-muted mb-0">Add new contact</p>
+                            </div>
+                        </div>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email" placeholder="">
-            </div>
-            <div class="form-group">
-                <label for="address">Address</label>
-                <textarea name="address" id="address" rows="4" cols="42"></textarea>
-            </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label" for="name">Name</label>
+                                <input type="text" class="" name="name" id="name" />
+                            </div>
 
-            <button type="submit" id="submit">Update Contact</button>
-        </form>
+                            <div class="col-md-6">
+                                <label class="form-label" for="number">Contact No.</label>
+                                <input type="text" class="" name="number" id="number" />
+                            </div>
 
+                            <div class="col-md-6">
+                                <label class="form-label" for="email">Email</label>
+                                <input type="text" class="" name="email" id="email" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="company">Company Name</label>
+                                <input type="text" class="" name="company" id="company" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="gst">GST/VAT</label>
+                                <input type="text" class="" name="gst" id="gst" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label" for="address">Address</label>
+                                <textarea name="address" class="" id="address" rows="4" cols="42"></textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-end mt-4">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="bi bi-send" aria-hidden="true"></i> Edit Contact</button>
+                            </div>
+
+                    </form>
+
+                </div>
+            </main>
+        </div>
     </div>
 
+    <script src="assets/js/main.js"></script>
+    <!-- bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- jQuery Validation Plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
@@ -125,7 +147,9 @@ if (!isset($_SESSION['user_id'])) {
 
     <script>
         $(document).ready(function() {
+
             let editContactId = new URLSearchParams(window.location.search).get('id');
+
             //get form data
             $.ajax({
                 url: "controller/fetch_contacts.php",
@@ -136,19 +160,17 @@ if (!isset($_SESSION['user_id'])) {
                 },
                 success: function(data) {
                     $("#editContactId").val(data.id);
-                    $("#fName").val(data.fname);
-                    $("#lName").val(data.lname);
+                    $("#name").val(data.name);
                     $("#number").val(data.number);
                     $("#email").val(data.email);
+                    $("#company").val(data.company);
+                    $("#gst").val(data.gst);
                     $("#address").val(data.address);
                 }
             });
-            $("#editForm").validate({
+            $("#UpdateContactForm").validate({
                 rules: {
-                    fname: {
-                        required: true
-                    },
-                    lname: {
+                    name: {
                         required: true
                     },
                     number: {
@@ -170,16 +192,19 @@ if (!isset($_SESSION['user_id'])) {
                         required: true,
                         email: true
                     },
+                    company: {
+                        required: true
+                    },
+                    gst: {
+                        required: true
+                    },
                     address: {
                         required: true,
                     }
                 },
                 messages: {
-                    fname: {
-                        required: "First Name is required"
-                    },
-                    lname: {
-                        required: "Last Name is required"
+                    name: {
+                        required: "Name is required"
                     },
                     number: {
                         required: "Number is required",
@@ -192,11 +217,15 @@ if (!isset($_SESSION['user_id'])) {
                         required: "Email is required",
                         email: "abc@gmail.com format required"
                     },
+                    company: {
+                        required: "Company Name is required"
+                    },
+                    gst: {
+                        required: "GST/VAT no. is required"
+                    },
                     address: {
                         required: "Address is required"
                     }
-
-
                 },
                 submitHandler: function(form) {
                     Swal.fire({
@@ -222,20 +251,28 @@ if (!isset($_SESSION['user_id'])) {
                                             title: "Successful",
                                             text: "Contact Updated",
                                             icon: "success"
+                                        }).then(() => {
+                                            window.location.href = "manage_contact.php";
                                         });
-
+                                    }else{
+                                       Swal.fire({
+                                        title: "Failed",
+                                        text: "Contact not updated",
+                                        icon: "error"
+                                    }); 
                                     }
-                                    window.location.href = "manage_contact.php"
+                                    
+
                                 },
                                 error: function() {
                                     Swal.fire({
-                                        title: "Failed",
-                                        text: "Contact not updated",
+                                        title: "Error",
+                                        text: "Something went wrong! ry again",
                                         icon: "error"
                                     });
                                 }
                             });
-                            
+
                         }
 
                     });

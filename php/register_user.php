@@ -1,12 +1,12 @@
 <?php
-
-//setting up connection with DB
-include("../config/connection.php");
-
+session_start();
 if(!isset($_SESSION['user_id'])){
     header("location: index.php");
     exit();
 }
+//setting up connection with DB
+include("../config/connection.php");
+
 
 //input fields with mysql injection
 $name = trim(mysqli_real_escape_string($conn, $_POST['name']) ?? '');

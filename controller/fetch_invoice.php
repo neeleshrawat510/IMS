@@ -11,7 +11,7 @@ include("../config/connection.php");
 $sql = mysqli_query($conn, "
     SELECT 
         invoices.id,
-        contacts.fname,
+        contacts.name,
         contacts.number,
         invoices.invoice_no,
         invoices.invoice_date,
@@ -28,6 +28,7 @@ $sql = mysqli_query($conn, "
     FROM invoices 
     INNER JOIN contacts 
         ON invoices.contact_id = contacts.id
+        WHERE invoices.remove = 0
 ");
 
 $row = mysqli_fetch_array($sql);

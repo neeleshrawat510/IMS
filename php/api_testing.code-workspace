@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "../../api_testing"
+		},
+		{
+			"path": "../../jwt"
+		},
+		{
+			"path": ".."
+		}
+	],
+	"settings": {}
+}
