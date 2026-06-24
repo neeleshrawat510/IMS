@@ -46,18 +46,26 @@ $errors = [];
 
 if (empty($name)) {
     $errors['name'] = "Name is required";
-}
-if (empty($number)) {
-    $errors['number'] = "Number is required";
+}elseif
+    (!preg_match('/^[a-zA-Z ]+$/', $name)){
+    $errors['name'] = "Only alphabets allowed";
 }
 
-if (!preg_match('/^[0-9]{10}$/', $number)) {
+if (empty($number)) {
+    $errors['number'] = "Number is required";
+}elseif (!preg_match('/^[0-9]{10}$/', $number)) {
     $errors['number'] = "Enter valid 10 digit mobile number";
 }
+$checkNumber = mysqli_query($conn, "SELECT * FROM contacts WHERE `number` = '$number'");
+
+if(mysqli_num_rows($checkNumber) > 0){
+    $errors['number'] = "Number Already Exists";
+}
+
 if (empty($email)) {
     $errors['email'] = "Email is required";
-}
-if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+}elseif 
+    (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors['email'] = "Invalid email format";
 }
 if (empty($company)) {
@@ -67,23 +75,18 @@ if (empty($gst)) {
     $errors['gst'] = "GST is required";
 }
 if (!preg_match('/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/', $gst)) {
-    $errors['gst'] = "Enter valid GST number";
+    $errors['gst'] = "Enter valid GST number like: 07ABCDE1234F1Z5";
 }
-if (empty($address)) {
-    $errors['address'] = "Address is required";
-}
-
-$checkNumber = mysqli_query($conn, "SELECT * FROM contacts WHERE `number` = '$number'");
-
-if(mysqli_num_rows($checkNumber) > 0){
-    $errors['number'] = "Number Already Exists";
-}
-
 $checkGst = mysqli_query($conn, "SELECT * FROM contacts WHERE `gst` = '$gst'");
 
 if(mysqli_num_rows($checkGst) > 0){
     $errors['gst'] = "GST Already Exists";
 }
+
+if (empty($address)) {
+    $errors['address'] = "Address is required";
+}
+
 
 if (!empty($errors)) {
     echo json_encode([
@@ -99,13 +102,13 @@ $insertContact = mysqli_query($conn, "INSERT INTO `contacts` (`created_by`,`name
 if ($insertContact) {
     echo json_encode([
         "Message" => "Contact Added Successfully",
-        "created by" => $user_name,
         "name" => $name,
         "number" => $number,
         "email" => $email,
         "company" => $company,
         "gst" => $gst,
-        "address" => $address
+        "address" => $address,
+        "created by" => $user_name
     ]);
 } else {
     echo json_encode([
