@@ -45,8 +45,16 @@ $errors = [];
 if (empty($product_code)) {
     $errors['product_code'] = "Product code is required";
 }
+$checkProductCode = mysqli_query($conn, "SELECT * FROM products WHERE product_code = '$product_code'");
 
-if (empty($product_name)) {
+if(mysqli_num_rows($checkProductCode) > 0){
+    $errors['product_code'] = "Product Code Already Exists";
+}elseif
+    (!preg_match('/^[0-9]+$/', $product_code)){
+    $errors['product_code'] = "Product code should be only numbric value(0-9)";
+        }
+
+if(empty($product_name)) {
     $errors['product_name'] = "Product name is required";
 }
 
@@ -59,9 +67,8 @@ if ($cost_price !== '' && !is_numeric($cost_price)) {
 
 if (empty($selling_price)) {
     $errors['selling_price'] = "Selling price is required";
-}
-
-if ($selling_price !== '' && $selling_price < $cost_price) {
+}elseif
+    ($selling_price !== '' && $selling_price < $cost_price) {
     $errors['selling_price'] = "Selling price must be greater than Cost Price";
 }
 
@@ -69,11 +76,6 @@ if (empty($tax)) {
     $errors['tax'] = "Tax is required";
 }
 
-$checkProductCode = mysqli_query($conn, "SELECT * FROM products WHERE product_code = '$product_code'");
-
-if(mysqli_num_rows($checkProductCode) > 0){
-    $errors['product_code'] = "Product Code Already Exists";
-}
 
 if (!empty($errors)) {
     echo json_encode([
