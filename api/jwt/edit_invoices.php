@@ -2,7 +2,15 @@
 require ("../../config/connection.php");
 require ("jwt.php");
 
+//include DOMPDF library
+require_once("../../vendor/autoload.php");
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
 header("Content-Type: application/json");
+
+//check auth
 $headers = getallheaders();
 
 if (!isset($headers['Authorization'])) {
@@ -23,14 +31,17 @@ if (!$user) {
     ]);
     exit;
 }
-
+//login user data
 $user_id = $user['user_id'];
 $user_name = $user['user_name'];
 
+//input data from json request body
 $data = json_decode(file_get_contents("php://input"), true);
 
 $invoice_id = $data['invoice_id'] ?? '';
 $contact_id = $data['contact_id'] ?? '';
+$invoice_no = $data['invoice_no'] ?? '';
+$invoice_date = $data['invoice_date'] ?? '';
 $due_date   = $data['due_date'] ?? '';
 $status     = $data['status'] ?? '';
 $items      = $data['items'] ?? [];
@@ -132,6 +143,7 @@ if (!$updateInvoice) {
     exit;
 }
 
+
 // Delete old items (IMPORTANT: use original invoice_id) 
 mysqli_query($conn, "DELETE FROM `invoice_items` WHERE `invoice_id` = '$invoice_id'");
 
@@ -174,6 +186,7 @@ foreach ($items as $item) {
     ];
 }
 
+$link = "http://localhost/Invoice_management_System/api/jwt/";
 // FINAL RESPONSE (OUTSIDE LOOP) 
 echo json_encode([
     "response" => "success",
@@ -192,11 +205,222 @@ echo json_encode([
     "contact" => [
         "id" => $contact['id'],
         "name" => $contact['name'],
-        "email" => $contact['email'],
-        "number" => $contact['number']
+        "View Contact" =>$link ."view_contacts?id=". $contact['id']
     ],
 
     "items" => $insertedItems
 ]);
+
+
+
+//GET Client's Info
+
+$contactQuery = mysqli_query($conn, "
+    SELECT name, company, gst, number, email
+    FROM contacts
+    WHERE id = '$contact_id'
+");
+
+$contact = mysqli_fetch_assoc($contactQuery);
+
+$contact_name = $contact['name'];
+$contact_company = $contact['company'];
+$contact_gst = $contact['gst'];
+$contact_number = $contact['number'];
+$contact_email = $contact['email'];
+
+
+// SAVING PDF
+
+$html = '
+<style>
+    body { font-family: Arial, sans-serif; font-size: 12px; color: #333; }
+    .header { text-align: center; margin-bottom: 20px; }
+    .header h1 { margin: 0; }
+    .invoice-box { width: 100%; }
+
+    .info-table td { padding: 4px 0; }
+
+    table { border-collapse: collapse; width: 100%; }
+
+    .items th {
+        background: #f2f2f2;
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .items td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .right {
+        text-align: right;
+    }
+
+    .totals {
+        margin-top: 20px;
+        width: 40%;
+        float: right;
+    }
+
+    .totals th, .totals td {
+        border: 1px solid #ddd;
+        padding: 8px;
+    }
+
+    .section {
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="header">
+    <h1>INVOICE</h1>
+    <hr>
+</div>
+
+<table width="100%" class="info-table">
+    <tr>
+        <td><b>Invoice No:</b> ' . $invoice_no . '</td>
+        <td class="right"><b>Date:</b> ' . $invoice_date . '</td>
+    </tr>
+    <tr>
+        <td><b>Due Date:</b> ' . $due_date . '</td>
+        <td></td>
+    </tr>
+</table>
+
+<br>
+
+<!-- CUSTOMER / COMPANY INFO SECTION -->
+<table width="100%" class="section">
+    <tr>
+        <td width="50%">
+            <b>From:</b><br>
+            Baselline It Dev<br>
+            Mohali<br>
+        </td>
+
+        <td width="50%">
+            <b>Bill To:</b><br>
+            ' . $contact_name . ' <br>
+            ' . $contact_company . ' <br>
+            ' . $contact_gst . ' <br>
+            ' . $contact_number . ' | ' . $contact_email . '<br>
+        </td>
+    </tr>
+</table>
+
+<br>
+
+<!-- ITEMS TABLE -->
+<table class="items">
+    <tr>
+        <th>Product</th>
+        <th>Description</th>
+        <th>Qty</th>
+        <th>Price</th>
+        <th>Tax</th>
+        <th>Total</th>
+    </tr>
+';
+
+
+$productCodes = [];
+
+$result = mysqli_query($conn, "
+    SELECT id, product_code
+    FROM products
+");
+
+while ($row = mysqli_fetch_assoc($result)) {
+    $productCodes[$row['id']] = $row['product_code'];
+}
+
+
+$html .= '';
+
+foreach ($items as $item) {
+
+    $pid = $item['product_id'];
+    $qty = $item['qty'];
+
+    $product = $productCache[$pid];
+
+    $description = $product['product_name'];
+    $price = $product['selling_price'];
+    $tax = $product['tax'];
+
+    $lineTotal = $price * $qty;
+
+    $html .= "
+    <tr>
+        <td>{$product['product_code']}</td>
+        <td>{$description}</td>
+        <td>{$qty}</td>
+        <td>{$price}</td>
+        <td>{$tax}</td>
+        <td>{$lineTotal}</td>
+    </tr>";
+}
+
+$html .= '
+</table>
+
+<br>
+
+<!-- TOTALS -->
+<table class="totals" align="right">
+    <tr>
+        <th>Subtotal</th>
+        <td class="right">' . $subtotal . '</td>
+    </tr>
+    <tr>
+        <th>Tax</th>
+        <td class="right">' . $tax_total . '</td>
+    </tr>
+    <tr>
+        <th>Grand Total</th>
+        <td class="right"><b>' . $grand_total . '</b></td>
+    </tr>
+</table>
+
+<div style="clear:both;"></div>
+';
+
+//generate pdf using DOMPDF
+$options = new Options();
+$options->set('isHtml5ParserEnabled', true);
+$options->set('isRemoteEnabled', true);
+
+$dompdf = new Dompdf($options);
+$dompdf->loadHtml($html);
+
+// Paper size
+$dompdf->setPaper('A4', 'portrait');
+
+$dompdf->render();
+
+
+//save pdf
+
+$pdfOutput = $dompdf->output();
+
+$fileName = "invoices/invoice_" . $invoice_id . ".pdf";
+$fullPath = "../../" . $fileName;
+
+file_put_contents($fullPath, $pdfOutput);
+
+//db path
+
+mysqli_query($conn, "UPDATE invoices SET pdf_path = '$fileName' WHERE id = '$invoice_id'");
+
+echo json_encode([
+    "Pdf" => "Saved Successfully"
+    ]);
+exit;
+?>
 
 ?>

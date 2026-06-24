@@ -3,4 +3,5 @@ vendor
 invoices
 includes/test.php
 api.zip
-api
+api/jwt/jwt.php
+api/jwt/jwt.zip
