@@ -56,8 +56,22 @@ $errors = [];
 
 if (empty($contact_id))
     $errors['contact_id'] = "Contact is required";
+
+//fetch contacts
+$contactQuery = mysqli_query($conn, "SELECT * FROM contacts WHERE id = '$contact_id'");
+
+if (mysqli_num_rows($contactQuery) == 0) 
+    $errors['invoice_no'] = "Contact not found for this id";
+
 if (empty($invoice_no))
     $errors['invoice_no'] = "Invoice number is required";
+
+//Check for duplicate invoice
+$check = mysqli_query($conn, "SELECT id FROM invoices WHERE invoice_no = '$invoice_no'");
+
+if (mysqli_num_rows($check) > 0)
+     $errors['invoice_no'] = "Invoice no. already exist";
+
 if (empty($due_date))
     $errors['due_date'] = "Due date is required";
 if (empty($status))
@@ -73,29 +87,6 @@ if (!empty($errors)) {
     exit;
 }
 
-
-//Check for duplicate invoice
-$check = mysqli_query($conn, "SELECT id FROM invoices WHERE invoice_no = '$invoice_no'");
-
-if (mysqli_num_rows($check) > 0) {
-    echo json_encode([
-        "response" => "error",
-        "message" => "Invoice already exists"
-    ]);
-    exit;
-}
-
-
-//fetch contacts
-$contactQuery = mysqli_query($conn, "SELECT * FROM contacts WHERE id = '$contact_id'");
-
-if (mysqli_num_rows($contactQuery) == 0) {
-    echo json_encode([
-        "Response" => "Error",
-        "Message" => "Contact not found"
-    ]);
-    exit;
-}
 
 $contact = mysqli_fetch_assoc($contactQuery);
 
@@ -116,7 +107,7 @@ foreach ($items as $item) {
     if (mysqli_num_rows($productQuery) == 0) {
         echo json_encode([
             "Response" => "Error",
-            "Message" => "Product not found"
+            "Message" => "Product not found for this id"
         ]);
         exit;
     }

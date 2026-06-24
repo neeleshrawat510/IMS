@@ -33,7 +33,7 @@ $invoice_date = $_GET['invoice_date'] ?? '';
 $invoice_no = $_GET['invoice_no'] ?? '';
 
 
-$allowedParams = ['id', 'invoice_date', 'invoice_no'];
+$allowedParams = ['id', 'invoice_date', 'invoice_no', 'page', 'page_size'];
 $receivedParams = array_keys($_GET);
 
 $invalidParams = array_diff($receivedParams, $allowedParams);
@@ -47,6 +47,23 @@ if (!empty($invalidParams)) {
     ]);
     exit;
 }
+
+
+//validate date format 
+if (!empty($_GET['invoice_date'])) {
+
+    $invoice_date = trim($_GET['invoice_date']);
+
+    if (!DateTime::createFromFormat('Y-m-d', $invoice_date)) {
+
+        echo json_encode([
+            "response" => "error",
+            "message" => "Invalid date format. Use YYYY-MM-DD"
+        ]);
+        exit;
+    }
+}
+
 
 $sql = "
 SELECT
@@ -68,21 +85,20 @@ LEFT JOIN invoice_items ON invoices.id = invoice_items.invoice_id
 LEFT JOIN products ON invoice_items.product_id = products.id
 WHERE 1=1
 ";
-if (!empty($_GET['id'])) {
-    $id = mysqli_real_escape_string($conn, $_GET['id']);
-    $sql .= " AND invoices.id = '$id'";
-}
 
-if (!empty($_GET['invoice_date'])) {
-    $date = mysqli_real_escape_string($conn, $_GET['invoice_date']);
-    $sql .= " AND invoices.invoice_date = '$invoice_date'";
-}
+$id = mysqli_real_escape_string($conn, $_GET['id']);
+$sql .= " AND invoices.id = $id'";
 
-if (!empty($_GET['invoice_no'])) {
-    $date = mysqli_real_escape_string($conn, $_GET['invoice_no']);
-    $sql .= " AND invoices.invoice_no = '$invoice_no'";
-}
 
+$invoice_date = mysqli_real_escape_string($conn, $_GET['invoice_date']);
+$sql .= " AND invoices.invoice_date LIKE '%$invoice_date%'";
+
+
+//where invoice_no = $invoice_no
+$invoice_no = mysqli_real_escape_string($conn, $_GET['invoice_no']);
+$sql .= " AND invoices.invoice_no LIKE '%$invoice_no%'";
+
+//run sql
 $viewInvoices = mysqli_query($conn, $sql);
 
 if (mysqli_num_rows($viewInvoices) == 0) {

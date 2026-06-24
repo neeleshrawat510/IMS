@@ -28,11 +28,11 @@ if(!$user){
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-$product_id = $data['product_id'];
+$product_id = $_GET['product_id'] ?? null;
 
-if (!isset($data['product_id']) || empty($data['product_id'])) {
+if (!$product_id) {
     echo json_encode([
-        "response" => "Error",
+        "response" => "error",
         "message" => "Product ID is missing"
     ]);
     exit;

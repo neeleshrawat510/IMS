@@ -28,11 +28,11 @@ if(!$user){
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-$invoice_id = $data['invoice_id'];
+$invoice_id = $_GET['invoice_id'] ?? null;
 
-if (!isset($data['invoice_id']) || empty($data['invoice_id'])) {
+if (!$invoice_id) {
     echo json_encode([
-        "response" => "Error",
+        "response" => "error",
         "message" => "Invoice ID is missing"
     ]);
     exit;

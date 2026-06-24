@@ -28,11 +28,11 @@ if(!$user){
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-$contact_id = $data['contact_id'];
+$contact_id = $_GET['contact_id'] ?? null;
 
-if (!isset($data['contact_id']) || empty($data['contact_id'])) {
+if (!$contact_id) {
     echo json_encode([
-        "response" => "Error",
+        "response" => "error",
         "message" => "Contact ID is missing"
     ]);
     exit;
