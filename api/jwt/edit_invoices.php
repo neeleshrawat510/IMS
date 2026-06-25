@@ -1,8 +1,7 @@
 <?php
-require ("../../config/connection.php");
-require ("jwt.php");
 
-//include DOMPDF library
+require("../../config/connection.php");
+require("jwt.php");
 require_once("../../vendor/autoload.php");
 
 use Dompdf\Dompdf;
@@ -10,417 +9,217 @@ use Dompdf\Options;
 
 header("Content-Type: application/json");
 
-//check auth
+//   AUTH CHECK
 $headers = getallheaders();
 
 if (!isset($headers['Authorization'])) {
-    echo json_encode([
-        "response" => "error",
-        "message" => "Token Missing"
-    ]);
-    exit;
+    exit(json_encode(["response" => "error", "message" => "Token Missing"]));
 }
 
 $token = str_replace("Bearer ", "", $headers['Authorization']);
 $user = verifyJWT($token);
 
 if (!$user) {
-    echo json_encode([
-        "response" => "error",
-        "message" => "Invalid Token"
-    ]);
-    exit;
+    exit(json_encode(["response" => "error", "message" => "Invalid Token"]));
 }
-//login user data
+
 $user_id = $user['user_id'];
 $user_name = $user['user_name'];
 
-//input data from json request body
+//   INPUT
 $data = json_decode(file_get_contents("php://input"), true);
 
-$invoice_id = $data['invoice_id'] ?? '';
-$contact_id = $data['contact_id'] ?? '';
-$invoice_no = $data['invoice_no'] ?? '';
-$invoice_date = $data['invoice_date'] ?? '';
-$due_date   = $data['due_date'] ?? '';
-$status     = $data['status'] ?? '';
-$items      = $data['items'] ?? [];
+$invoice_id = $_GET['id'] ?? null;
 
-$updated_at = date('Y-m-d H:i:s');
-
-$errors = [];
-
-if (empty($invoice_id)) $errors['invoice_id'] = "Invoice ID is required";
-if (empty($contact_id))  $errors['contact_id'] = "Contact is required";
-if (empty($due_date))    $errors['due_date'] = "Due date is required";
-if (empty($status))      $errors['status'] = "Status is required";
-if (empty($items))       $errors['items'] = "Items are required";
-
-$checkInvoice = mysqli_query($conn, "SELECT id FROM invoices WHERE id='$invoice_id'");
-if (mysqli_num_rows($checkInvoice) == 0) {
-    echo json_encode([
-        "response" => "error",
-        "message" => "Invoice not found"
-    ]);
-    exit;
+if (!$invoice_id || !is_numeric($invoice_id)) {
+    exit(json_encode(["response" => "error", "message" => "Invalid invoice id"]));
 }
 
+$invoice_id = mysqli_real_escape_string($conn, $invoice_id);
+
+//   FETCH INVOICE
+$invoiceRes = mysqli_query($conn, "SELECT * FROM invoices WHERE id='$invoice_id'");
+if (mysqli_num_rows($invoiceRes) == 0) {
+    exit(json_encode(["response" => "error", "message" => "Invoice not found"]));
+}
+
+$invoice = mysqli_fetch_assoc($invoiceRes);
+
+//   VALIDATION
+$errors = [];
+$fields = [];
+
+$contact_id = $data['contact_id'] ?? $invoice['contact_id'];
+$due_date   = $data['due_date'] ?? $invoice['due_date'];
+$status     = $data['status'] ?? $invoice['status'];
+$items      = $data['items'] ?? null;
+
+/* Contact */
+if (isset($data['contact_id'])) {
+    $contact_id = mysqli_real_escape_string($conn, $data['contact_id']);
+
+    $contactRes = mysqli_query($conn, "SELECT * FROM contacts WHERE id='$contact_id'");
+    if (mysqli_num_rows($contactRes) == 0) {
+        exit(json_encode(["response" => "error", "message" => "Contact not found"]));
+    }
+
+    $fields[] = "`contact_id`='$contact_id'";
+}
+
+/* Due Date */
+if (isset($data['due_date'])) {
+    if (!DateTime::createFromFormat('Y-m-d', $due_date)) {
+        $errors['due_date'] = "Invalid date format (YYYY-MM-DD)";
+    } else {
+        $fields[] = "`due_date`='$due_date'";
+    }
+}
+
+/* Status */
+if (isset($data['status'])) {
+    if (!preg_match('/^[a-zA-Z ]+$/', $status)) {
+        $errors['status'] = "Status must contain only letters";
+    } else {
+        $fields[] = "`status`='$status'";
+    }
+}
+
+/* Items */
+if (isset($data['items'])) {
+    if (!is_array($items) || empty($items)) {
+        $errors['items'] = "Items must be a non-empty array";
+    }
+}
 
 if (!empty($errors)) {
-    echo json_encode([
-        "response" => "error",
-        "errors" => $errors
-    ]);
-    exit;
+    exit(json_encode(["response" => "error", "errors" => $errors]));
 }
 
-// Check contact 
-$contactQuery = mysqli_query($conn, "SELECT * FROM contacts WHERE id = '$contact_id'");
-if (mysqli_num_rows($contactQuery) == 0) {
-    echo json_encode([
-        "response" => "error",
-        "message" => "Contact not found"
-    ]);
-    exit;
-}
-
-$contact = mysqli_fetch_assoc($contactQuery);
-
-// Calculate totals 
+//   CALCULATIONS
 $subtotal = 0;
 $tax_total = 0;
 $grand_total = 0;
 
 $productCache = [];
 
-foreach ($items as $item) {
+if ($items) {
+    foreach ($items as $item) {
 
-    $product_id = $item['product_id'];
-    $qty = $item['qty'];
+        $pid = mysqli_real_escape_string($conn, $item['product_id']);
+        $qty = (int)$item['qty'];
 
-    $productQuery = mysqli_query($conn, "SELECT * FROM products WHERE id='$product_id'");
+        $productRes = mysqli_query($conn, "SELECT * FROM products WHERE id='$pid'");
+        if (mysqli_num_rows($productRes) == 0) {
+            exit(json_encode(["response" => "error", "message" => "Product not found"]));
+        }
 
-    if (mysqli_num_rows($productQuery) == 0) {
-        echo json_encode([
-            "response" => "error",
-            "message" => "Product not found"
-        ]);
-        exit;
+        $product = mysqli_fetch_assoc($productRes);
+        $productCache[$pid] = $product;
+
+        $price = $product['selling_price'];
+        $tax   = $product['tax'];
+
+        $lineSubtotal = $price * $qty;
+        $taxAmount = ($lineSubtotal * $tax) / 100;
+
+        $subtotal += $lineSubtotal;
+        $tax_total += $taxAmount;
+        $grand_total += ($lineSubtotal + $taxAmount);
     }
-
-    $product = mysqli_fetch_assoc($productQuery);
-
-    $price = $product['selling_price'];
-    $tax   = $product['tax'];
-
-    $lineSubtotal = $price * $qty;
-    $taxAmount = ($lineSubtotal * $tax) / 100;
-
-    $subtotal += $lineSubtotal;
-    $tax_total += $taxAmount;
-    $grand_total += ($lineSubtotal + $taxAmount);
-
-    $productCache[$product_id] = $product;
 }
 
-// Update invoice 
-$updateInvoice = mysqli_query($conn, "UPDATE `invoices` SET 
-    `contact_id` = '$contact_id',
-    `due_date` = '$due_date',
-    `subtotal` = '$subtotal',
-    `tax_total` = '$tax_total',
-    `grand_total` = '$grand_total',
-    `status` = '$status',
-    `updated_at` = '$updated_at',
-    `updated_by` = '$user_name'
-WHERE `id` = '$invoice_id'");
+//   UPDATE INVOICE
+$fields[] = "`updated_at`=NOW()";
+$fields[] = "`updated_by`='$user_name'";
 
-if (!$updateInvoice) {
-    echo json_encode([
-        "response" => "error",
-        "message" => "Failed to edit Invoice"
-    ]);
-    exit;
+if ($items) {
+    $fields[] = "`subtotal`='$subtotal'";
+    $fields[] = "`tax_total`='$tax_total'";
+    $fields[] = "`grand_total`='$grand_total'";
 }
 
+$updateQuery = "UPDATE invoices SET " . implode(",", $fields) . " WHERE id='$invoice_id'";
 
-// Delete old items (IMPORTANT: use original invoice_id) 
-mysqli_query($conn, "DELETE FROM `invoice_items` WHERE `invoice_id` = '$invoice_id'");
+if (!mysqli_query($conn, $updateQuery)) {
+    exit(json_encode(["response" => "error", "message" => "Invoice update failed"]));
+}
 
-// Insert new items 
-$insertedItems = [];
+//   REPLACE ITEMS
+if ($items) {
 
-foreach ($items as $item) {
+    mysqli_query($conn, "DELETE FROM invoice_items WHERE invoice_id='$invoice_id'");
 
-    $product_id = $item['product_id'];
-    $qty = $item['qty'];
+    foreach ($items as $item) {
 
-    $product = $productCache[$product_id];
+        $pid = $item['product_id'];
+        $qty = $item['qty'];
+        $product = $productCache[$pid];
 
-    $description = $product['product_name'];
-    $price = $product['selling_price'];
-    $tax = $product['tax'];
+        $desc = $product['product_name'];
+        $price = $product['selling_price'];
+        $tax = $product['tax'];
 
-    $lineSubtotal = $qty * $price;
+        $amount = $price * $qty;
 
-    $insertInvoiceItems = mysqli_query($conn, "INSERT INTO `invoice_items` 
-        (`invoice_id`, `product_id`, `description`, `qty`, `price`, `tax`, `amount`)
-        VALUES
-        ('$invoice_id', '$product_id', '$description', '$qty', '$price', '$tax', '$lineSubtotal')");
-
-    if (!$insertInvoiceItems) {
-        echo json_encode([
-            "response" => "error",
-            "message" => "Failed to save Invoice Items"
-        ]);
-        exit;
+        mysqli_query($conn, "
+            INSERT INTO invoice_items
+            (invoice_id, product_id, description, qty, price, tax, amount)
+            VALUES
+            ('$invoice_id', '$pid', '$desc', '$qty', '$price', '$tax', '$amount')
+        ");
     }
-
-    $insertedItems[] = [
-        "product_id" => $product_id,
-        "product_name" => $description,
-        "price" => $price,
-        "qty" => $qty,
-        "tax" => $tax,
-        "amount" => $lineSubtotal
-    ];
 }
 
-$link = "http://localhost/Invoice_management_System/api/jwt/";
-// FINAL RESPONSE (OUTSIDE LOOP) 
+//   FETCH CONTACT (ONCE)
+$contactRes = mysqli_query($conn, "SELECT * FROM contacts WHERE id='$contact_id'");
+$contact = mysqli_fetch_assoc($contactRes);
+
+//   FETCH UPDATED INVOICE
+$invoiceRes = mysqli_query($conn, "SELECT * FROM invoices WHERE id='$invoice_id'");
+$invoice = mysqli_fetch_assoc($invoiceRes);
+
+//   PDF GENERATION
+
+$options = new Options();
+$options->set('isHtml5ParserEnabled', true);
+$options->set('isRemoteEnabled', true);
+
+$dompdf = new Dompdf($options);
+
+$html = "
+<h2>Invoice #{$invoice['invoice_no']}</h2>
+<p>Customer: {$contact['name']}</p>
+<p>Total: {$invoice['grand_total']}</p>
+";
+
+$dompdf->loadHtml($html);
+$dompdf->setPaper('A4', 'portrait');
+$dompdf->render();
+
+$pdfOutput = $dompdf->output();
+
+$fileName = "invoices/invoice_{$invoice_id}.pdf";
+$fullPath = "../../" . $fileName;
+
+file_put_contents($fullPath, $pdfOutput);
+
+/* update pdf path */
+mysqli_query($conn, "UPDATE invoices SET pdf_path='$fileName' WHERE id='$invoice_id'");
+
+//   FINAL RESPONSE (ONLY ONCE)
 echo json_encode([
     "response" => "success",
-    "message" => "Invoice Edited Successfully",
-
+    "message" => "Invoice updated successfully",
     "invoice" => [
-        "invoice_id" => $invoice_id,
-        "due_date" => $due_date,
+        "id" => $invoice_id,
         "subtotal" => $subtotal,
         "tax_total" => $tax_total,
         "grand_total" => $grand_total,
         "status" => $status,
         "updated_by" => $user_name
     ],
-
-    "contact" => [
-        "id" => $contact['id'],
-        "name" => $contact['name'],
-        "View Contact" =>$link ."view_contacts?id=". $contact['id']
-    ],
-
-    "items" => $insertedItems
+    "contact" => $contact,
+    "pdf" => $fileName
 ]);
 
-
-
-//GET Client's Info
-
-$contactQuery = mysqli_query($conn, "
-    SELECT name, company, gst, number, email
-    FROM contacts
-    WHERE id = '$contact_id'
-");
-
-$contact = mysqli_fetch_assoc($contactQuery);
-
-$contact_name = $contact['name'];
-$contact_company = $contact['company'];
-$contact_gst = $contact['gst'];
-$contact_number = $contact['number'];
-$contact_email = $contact['email'];
-
-
-// SAVING PDF
-
-$html = '
-<style>
-    body { font-family: Arial, sans-serif; font-size: 12px; color: #333; }
-    .header { text-align: center; margin-bottom: 20px; }
-    .header h1 { margin: 0; }
-    .invoice-box { width: 100%; }
-
-    .info-table td { padding: 4px 0; }
-
-    table { border-collapse: collapse; width: 100%; }
-
-    .items th {
-        background: #f2f2f2;
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-
-    .items td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
-    .totals {
-        margin-top: 20px;
-        width: 40%;
-        float: right;
-    }
-
-    .totals th, .totals td {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-
-    .section {
-        margin-bottom: 15px;
-    }
-</style>
-
-<div class="header">
-    <h1>INVOICE</h1>
-    <hr>
-</div>
-
-<table width="100%" class="info-table">
-    <tr>
-        <td><b>Invoice No:</b> ' . $invoice_no . '</td>
-        <td class="right"><b>Date:</b> ' . $invoice_date . '</td>
-    </tr>
-    <tr>
-        <td><b>Due Date:</b> ' . $due_date . '</td>
-        <td></td>
-    </tr>
-</table>
-
-<br>
-
-<!-- CUSTOMER / COMPANY INFO SECTION -->
-<table width="100%" class="section">
-    <tr>
-        <td width="50%">
-            <b>From:</b><br>
-            Baselline It Dev<br>
-            Mohali<br>
-        </td>
-
-        <td width="50%">
-            <b>Bill To:</b><br>
-            ' . $contact_name . ' <br>
-            ' . $contact_company . ' <br>
-            ' . $contact_gst . ' <br>
-            ' . $contact_number . ' | ' . $contact_email . '<br>
-        </td>
-    </tr>
-</table>
-
-<br>
-
-<!-- ITEMS TABLE -->
-<table class="items">
-    <tr>
-        <th>Product</th>
-        <th>Description</th>
-        <th>Qty</th>
-        <th>Price</th>
-        <th>Tax</th>
-        <th>Total</th>
-    </tr>
-';
-
-
-$productCodes = [];
-
-$result = mysqli_query($conn, "
-    SELECT id, product_code
-    FROM products
-");
-
-while ($row = mysqli_fetch_assoc($result)) {
-    $productCodes[$row['id']] = $row['product_code'];
-}
-
-
-$html .= '';
-
-foreach ($items as $item) {
-
-    $pid = $item['product_id'];
-    $qty = $item['qty'];
-
-    $product = $productCache[$pid];
-
-    $description = $product['product_name'];
-    $price = $product['selling_price'];
-    $tax = $product['tax'];
-
-    $lineTotal = $price * $qty;
-
-    $html .= "
-    <tr>
-        <td>{$product['product_code']}</td>
-        <td>{$description}</td>
-        <td>{$qty}</td>
-        <td>{$price}</td>
-        <td>{$tax}</td>
-        <td>{$lineTotal}</td>
-    </tr>";
-}
-
-$html .= '
-</table>
-
-<br>
-
-<!-- TOTALS -->
-<table class="totals" align="right">
-    <tr>
-        <th>Subtotal</th>
-        <td class="right">' . $subtotal . '</td>
-    </tr>
-    <tr>
-        <th>Tax</th>
-        <td class="right">' . $tax_total . '</td>
-    </tr>
-    <tr>
-        <th>Grand Total</th>
-        <td class="right"><b>' . $grand_total . '</b></td>
-    </tr>
-</table>
-
-<div style="clear:both;"></div>
-';
-
-//generate pdf using DOMPDF
-$options = new Options();
-$options->set('isHtml5ParserEnabled', true);
-$options->set('isRemoteEnabled', true);
-
-$dompdf = new Dompdf($options);
-$dompdf->loadHtml($html);
-
-// Paper size
-$dompdf->setPaper('A4', 'portrait');
-
-$dompdf->render();
-
-
-//save pdf
-
-$pdfOutput = $dompdf->output();
-
-$fileName = "invoices/invoice_" . $invoice_id . ".pdf";
-$fullPath = "../../" . $fileName;
-
-file_put_contents($fullPath, $pdfOutput);
-
-//db path
-
-mysqli_query($conn, "UPDATE invoices SET pdf_path = '$fileName' WHERE id = '$invoice_id'");
-
-echo json_encode([
-    "Pdf" => "Saved Successfully"
-    ]);
 exit;
-?>
-
-?>
