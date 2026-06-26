@@ -129,14 +129,17 @@ $fields[] = "`updated_at` = '$updated_at'";
 
 
 $editProducts = mysqli_query($conn, "UPDATE `products` SET " . implode(",", $fields) . " WHERE `id` = '$product_id'");
+
+$productResult = mysqli_query($conn, "SELECT * FROM `products` WHERE `id` = '$product_id'");
+$productData = mysqli_fetch_assoc($productResult);
 if ($editProducts) {
     echo json_encode([
         "Message" => "Product Edited Successfully",
         "edited by" => $user_name,
-        "product name" => $product_name,
-        "cost price" => $cost_price,
-        "selling price" => $selling_price,
-        "tax" => $tax
+        "product name" => $productData['product_name'],
+        "cost price" => $productData['cost_price'],
+        "selling price" => $productData['selling_price'],
+        "tax" => $productData['tax']
     ]);
 }
 ?>

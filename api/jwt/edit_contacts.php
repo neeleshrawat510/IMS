@@ -132,15 +132,17 @@ $fields[] = "`updated_at` = '$updated_at'";
 
 $updateContacts = mysqli_query($conn, "UPDATE `contacts` SET " . implode(", ", $fields) . " WHERE id = '$contact_id'");
 
+$contactResult = mysqli_query($conn, "SELECT * FROM contacts WHERE id = '$contact_id'");
+$contactData = mysqli_fetch_assoc($contactResult);
 
 if ($updateContacts) {
     echo json_encode([
         "Message" => "Product Edited Successfully",
-        "name" => $name,
-        "number" => $number,
-        "email" => $email,
-        "company" => $company,
-        "address" => $address,
+        "name" => $contactData['name'],
+        "number" => $contactData['number'],
+        "email" => $contactData['email'],
+        "company" => $contactData['company'],
+        "address" => $contactData['address'],
         "updated by" => $user_name
     ]);
 } else {    
