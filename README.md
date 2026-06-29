@@ -158,7 +158,7 @@ JSON responses with pagination and filtering.
 
 | Invoice                      | PDF Invoice              |
 | ---------------------------- | ------------------------ |
-| ![Invoice](assets/images/screenshots/invoice.JPG) |
+| ![Invoice](assets/images/screenshots/invoice.JPG) | ![Product](assets/images/screenshots/pdf.JPG) |
 
 ---
 
