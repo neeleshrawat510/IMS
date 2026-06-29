@@ -150,15 +150,15 @@ JSON responses with pagination and filtering.
 
 | Login                      | Dashboard                      |
 | -------------------------- | ------------------------------ |
-| ![Login Page](assets/images/screenshots/login.jpg) | ![Dashboard](assets/images/screenshots/dashboard.jpg) |
+| ![Login Page](assets/images/screenshots/login.JPG) | ![Dashboard](assets/images/screenshots/dashboard.JPG) |
 
 | Contacts                      | Products                      |
 | ------------------------------ | ----------------------------- |
-| ![Contact](assets/images/screenshots/contact.JPG) | ![Product](assets/images/screenshots/product.jpg) |
+| ![Contact](assets/images/screenshots/contact.JPG) | ![Product](assets/images/screenshots/product.JPG) |
 
 | Invoice                      | PDF Invoice              |
 | ---------------------------- | ------------------------ |
-| ![Invoice](assets/images/screenshots/invoice.jpg) | ![Pdf](assets/images/screenshots/pdf.jpg) |
+| ![Invoice](assets/images/screenshots/invoice.JPG) |
 
 ---
 
