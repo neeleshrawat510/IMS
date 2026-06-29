@@ -27,12 +27,14 @@ if (!$data) {
     exit;
 }
 
+//lowercase Input in endpoints
+$_GET = array_change_key_case($_GET, CASE_LOWER);
 //set params
 $id = $_GET['id'] ?? '';
 $code = $_GET['code'] ?? '';
 $name = $_GET['name'] ?? '';
 
-$allowedParams = ['id', 'code', 'name'];
+$allowedParams = ['id', 'code', 'name', 'page', 'page_size'];
 $receivedParams = array_keys($_GET);
 
 $invalidParams = array_diff($receivedParams, $allowedParams);
@@ -84,7 +86,7 @@ if ($is_single) {
 
 if (!empty($_GET['code'])) {
     $code = mysqli_real_escape_string($conn, $_GET['code']);
-    $sql .= " AND product_code = '%$code%'";
+    $sql .= " AND product_code LIKE '%$code%'";
 }
 
 if (!empty($_GET['name'])) {
@@ -147,10 +149,10 @@ while ($product = mysqli_fetch_array($viewProducts)) {
     ];
 }
 
-echo json_encode([
-    "message" => "All Products",
-    "products" => $products
-]);
+// echo json_encode([
+//     "message" => "All Products",
+//     "products" => $products
+// ]);
 
 //prev and next navigation for single data
 $navigation = null;

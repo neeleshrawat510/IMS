@@ -34,7 +34,7 @@ $email = $_GET['email'] ?? '';
 $gst = $_GET['gst'] ?? '';
 
 
-$allowedParams = ['id','name', 'number', 'email', 'gst',];
+$allowedParams = ['id','name', 'number', 'email', 'gst', 'page', 'page_size'];
 $receivedParams = array_keys($_GET);
 
 $invalidParams = array_diff($receivedParams, $allowedParams);
@@ -49,7 +49,7 @@ if(!empty($invalidParams)){
     exit;
 }
 
-//single or multiple record
+//single record
 
 $is_single = isset($_GET['id']) && $_GET['id'] !== '';
 $id = $is_single ? (int) $_GET['id'] : null;
@@ -88,23 +88,23 @@ if(!empty($_GET['id'])){
 }
 
 if(!empty($_GET['name'])){
-    $code = mysqli_real_escape_string($conn, $_GET['name']);
-    $sql .=" AND `name` = '%$name%'";
+    $name = mysqli_real_escape_string($conn, $_GET['name']);
+    $sql .=" AND `name` LIKE '%$name%'";
 }
 
 if(!empty($_GET['number'])){
-    $name = mysqli_real_escape_string($conn, $_GET['number']);
-    $sql .=" AND `number` = '%$number%'";
+    $number = mysqli_real_escape_string($conn, $_GET['number']);
+    $sql .=" AND `number` LIKE '%$number%'";
 }
 
 if(!empty($_GET['email'])){
-    $name = mysqli_real_escape_string($conn, $_GET['email']);
+    $email = mysqli_real_escape_string($conn, $_GET['email']);
     $sql .=" AND `email` LIKE '%$email%'";
 }
 
 if(!empty($_GET['gst'])){
-    $name = mysqli_real_escape_string($conn, $_GET['gst']);
-    $sql .=" AND `gst` = '%$gst%'";
+    $gst = mysqli_real_escape_string($conn, $_GET['gst']);
+    $sql .=" AND `gst` LIKE '%$gst%'";
 }
 
 //count pages
@@ -119,11 +119,11 @@ if ($number) {
     $count_sql .= " AND `number` LIKE '%$number%'";
 }
 
-if ($number) {
+if ($email) {
     $count_sql .= " AND `email` LIKE '%$email%'";
 }
 
-if ($number) {
+if ($gst) {
     $count_sql .= " AND `gst` LIKE '%$gst%'";
 }
 
@@ -170,10 +170,11 @@ while ($row = mysqli_fetch_assoc($viewContacts)) {
     ];
 }
 
-echo json_encode([
-    "message" => "All Contacts",
-    "contacts" => $contacts
-]);
+// echo json_encode([
+//     "message" => "All Contacts",
+//     "contacts" => $contacts
+// ]);
+
 
 //prev and next navigation for single data
 $navigation = null;
@@ -219,5 +220,3 @@ if (!$is_single) {
 echo json_encode($response);
 ?>
 
-
-?>

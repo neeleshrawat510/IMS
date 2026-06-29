@@ -27,7 +27,7 @@ if (!$data) {
 
 
 //valid params
-$allowed_params = ['id', 'invoice_no', 'start_date', 'end_date', 'page', 'page_size'];
+$allowed_params = ['id', 'invoice_no', 'invoice_date', 'start_date', 'end_date', 'page', 'page_size'];
 $received_params = array_keys($_GET);
 $invalidParams = array_diff($received_params, $allowed_params);
 
@@ -36,7 +36,7 @@ if (!empty($invalidParams)) {
         "response" => "error",
         "message" => "invalid paramter(s)",
         "invalid params" => array_values($invalidParams),
-        "allowed_params" => $allowedParams
+        "allowed_params" => $allowed_params
     ]);
     exit;
 }
@@ -66,9 +66,18 @@ $offset = ($page - 1) * $page_size;
 
 //validate dates
 $invoice_no = isset($_GET['invoice_no']) ? trim($_GET['invoice_no']) : null;
+$invoice_date = $_GET['invoice_date'] ?? null;
 $start_date = $_GET['start_date'] ?? null;
 $end_date = $_GET['end_date'] ?? null;
 
+
+if ($invoice_date && !DateTime::createFromFormat('Y-m-d', $invoice_date)) {
+    echo json_encode([
+        "response" => "error",
+        "message" => "invalid invoice_date format. use YYYY-MM-DD"
+    ]);
+    exit;
+}
 
 if ($start_date && !DateTime::createFromFormat('Y-m-d', $start_date)) {
     echo json_encode([
@@ -115,6 +124,9 @@ if (!empty($invoice_no)) {
     $invoice_no = mysqli_real_escape_string($conn, $invoice_no);
     $sql .= " AND invoices.invoice_no LIKE '%$invoice_no%'";
 }
+if ($invoice_date) {
+    $sql .= " AND invoices.invoice_date = '$invoice_date'";
+}
 
 if ($start_date && $end_date) {
     $sql .= " AND invoices.invoice_date BETWEEN '$start_date' AND '$end_date'";
@@ -131,6 +143,10 @@ WHERE 1=1
 
 if (!empty($invoice_no)) {
     $count_sql .= " AND invoices.invoice_no LIKE '%$invoice_no%'";
+}
+
+if ($invoice_date) {
+    $count_sql .= " AND invoices.invoice_date = '$invoice_date'";
 }
 
 if ($start_date && $end_date) {
@@ -173,7 +189,7 @@ while ($row = mysqli_fetch_assoc($result)) {
     if (!isset($invoices[$invoice_id])) {
         $invoices[$invoice_id] = [
             "invoice_id" => $row['id'],
-            "invoice_no" => strtolower($row['invoice_no']),
+            "invoice_no" => $row['invoice_no'],
             "invoice_date" => $row['invoice_date'],
             "due_date" => $row['due_date'],
             "contact_id" => $row['contact_id'],
@@ -186,7 +202,7 @@ while ($row = mysqli_fetch_assoc($result)) {
 
     $invoices[$invoice_id]["products"][] = [
         "product_id" => $row['product_id'],
-        "product_code" => strtolower($row['product_code']),
+        "product_code" => $row['product_code'],
         "product_name" => strtolower($row['product_name']),
         "price" => $row['price'],
         "qty" => $row['qty'],
