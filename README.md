@@ -154,7 +154,7 @@ JSON responses with pagination and filtering.
 
 | Contacts                      | Products                      |
 | ------------------------------ | ----------------------------- |
-| ![Contact](assets/images/screenshots/contact.jpg) | ![Product](assets/images/screenshots/product.jpg) |
+| ![Contact](assets/images/screenshots/contact.JPG) | ![Product](assets/images/screenshots/product.jpg) |
 
 | Invoice                      | PDF Invoice              |
 | ---------------------------- | ------------------------ |
