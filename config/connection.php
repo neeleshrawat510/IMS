@@ -1,5 +1,5 @@
 <?php
 
-$conn = mysqli_connect('localhost','root','','ims', '3307');
+$conn = mysqli_connect('localhost','root','','ims');
 
 ?>
