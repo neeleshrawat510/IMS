@@ -4,9 +4,7 @@ include("../../config/connection.php");
 include("../../vendor/autoload.php");
 include("jwt.php");
 
-$client = new Google_Client([
-    'client_id' => 'YOUR_GOOGLE_CLIENT_ID'
-]);
+$client = new Google_Client(['client_id' => '92348507939-b70lkfpsj2s4ml1phi6ri6chiv1gcor8.apps.googleusercontent.com']);
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -52,15 +50,30 @@ try {
         "user_id"=>$userId,
         "email"=>$email,
         "name"=>$name,
-        "iat"=>time()
+        "iat"=>time(),
+        "exp" => time() + 3600 // 1 hour
     ];
 
     $jwt = generateJWT($jwtPayload);
 
+
+    //generate refresh token
+     $refreshToken = bin2hex(random_bytes(64));
+    $expiresAt = date('Y-m-d H:i:s', strtotime('+30 days'));
+
+    mysqli_query($conn,
+        "UPDATE users 
+         SET refresh_token='$refreshToken', refresh_token_expires_at='$expiresAt'
+
+         WHERE id=$userId"
+    );
+
+
     echo json_encode([
 
         "status"=>"success",
-        "jwt"=>$jwt
+        "jwt"=>$jwt,
+        "refresh_token" => $refreshToken
 
     ]);
 
