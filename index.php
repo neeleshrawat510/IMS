@@ -9,6 +9,29 @@
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        section {
+            height: 100vh;
+        }
+
+        .card,
+        .row,
+        .col-lg-4 {
+            height: 100%;
+        }
+
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .rounded-t-5 {
             border-top-left-radius: 0.5rem;
             border-top-right-radius: 0.5rem;
@@ -23,8 +46,8 @@
                 border-bottom-left-radius: 0.5rem;
             }
         }
-      
-        label.error{
+
+        label.error {
             color: red;
         }
     </style>
@@ -33,29 +56,30 @@
 <body>
 
     <!-- Login Card -->
-    <section class=" text-center text-lg-start vh-100">
-
-        <div class="card mb-3">
-            <div class="row g-0 d-flex align-items-center">
-                <div class="col-lg-4 d-none d-lg-flex">
-                    <img src="uploads/login_img1.jpg" alt="Login Image"
-                        class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+    <section class="vh-100">
+        <div class="card h-100 border-0 rounded-0">
+            <div class="row g-0 h-100">
+                <div class="col-lg-4 d-none d-lg-block">
+                    <img src="uploads/login_img1.jpg" class="img-fluid w-100 h-100" alt="Login"
+                        style="object-fit: cover;">
                 </div>
-                <div class="col-lg-8">
-                    <div class="card-body py-5 px-md-5">
+                <div class="col-lg-8 d-flex align-items-center">
+                    <div class="card-body">
 
                         <form method="post" id="login">
                             <h3 class="text-primary text-center mb-5">LOGIN</h3>
                             <!-- Email input -->
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <label class="form-label" for="email">Email address</label>
-                                <input type="email" id="email" class="form-control" name="email" placeholder="Enter your Email" />
+                                <input type="email" id="email" class="form-control" name="email"
+                                    placeholder="Enter your Email" />
                             </div>
 
                             <!-- Password input -->
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <label class="form-label" for="password">Password</label>
-                                <input type="password" id="password" class="form-control" name="password" placeholder="Enter your Password" />
+                                <input type="password" id="password" class="form-control" name="password"
+                                    placeholder="Enter your Password" />
                             </div>
 
 
@@ -76,7 +100,8 @@
                             </div>
 
                             <!-- Submit button -->
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Sign in</button>
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init
+                                class="btn btn-primary btn-block mb-4">Sign in</button>
 
                         </form>
 
@@ -97,7 +122,7 @@
     <!-- Sweet alert cdn -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             //load saved data
             if (localStorage.getItem("rememberMe") === "true") {
@@ -127,7 +152,7 @@
                     }
                 },
 
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     // save login details
                     if ($("#rememberMe").is(":checked")) {
 
@@ -150,7 +175,7 @@
                         processData: false,
                         contentType: false,
 
-                        success: function(response) {
+                        success: function (response) {
                             if (response.trim() == 'success') {
                                 Swal.fire({
                                     position: "center",
@@ -171,7 +196,7 @@
 
                             }
                         },
-                        error: function(response) {
+                        error: function (response) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops...",
