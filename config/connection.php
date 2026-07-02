@@ -1,5 +1,5 @@
 <?php
 
-$conn = mysqli_connect('localhost','root','','ims');
+$conn = mysqli_connect('hayabusa.proxy.rlwy.net','root','vlGfzDyXIncakRtZQhQlDbQKFVncJwAD','railway');
 
 ?>
