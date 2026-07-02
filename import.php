@@ -1,5 +1,10 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+
 $host = getenv('MYSQLHOST');
 $port = getenv('MYSQLPORT');
 $user = getenv('MYSQLUSER');
@@ -14,7 +19,7 @@ if ($conn->connect_error) {
 
 $conn->set_charset("utf8mb4");
 
-$sql = file_get_contents(__DIR__ . '/database/database.sql');
+$sql = file_get_contents(__DIR__ . '/config/dump.sql');
 
 if (!$sql) {
     die("SQL file not found or empty");
