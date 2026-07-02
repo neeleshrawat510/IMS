@@ -5,11 +5,11 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-$host = getenv('MYSQLHOST');
-$port = getenv('MYSQLPORT');
-$user = getenv('MYSQLUSER');
-$password = getenv('MYSQLPASSWORD');
-$database = getenv('MYSQLDATABASE');
+$host = hayabusa.proxy.rlwy.net:59389;
+$port = 3306;
+$user = root;
+$password = vlGfzDyXIncakRtZQhQlDbQKFVncJwAD;
+$database = railway;
 
 $conn = new mysqli($host, $user, $password, $database, $port);
 
