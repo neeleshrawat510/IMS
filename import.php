@@ -5,8 +5,8 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 
-$host = hayabusa.proxy.rlwy.net:59389;
-$port = 3306;
+$host = hayabusa.proxy.rlwy.net;
+$port = 59389;
 $user = root;
 $password = vlGfzDyXIncakRtZQhQlDbQKFVncJwAD;
 $database = railway;
