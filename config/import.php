@@ -1,11 +1,13 @@
 <?php
-$conn = new mysqli("HOST","USER","PASS","DB");
+$host = getenv("MYSQLHOST");
+$user = getenv("MYSQLUSER");
+$pass = getenv("MYSQLPASSWORD");
+$db   = getenv("MYSQLDATABASE");
+$port = getenv("MYSQLPORT");
 
-$sql = file_get_contents("dump.sql");
+$conn = new mysqli($host, $user, $pass, $db, $port);
 
-if ($conn->multi_query($sql)) {
-    echo "Imported successfully";
-} else {
-    echo "Error: " . $conn->error;
+if ($conn->connect_error) {
+    die("DB Connection Failed: " . $conn->connect_error);
 }
 ?>
