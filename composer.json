@@ -3,6 +3,7 @@
         "dompdf/dompdf": "^3.1",
         "phpmailer/phpmailer": "^7.1",
         "firebase/php-jwt": "^7.1",
-        "google/apiclient": "*"
+        "google/apiclient": "*",
+         "ext-mysqli": "*"
     }
 }
