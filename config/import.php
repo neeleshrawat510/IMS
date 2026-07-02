@@ -1,18 +1,11 @@
 <?php
-$host = getenv("MYSQLHOST");
-$db   = getenv("MYSQLDATABASE");
-$user = getenv("MYSQLUSER");
-$pass = getenv("MYSQLPASSWORD");
-$port = getenv("MYSQLPORT");
+$conn = new mysqli("HOST","USER","PASS","DB");
 
-try {
-    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$db", $user, $pass);
-    $sql = file_get_contents("dump.sql");
+$sql = file_get_contents("dump.sql");
 
-    $pdo->exec($sql);
-
+if ($conn->multi_query($sql)) {
     echo "Imported successfully";
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+} else {
+    echo "Error: " . $conn->error;
 }
 ?>
