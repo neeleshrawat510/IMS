@@ -4,6 +4,6 @@
         "phpmailer/phpmailer": "^7.1",
         "firebase/php-jwt": "^7.1",
         "google/apiclient": "*",
-        "mysqli": "*"
+        "ext-mysqli": "*"
         }
 }
