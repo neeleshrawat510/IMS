@@ -105,7 +105,7 @@ if (!isset($_SESSION['user_id'])) {
 
                             <div class="col-md-6">
                                 <label class="form-label" for="tax">Tax %</label>
-                                <select class="form-select" name="tax" id="tax">
+                                <select class="" name="tax" id="tax" style="width:100%; height:42px;">
                                     <option selected disabled>Choose</option>
                                     <option value="0">0%</option>
                                     <option value="5">5%</option>
