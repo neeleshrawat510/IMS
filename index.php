@@ -8,6 +8,9 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         html,
         body {
@@ -102,6 +105,15 @@
                             <!-- Submit button -->
                             <button type="submit" data-mdb-button-init data-mdb-ripple-init
                                 class="btn btn-primary btn-block mb-4">Sign in</button>
+
+                            <div class="text-center mb-3 text-muted">or</div>
+
+                            <!-- Google Sign-In -->
+                            <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                                data-callback="handleGoogleLogin">
+                            </div>
+                            <div class="g_id_signin d-flex justify-content-center" data-type="standard"
+                                data-width="300"></div>
 
                         </form>
 
