@@ -139,7 +139,15 @@ if (!isset($_SESSION['user_id'])) {
     <script src="controller/logout.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+            // Custom validation rule
+            $.validator.addMethod("greaterThanCostPrice", function (value, element) {
+                var costPrice = parseFloat($("#cost_price").val()) || 0;
+                var sellingPrice = parseFloat(value) || 0;
+
+                return sellingPrice > costPrice;
+            }, "Selling price must be greater than cost price.");
 
             //validation on Product Form
             $("#productForm").validate({
@@ -160,7 +168,8 @@ if (!isset($_SESSION['user_id'])) {
                     },
                     selling_price: {
                         required: true,
-                        number: true
+                        number: true,
+                        greaterThanCostPrice: true
                     },
                     tax: {
                         required: true
@@ -180,14 +189,15 @@ if (!isset($_SESSION['user_id'])) {
                     },
                     selling_price: {
                         required: "This can't be empty",
-                        number: "Only numbers allowed"
+                        number: "Only numbers allowed",
+                        greaterThanCostPrice: "Sellig price must be greater than Cost price"
                     },
                     tax: {
                         required: "This can't be empty"
                     }
                 },
 
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     let formData = new FormData(form);
                     $.ajax({
@@ -198,18 +208,18 @@ if (!isset($_SESSION['user_id'])) {
                         processData: false,
 
 
-                        success: function(response) {
+                        success: function (response) {
                             if (response.trim() == 'success') {
                                 Swal.fire({
                                     title: "Successful",
                                     text: "New Product added",
                                     icon: "success"
                                 });
-                                window.location.href= "manage_product.php"
+                                window.location.href = "manage_product.php"
                             }
                             $("#productForm")[0].reset();
                         },
-                        error: function() {
+                        error: function () {
                             Swal.fire({
                                 title: "error",
                                 text: "An error occured",
@@ -219,6 +229,9 @@ if (!isset($_SESSION['user_id'])) {
 
                     });
                 }
+            });
+            $("#cost_price, #selling_price").on("keyup change", function () {
+                $("#productForm").valid();
             });
         });
     </script>
