@@ -17,9 +17,10 @@ $company = trim(mysqli_real_escape_string($conn, $_POST['company']  ??  ''));
 $gst = trim(mysqli_real_escape_string($conn, $_POST['gst']  ??  ''));
 $address = trim(mysqli_real_escape_string($conn, $_POST['address']  ??  ''));
 $todayDate = date('Y-m-d H:i:s');
+$created_by = $_SESSION['user_name'];
 
 
-$insert = mysqli_query($conn, "INSERT INTO `contacts` (`name`, `number`, `email`,`company`, `gst`, `address`, `created_at`) VALUES('$name', '$number', '$email', '$company', '$gst', '$address', '$todayDate')");
+$insert = mysqli_query($conn, "INSERT INTO `contacts` (`name`, `number`, `email`,`company`, `gst`, `address`, `created_at`, `created_by`) VALUES('$name', '$number', '$email', '$company', '$gst', '$address', '$todayDate', '$created_by')");
 
 if($insert){
     echo "success";

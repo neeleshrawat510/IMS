@@ -29,13 +29,14 @@ $tax         = $_POST['tax'];
 $amount      = $_POST['amount'];
 $status = $_POST['status'];
 $dateToday = date('Y-m-d H:i:s');
+$created_by = $_SESSION['user_name'];
 
 // Save invoice 
 $insertInvoice = mysqli_query($conn, "
     INSERT INTO invoices 
-    (contact_id, invoice_no, invoice_date, due_date, subtotal, tax_total, grand_total, status, created_at)
+    (`contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `created_at`, `created_by`)
     VALUES 
-    ('$contact_id', '$invoice_no', '$invoice_date', '$due_date', '$subtotal', '$tax_total', '$grand_total', '$status', '$dateToday')
+    ('$contact_id', '$invoice_no', '$invoice_date', '$due_date', '$subtotal', '$tax_total', '$grand_total', '$status', '$dateToday', '$created_by')
 ");
 
 // Get invoice ID 
