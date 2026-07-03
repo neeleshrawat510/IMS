@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 02, 2026 at 05:52 AM
+-- Generation Time: Jul 03, 2026 at 06:50 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -35,10 +35,10 @@ CREATE TABLE `contacts` (
   `company` varchar(100) NOT NULL,
   `gst` varchar(20) NOT NULL,
   `address` varchar(255) NOT NULL,
-  `created_by` varchar(100) NOT NULL,
-  `created_at` varchar(20) NOT NULL,
-  `updated_by` varchar(100) NOT NULL,
-  `updated_at` varchar(20) NOT NULL,
+  `created_by` varchar(100) DEFAULT NULL,
+  `created_at` varchar(20) DEFAULT NULL,
+  `updated_by` varchar(100) DEFAULT NULL,
+  `updated_at` varchar(20) DEFAULT NULL,
   `remove` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -69,10 +69,10 @@ CREATE TABLE `invoices` (
   `grand_total` decimal(50,2) NOT NULL,
   `status` varchar(20) NOT NULL,
   `pdf_path` varchar(100) NOT NULL,
-  `created_at` varchar(20) NOT NULL,
-  `created_by` varchar(100) NOT NULL,
-  `updated_at` varchar(100) NOT NULL,
-  `updated_by` varchar(100) NOT NULL,
+  `created_at` varchar(20) DEFAULT NULL,
+  `created_by` varchar(100) DEFAULT NULL,
+  `updated_at` varchar(100) DEFAULT NULL,
+  `updated_by` varchar(100) DEFAULT NULL,
   `remove` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -163,10 +163,10 @@ CREATE TABLE `products` (
   `cost_price` decimal(50,2) NOT NULL,
   `selling_price` decimal(50,2) NOT NULL,
   `tax` decimal(10,2) NOT NULL,
-  `created_by` varchar(100) NOT NULL,
-  `created_at` varchar(50) NOT NULL,
-  `updated_by` varchar(100) NOT NULL,
-  `updated_at` varchar(50) NOT NULL,
+  `created_by` varchar(100) DEFAULT NULL,
+  `created_at` varchar(50) DEFAULT NULL,
+  `updated_by` varchar(100) DEFAULT NULL,
+  `updated_at` varchar(50) DEFAULT NULL,
   `remove` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -191,10 +191,10 @@ CREATE TABLE `users` (
   `name` varchar(100) NOT NULL,
   `number` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `reset_token` varchar(255) NOT NULL,
+  `reset_token` varchar(255) DEFAULT NULL,
   `token_expiry` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `password` varchar(200) NOT NULL,
-  `refresh_token` text NOT NULL,
+  `password` varchar(200) DEFAULT NULL,
+  `refresh_token` text DEFAULT NULL,
   `refresh_token_expires_at` datetime(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
