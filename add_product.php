@@ -230,6 +230,8 @@ if (!isset($_SESSION['user_id'])) {
                     });
                 }
             });
+
+            //validate if SP is set after SP
             $("#cost_price, #selling_price").on("keyup change", function () {
                 $("#productForm").valid();
             });

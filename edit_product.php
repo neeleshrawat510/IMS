@@ -144,7 +144,16 @@ if (!isset($_SESSION['user_id'])) {
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
+
+            // Custom validation rule
+            $.validator.addMethod("greaterThanCostPrice", function (value, element) {
+                var costPrice = parseFloat($("#cost_price").val()) || 0;
+                var sellingPrice = parseFloat(value) || 0;
+
+                return sellingPrice > costPrice;
+            }, "Selling price must be greater than cost price.");
+
             //get id from url
             let productId = new URLSearchParams(window.location.search).get('id');
             $.ajax({
@@ -154,7 +163,7 @@ if (!isset($_SESSION['user_id'])) {
                 data: {
                     id: productId
                 },
-                success: function(data) {
+                success: function (data) {
                     $("#productId").val(data.id);
                     $("#productCode").val(data.product_code);
                     $("#productName").val(data.product_name);
@@ -172,7 +181,7 @@ if (!isset($_SESSION['user_id'])) {
                             url: "controller/check_product.php",
                             type: "POST",
                             data: {
-                                id: function() {
+                                id: function () {
                                     return $("#productId").val();
                                 }
                             }
@@ -214,7 +223,7 @@ if (!isset($_SESSION['user_id'])) {
                     }
                 },
 
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     Swal.fire({
                         title: "Are you sure?",
                         text: "You won't be able to revert this!",
@@ -234,7 +243,7 @@ if (!isset($_SESSION['user_id'])) {
                                 contentType: false,
                                 processData: false,
 
-                                success: function(response) {
+                                success: function (response) {
                                     if (response.trim() == 'success') {
                                         Swal.fire({
                                             title: "Successful",
@@ -244,7 +253,7 @@ if (!isset($_SESSION['user_id'])) {
                                     }
                                     window.location.href = "manage_product.php"
                                 },
-                                error: function() {
+                                error: function () {
                                     Swal.fire({
                                         title: "error",
                                         text: "An error occured",
@@ -257,6 +266,11 @@ if (!isset($_SESSION['user_id'])) {
                     });
 
                 }
+            });
+
+            //validate if SP is set after SP
+            $("#cost_price, #selling_price").on("keyup change", function () {
+                $("#productForm").valid();
             });
         });
     </script>
