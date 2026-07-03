@@ -196,7 +196,8 @@ if (!isset($_SESSION['user_id'])) {
                     },
                     selling_price: {
                         required: true,
-                        number: true
+                        number: true,
+                        greaterThanCostPrice: true
                     },
                     tax: {
                         required: true
@@ -216,7 +217,9 @@ if (!isset($_SESSION['user_id'])) {
                     },
                     selling_price: {
                         required: "This Field can't be empty",
-                        number: "Only numbers allowed"
+                        number: "Only numbers allowed",
+                        greaterThanCostPrice: "Selling price must be greater than Cost price"
+
                     },
                     tax: {
                         required: "This Field can't be empty"
