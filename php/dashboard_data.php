@@ -49,11 +49,13 @@ $revenue = [];
 
 $sql2 = mysqli_query($conn, "
     SELECT 
-        DATE_FORMAT(STR_TO_DATE(invoice_date, '%Y-%m-%d'), '%b') as month,
-        SUM(grand_total) as total
+        DATE_FORMAT(STR_TO_DATE(invoice_date, '%Y-%m-%d'), '%b %Y') AS month,
+        SUM(grand_total) AS total
     FROM invoices
-    GROUP BY MONTH(STR_TO_DATE(invoice_date, '%Y-%m-%d'))
-    ORDER BY MONTH(STR_TO_DATE(invoice_date, '%Y-%m-%d'))
+    GROUP BY YEAR(STR_TO_DATE(invoice_date, '%Y-%m-%d')),
+             MONTH(STR_TO_DATE(invoice_date, '%Y-%m-%d'))
+    ORDER BY YEAR(STR_TO_DATE(invoice_date, '%Y-%m-%d')),
+             MONTH(STR_TO_DATE(invoice_date, '%Y-%m-%d'))
 ");
 
 while ($row = mysqli_fetch_assoc($sql2)) {
