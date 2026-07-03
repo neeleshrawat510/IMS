@@ -8,7 +8,7 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+
     <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
@@ -109,7 +109,8 @@
                             <div class="text-center mb-3 text-muted">or</div>
 
                             <!-- Google Sign-In -->
-                            <div id="g_id_onload" data-client_id="YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+                            <div id="g_id_onload"
+                                data-client_id="92348507939-b70lkfpsj2s4ml1phi6ri6chiv1gcor8.apps.googleusercontent.com"
                                 data-callback="handleGoogleLogin">
                             </div>
                             <div class="g_id_signin d-flex justify-content-center" data-type="standard"
@@ -138,11 +139,53 @@
 
             //load saved data
             if (localStorage.getItem("rememberMe") === "true") {
-
                 $("#email").val(localStorage.getItem("email"));
                 $("#password").val(localStorage.getItem("password"));
                 $("#rememberMe").prop("checked", true);
             }
+
+            // Shared success handler for both login methods
+            function onLoginSuccess(token) {
+                // Store JWT in a cookie so it travels with normal page navigation
+                document.cookie = "auth_token=" + token + "; path=/; max-age=3600; SameSite=Lax" +
+                    (location.protocol === "https:" ? "; Secure" : "");
+
+                Swal.fire({
+                    position: "center",
+                    icon: "success",
+                    title: "You are successfully logged In",
+                    showConfirmButton: false,
+                    timer: 1500
+                }).then(() => {
+                    window.location.href = "dashboard.php";
+                });
+            }
+
+            // Google Sign-In callback (invoked by Google's library)
+            window.handleGoogleLogin = function (response) {
+                $.ajax({
+                    url: "api/jwt/google_login.php",
+                    type: "POST",
+                    contentType: "application/json",
+                    data: JSON.stringify({ id_token: response.credential }),
+                    success: function (res) {
+                        res = typeof res === "string" ? JSON.parse(res) : res;
+                        if (res.status === "success") {
+                            onLoginSuccess(res.jwt);
+                        } else {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Google Login Failed",
+                                text: res.message || "Something went wrong"
+                            });
+                        }
+                    },
+                    error: function () {
+                        Swal.fire({ icon: "error", title: "Oops...", text: "Something went wrong!" });
+                    }
+                });
+            };
+
             // validation
             $("#login").validate({
                 rules: {
@@ -167,54 +210,41 @@
                 submitHandler: function (form) {
                     // save login details
                     if ($("#rememberMe").is(":checked")) {
-
                         localStorage.setItem("rememberMe", true);
                         localStorage.setItem("email", $("#email").val());
                         localStorage.setItem("password", $("#password").val());
-
                     } else {
-
                         localStorage.removeItem("rememberMe");
                         localStorage.removeItem("email");
                         localStorage.removeItem("password");
                     }
 
-                    let formData = new FormData(form);
                     $.ajax({
-                        url: "php/login_user.php",
+                        url: "api/jwt/login.php",
                         type: "POST",
-                        data: formData,
-                        processData: false,
-                        contentType: false,
-
-                        success: function (response) {
-                            if (response.trim() == 'success') {
-                                Swal.fire({
-                                    position: "center",
-                                    icon: "success",
-                                    title: "You are successfully logged In",
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                }).then(() => {
-                                    window.location.href = "dashboard.php";
-                                });
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            email: $("#email").val(),
+                            password: $("#password").val()
+                        }),
+                        success: function (res) {
+                            res = typeof res === "string" ? JSON.parse(res) : res;
+                            if (res.status === "success") {
+                                onLoginSuccess(res.token);
                             } else {
-
                                 Swal.fire({
                                     icon: "error",
                                     title: "Login Failed",
-                                    text: "Invalid email or password"
+                                    text: res.message || "Invalid email or password"
                                 });
-
                             }
                         },
-                        error: function (response) {
+                        error: function () {
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops...",
                                 text: "Something went wrong!"
                             });
-
                         }
                     });
                 }
