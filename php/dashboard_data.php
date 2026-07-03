@@ -1,6 +1,5 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+
 //session start
 session_start();
 
@@ -71,11 +70,11 @@ $status = [
     "Overdue" => 0
 ];
 
-$sql3 = mysqli_query($conn, "
-    SELECT status, COUNT(*) as total
-    FROM invoices
-    GROUP BY status
-");
+    $sql3 = mysqli_query($conn, "
+        SELECT status, COUNT(*) as total
+        FROM invoices
+        GROUP BY status
+    ");
 
 while ($row = mysqli_fetch_assoc($sql3)) {
     $status[$row['status']] = (int)$row['total'];

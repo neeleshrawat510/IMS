@@ -1,10 +1,12 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 session_start();
 
 include("../config/connection.php");
 
 if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
+    header("location: ../index.php");
     exit();
 }
 
