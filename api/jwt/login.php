@@ -6,9 +6,6 @@ ini_set('display_errors', 1);
 include("../../config/connection.php");
 include("jwt.php");
 
-include("../../config/connection.php");
-include("jwt.php");
-
 $data = json_decode(file_get_contents("php://input"), true);
 
 $email = $data['email'];
