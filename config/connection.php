@@ -18,6 +18,14 @@ $dbName = $_ENV['DB_NAME'] ?? getenv('DB_NAME');
 $dbPort = $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?? 28665;
 
 
+var_dump([
+    'host' => $_ENV['DB_HOST'] ?? getenv('DB_HOST'),
+    'user' => $_ENV['DB_USER'] ?? getenv('DB_USER'),
+    'db'   => $_ENV['DB_NAME'] ?? getenv('DB_NAME'),
+    'port' => $_ENV['DB_PORT'] ?? getenv('DB_PORT'),
+]);
+exit;
+
 $conn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName, (int)$dbPort);
 
 if (!$conn) {
