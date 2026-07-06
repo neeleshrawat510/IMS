@@ -1,4 +1,11 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+include("../../config/connection.php");
+include("jwt.php");
+
 include("../../config/connection.php");
 include("jwt.php");
 
@@ -61,6 +68,7 @@ $payload = [
 $token = generateJWT($payload);
 
 echo json_encode([
-    "token"=> $token
+    "response" => "success",
+    "token" => $token
 ]);
 ?>
