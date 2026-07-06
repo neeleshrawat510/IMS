@@ -1,8 +1,14 @@
 <?php
-//session start
+<?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+session_start();
+
 require_once "includes/auth_check.php";
 if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
+    header("location: ../index.php");
     exit();
 }
 //connection
