@@ -171,7 +171,7 @@
                     success: function (res) {
                         res = typeof res === "string" ? JSON.parse(res) : res;
                         if (res.status === "success") {
-                            onLoginSuccess(res.jwt);
+                            onLoginSuccess(res.token);
                         } else {
                             Swal.fire({
                                 icon: "error",

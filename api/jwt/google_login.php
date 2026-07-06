@@ -4,7 +4,9 @@ include("../../config/connection.php");
 include("../../vendor/autoload.php");
 include("jwt.php");
 
-$client = new Google_Client(['client_id' => '92348507939-b70lkfpsj2s4ml1phi6ri6chiv1gcor8.apps.googleusercontent.com']);
+$client = new Google_Client([
+    'client_id' => getenv('client_id')
+]);
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -50,13 +52,10 @@ try {
     }
 
     $jwtPayload = [
-
-        "user_id" => $userId,
-        "email" => $email,
-        "name" => $name,
-        "iat" => time(),
-        "exp" => time() + 3600 // 1 hour
-    ];
+    "user_id"   => $userId,
+    "user_name" => $name,
+    "email"     => $email
+];
 
     $jwt = generateJWT($jwtPayload);
 
@@ -77,7 +76,7 @@ try {
     echo json_encode([
 
         "status" => "success",
-        "jwt" => $jwt,
+        "token" => $jwt,
         "refresh_token" => $refreshToken
 
     ]);
