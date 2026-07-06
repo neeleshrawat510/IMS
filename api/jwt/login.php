@@ -65,7 +65,7 @@ $payload = [
 $token = generateJWT($payload);
 
 echo json_encode([
-    "response" => "success",
+    "status" => "success",
     "token" => $token
 ]);
 ?>
