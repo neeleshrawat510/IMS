@@ -110,7 +110,7 @@
 
                             <!-- Google Sign-In -->
                             <div id="g_id_onload"
-                                data-client_id="92348507939-b70lkfpsj2s4ml1phi6ri6chiv1gcor8.apps.googleusercontent.com"
+                                data-client_id="92348507939-74ujcuui4ce2g0pt2ipk287voa8io6sg.apps.googleusercontent.com"
                                 data-callback="handleGoogleLogin">
                             </div>
                             <div class="g_id_signin d-flex justify-content-center" data-type="standard"
