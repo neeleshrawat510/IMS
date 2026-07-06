@@ -1,10 +1,6 @@
 <?php
-include ("../../config/connection.php");
-include ("../../vendor/autoload.php");
-include ("jwt.php");
-
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+include("../../config/connection.php");
+include("jwt.php");
 
 $data = json_decode(file_get_contents("php://input"), true);
 

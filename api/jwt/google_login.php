@@ -17,8 +17,8 @@ try {
     if (!$payload) {
 
         echo json_encode([
-            "status"=>"error",
-            "message"=>"Invalid Google Token"
+            "status" => "error",
+            "message" => "Invalid Google Token"
         ]);
 
         exit;
@@ -27,18 +27,22 @@ try {
     $email = $payload['email'];
     $name = $payload['name'];
 
-    $result = mysqli_query($conn,
-        "SELECT * FROM users WHERE email='$email'");
+    $result = mysqli_query(
+        $conn,
+        "SELECT * FROM users WHERE email='$email'"
+    );
 
-    if(mysqli_num_rows($result)==0){
+    if (mysqli_num_rows($result) == 0) {
 
-        mysqli_query($conn,
+        mysqli_query(
+            $conn,
             "INSERT INTO users(name,email)
-             VALUES('$name','$email')");
+             VALUES('$name','$email')"
+        );
 
         $userId = mysqli_insert_id($conn);
 
-    }else{
+    } else {
 
         $user = mysqli_fetch_assoc($result);
         $userId = $user['id'];
@@ -47,10 +51,10 @@ try {
 
     $jwtPayload = [
 
-        "user_id"=>$userId,
-        "email"=>$email,
-        "name"=>$name,
-        "iat"=>time(),
+        "user_id" => $userId,
+        "email" => $email,
+        "name" => $name,
+        "iat" => time(),
         "exp" => time() + 3600 // 1 hour
     ];
 
@@ -58,10 +62,11 @@ try {
 
 
     //generate refresh token
-     $refreshToken = bin2hex(random_bytes(64));
+    $refreshToken = bin2hex(random_bytes(64));
     $expiresAt = date('Y-m-d H:i:s', strtotime('+30 days'));
 
-    mysqli_query($conn,
+    mysqli_query(
+        $conn,
         "UPDATE users 
          SET refresh_token='$refreshToken', refresh_token_expires_at='$expiresAt'
 
@@ -71,16 +76,16 @@ try {
 
     echo json_encode([
 
-        "status"=>"success",
-        "jwt"=>$jwt,
+        "status" => "success",
+        "jwt" => $jwt,
         "refresh_token" => $refreshToken
 
     ]);
 
-}catch(Exception $e){
+} catch (Exception $e) {
 
     echo json_encode([
-        "status"=>"error",
-        "message"=>$e->getMessage()
+        "status" => "error",
+        "message" => $e->getMessage()
     ]);
 }

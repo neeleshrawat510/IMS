@@ -5,3 +5,4 @@ includes/test.php
 api.zip
 api/jwt/jwt.php
 api/jwt/jwt.zip
+.env

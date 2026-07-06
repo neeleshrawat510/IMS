@@ -1,29 +1,32 @@
 <?php
-include("../../config/connection.php");
-include("../../vendor/autoload.php");
 
-date_default_timezone_set("Asia/Kolkata");
+require_once __DIR__ . "/../../vendor/autoload.php";
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-$secret =  "3!@^4*&(5*&^#6%$^&#7@%$%$8%$#*(9";
+date_default_timezone_set("Asia/Kolkata");
 
-function generateJWT($payload){
-    global $secret;
+define('JWT_SECRET', '3!@^4*&(5*&^#6%$^&#7@%$%$8%$#*(9');  
+define('JWT_EXPIRY', 3600); // 1 hour in seconds
 
-    return JWT:: encode($payload, $secret, 'HS256');
+function generateJWT(array $payload, int $expiry = JWT_EXPIRY): string
+{
+    // overwrite time claims to prevent manipulation
+    $payload['iat'] = time();           // issued at
+    $payload['exp'] = time() + $expiry; // expiry time
+
+    return JWT::encode($payload, JWT_SECRET, JWT_ALGO);
 }
 
-function verifyJWT($jwt){
-    global $secret;
-
-    try{
-        $decoded = JWT::decode($jwt, new key($secret, 'HS256'));
+function verifyJWT(string $token): ?array
+{
+    try {
+        $decoded = JWT::decode($token, new Key(JWT_SECRET, JWT_ALGO));
         return (array) $decoded;
-    }catch (Exception $e){
-        return false;
+
+    } catch (Exception $e) {
+        // Token is expired, tampered, or malformed
+        return null;
     }
 }
-
-?>
