@@ -2,44 +2,28 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-// Load .env only if it exists (local development)
-$envPath = __DIR__ . '/../.env';
+// Load .env only for local development
+$envFile = __DIR__ . '/../.env';
 
-if (file_exists($envPath)) {
+if (file_exists($envFile)) {
     $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
     $dotenv->load();
 }
 
-// Read values from either .env (local) or Railway Variables
-$dbHost = $_ENV['DB_HOST'] ?? getenv('DB_HOST');
-$dbUser = $_ENV['DB_USER'] ?? getenv('DB_USER');
-$dbPass = $_ENV['DB_PASS'] ?? getenv('DB_PASS');
-$dbName = $_ENV['DB_NAME'] ?? getenv('DB_NAME');
-$dbPort = $_ENV['DB_PORT'] ?? getenv('DB_PORT') ?? 28665;
+$dbHost = getenv('DB_HOST') ?: ($_ENV['DB_HOST'] ?? null);
+$dbUser = getenv('DB_USER') ?: ($_ENV['DB_USER'] ?? null);
+$dbPass = getenv('DB_PASS') ?: ($_ENV['DB_PASS'] ?? null);
+$dbName = getenv('DB_NAME') ?: ($_ENV['DB_NAME'] ?? null);
+$dbPort = getenv('DB_PORT') ?: ($_ENV['DB_PORT'] ?? 3306);
 
-
-echo "<pre>";
-
-var_dump(getenv("MYSQLHOST"));
-var_dump(getenv("MYSQLUSER"));
-var_dump(getenv("MYSQLDATABASE"));
-var_dump(getenv("MYSQLPORT"));
-
-echo "\n\n";
-
-var_dump($_ENV);
-
-exit;
-
-$conn = mysqli_connect($dbHost, $dbUser, $dbPass, $dbName, (int)$dbPort);
+$conn = mysqli_connect(
+    $dbHost,
+    $dbUser,
+    $dbPass,
+    $dbName,
+    (int)$dbPort
+);
 
 if (!$conn) {
-    error_log("DB Connection failed: " . mysqli_connect_error());
-
-    http_response_code(500);
-
-    die(json_encode([
-        "status" => "error",
-        "message" => "Database connection failed"
-    ]));
+    die("Database connection failed: " . mysqli_connect_error());
 }
