@@ -1,6 +1,7 @@
 <?php
 
 require_once "includes/auth_check.php";
+require_once "../update_overdue_invoices.php";
 
 ?>
 

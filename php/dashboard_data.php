@@ -2,7 +2,6 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
-require_once "../update_overdue_invoices.php";
 
 //DATA METRICS FOR CARD
 $counts = mysqli_fetch_assoc(mysqli_query($conn, "
