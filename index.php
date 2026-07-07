@@ -208,11 +208,15 @@
                 },
 
                 submitHandler: function (form) {
-                    // save login details
+
+                    // Save login details
                     if ($("#rememberMe").is(":checked")) {
-                        localStorage.setItem("rememberMe", true);
+
+                        localStorage.setItem("rememberMe", "true");
                         localStorage.setItem("email", $("#email").val());
+
                     } else {
+
                         localStorage.removeItem("rememberMe");
                         localStorage.removeItem("email");
                     }
@@ -226,25 +230,35 @@
                             password: $("#password").val()
                         }),
                         success: function (res) {
+
                             res = typeof res === "string" ? JSON.parse(res) : res;
+
                             if (res.status === "success") {
+
                                 onLoginSuccess(res.token);
+
                             } else {
+
                                 Swal.fire({
                                     icon: "error",
                                     title: "Login Failed",
                                     text: res.message || "Invalid email or password"
                                 });
+
                             }
+
                         },
                         error: function () {
+
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops...",
                                 text: "Something went wrong!"
                             });
+
                         }
                     });
+
                 }
             });
         });
