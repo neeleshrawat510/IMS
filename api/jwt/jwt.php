@@ -13,7 +13,7 @@ define(
     "JWT_SECRET",
     getenv("JWT_SECRET") ?: ($_ENV["JWT_SECRET"] ?? "")
 );
-
+ 
 define("JWT_EXPIRY", 3600);
 
 function generateJWT(array $payload, int $expiry = JWT_EXPIRY): string
