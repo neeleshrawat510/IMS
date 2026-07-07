@@ -1,5 +1,6 @@
 <?php
 
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
 
 $id = intval($_GET['id']);

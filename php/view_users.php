@@ -1,11 +1,6 @@
 <?php
-session_start();
 
-if(!isset($_SESSION['user_id'])){
-    header('location: ../index.php');
-}
-
-//setup connection
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
 
 $allUsers = mysqli_query($conn, "SELECT * FROM `users` ORDER BY id DESC");

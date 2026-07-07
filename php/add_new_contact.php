@@ -1,13 +1,7 @@
 <?php
 
-session_start();
-
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
-
-if(!isset($_SESSION['user_id'])){
-    header("location: ../index.php");
-    exit();
-}
 
 $name = trim(mysqli_real_escape_string($conn, $_POST['name']  ??  ''));
 $number = trim(mysqli_real_escape_string($conn, $_POST['number']  ??  ''));

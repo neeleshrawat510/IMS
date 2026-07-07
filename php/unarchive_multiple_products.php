@@ -1,5 +1,6 @@
 <?php
 
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
 
 if (isset($_POST['ids']) && !empty($_POST['ids'])) {

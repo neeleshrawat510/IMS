@@ -1,14 +1,9 @@
 <?php
-session_start();
 
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
 date_default_timezone_set('Asia/Kolkata');
 
-
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
 
 
 $product_id    = $_POST['id'];

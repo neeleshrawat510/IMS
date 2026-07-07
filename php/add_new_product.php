@@ -1,16 +1,11 @@
 <?php
-session_start();
 
-//connection setup
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
-
 //Indian Timezone
 date_default_timezone_set("ASIA/KOLKATA");
 
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
+
 
 $product_code = trim(mysqli_real_escape_string($conn, $_POST['product_code'] ?? ''));
 $product_name = trim(mysqli_real_escape_string($conn, $_POST['product_name'] ?? ''));

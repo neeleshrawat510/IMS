@@ -1,7 +1,6 @@
 <?php
-session_start();
 
-//connection setup
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
 
 $restoreContacts = mysqli_query($conn, "UPDATE `contacts` SET `remove` = '0'");
