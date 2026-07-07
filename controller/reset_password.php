@@ -46,7 +46,7 @@ try {
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = getenv("SMTP_PORT");
-
+    $mail->Timeout = 10;
     $mail->setFrom(
         getenv("MAIL_FROM"),
         getenv("MAIL_FROM_NAME")
@@ -89,6 +89,10 @@ try {
                     </small>
 
                 </div>';
+                $mail->SMTPDebug = 3;
+$mail->Debugoutput = function($str, $level) {
+    error_log("SMTP[$level]: $str");
+};
 
     $mail->send();
 
