@@ -27,7 +27,6 @@ try {
     }
 
     $email = $payload['email'];
-    $name = $payload['name'];
 
     $result = mysqli_query(
         $conn,
@@ -36,26 +35,21 @@ try {
 
     if (mysqli_num_rows($result) == 0) {
 
-        mysqli_query(
-            $conn,
-            "INSERT INTO users(name,email)
-             VALUES('$name','$email')"
-        );
-
-        $userId = mysqli_insert_id($conn);
-
-    } else {
-
-        $user = mysqli_fetch_assoc($result);
-        $userId = $user['id'];
-
+        echo json_encode([
+            "status" => "error",
+            "message" => "Account not found. Contact Admin."
+        ]);
+        exit;
     }
 
+    $user = mysqli_fetch_assoc($result);
+    $userId = $user['id'];
+
     $jwtPayload = [
-    "user_id"   => $userId,
-    "user_name" => $name,
-    "email"     => $email
-];
+        "user_id" => $userId,
+        "user_name" => $user['name'],
+        "email" => $user['email']
+    ];
 
     $jwt = generateJWT($jwtPayload);
 
@@ -85,6 +79,6 @@ try {
 
     echo json_encode([
         "status" => "error",
-        "message" => $e->getMessage()
+        "message" => "Google Login Failed"
     ]);
 }
