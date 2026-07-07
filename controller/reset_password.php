@@ -113,7 +113,11 @@ if ($httpCode == 201) {
 
 } else {
 
-    echo $response;
+    echo "HTTP Code: " . $httpCode . "<br><br>";
+
+    echo "<pre>";
+    print_r(json_decode($response, true));
+    echo "</pre>";
 
 }
 ?>
