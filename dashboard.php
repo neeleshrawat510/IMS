@@ -1,10 +1,7 @@
 <?php
+
 require_once "includes/auth_check.php";
 
-if (!isset($_SESSION['user_id'])) {
-    header("location: index.php");
-    exit();
-}
 ?>
 
 <!DOCTYPE html>

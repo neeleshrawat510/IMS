@@ -1,12 +1,10 @@
 <?php
-session_start();
+
+require_once "includes/auth_check.php";
+
 //connection setup
 include("config/connection.php");
 
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
 
 $product_id = $_POST['id'];
 
