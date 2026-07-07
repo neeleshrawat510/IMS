@@ -55,7 +55,7 @@ require_once "includes/auth_check.php";
                                 <thead class="table-light">
                                     <tr>
                                         <th><input type="checkbox" id="selectAll">
-                                        <button class="btn btn-sm text-primary p-0 ms-2" id="archiveSelected" title="Delete Selected">
+                                        <button class="btn btn-sm text-primary p-0 ms-2" id="archiveSelected" title="Archive Selected">
                                                 <i class="bi bi-box-arrow-down"></i>
                                             </button>    
                                         <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected" title="Delete Selected">

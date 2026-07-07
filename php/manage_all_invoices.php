@@ -31,16 +31,16 @@ if (mysqli_num_rows($sql) > 0) {
                 $row['invoice_date'],
                 $row['grand_total'],
                 $row['status'],
-                    '<a href="php/view_invoice.php?id=' . $row['id'] . '" target="_blank" class="btn btn-success btn-sm me-1">
+                    '<a href="php/view_invoice.php?id=' . $row['id'] . '" target="_blank" class="btn btn-success btn-sm me-1" title="View">
                         <i class="bi bi-eye"></i> 
                     </a>
-                    <a href="edit_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm">
+                    <a href="edit_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Edit">
                         <i class="bi bi-pencil"></i> 
                     </a>
-                    <a href="php/download_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm">
+                    <a href="php/download_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Download">
                         <i class="bi bi-download"></i> 
                     </a>
-                    <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="' . $row['id'] . '">                          <i class="bi bi-trash"></i>
+                    <a href="#" class="btn btn-danger btn-sm delete-btn" title="Delete" data-id="' . $row['id'] . '">                          <i class="bi bi-trash"></i>
                     </a>'
                 ];
     }

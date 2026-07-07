@@ -66,10 +66,12 @@ require_once "includes/auth_check.php";
                                     <thead class="table-light">
                                         <tr>
                                             <th><input type="checkbox" id="selectAll">
-                                            <button class="btn btn-sm text-primary p-0 ms-2" id="archiveSelected" title="Unarchive Selected">
+                                                <button class="btn btn-sm text-primary p-0 ms-2" id="archiveSelected"
+                                                    title="Archive Selected">
                                                     <i class="bi bi-box-arrow-down"></i>
                                                 </button>
-                                                <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected" title="Delete Selected">
+                                                <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected"
+                                                    title="Delete Selected">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
                                             </th>
@@ -97,7 +99,7 @@ require_once "includes/auth_check.php";
     <script src="controller/logout.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             //data table
             let table = $('#contactsTable').DataTable({
@@ -106,40 +108,40 @@ require_once "includes/auth_check.php";
                     dataSrc: ""
                 },
                 columns: [{
-                        data: 0, // id column FOR CHECKBOX
-                        orderable: false,
-                        render: function(data) {
-                            return `<input type="checkbox" class="row-check" data-id="${data}">`;
-                        }
-                    },
-                    {
-                        data: 1
-                    }, //S. No
-                    {
-                        data: 2
-                    }, //name
-                    {
-                        data: 3
-                    }, //"number"
-                    {
-                        data: 4
-                    }, //email
-                    {
-                        data: 5
-                    }, //company
-                    {
-                        data: 6
-                    } //action
+                    data: 0, // id column FOR CHECKBOX
+                    orderable: false,
+                    render: function (data) {
+                        return `<input type="checkbox" class="row-check" data-id="${data}">`;
+                    }
+                },
+                {
+                    data: 1
+                }, //S. No
+                {
+                    data: 2
+                }, //name
+                {
+                    data: 3
+                }, //"number"
+                {
+                    data: 4
+                }, //email
+                {
+                    data: 5
+                }, //company
+                {
+                    data: 6
+                } //action
                 ],
 
-                createdRow: function(row, data) {
+                createdRow: function (row, data) {
                     $(row).attr('data-id', data[0]); // store contact id
                     $(row).css('cursor', 'pointer');
                 }
             });
 
             //select all rows
-            $(document).on('click', '#selectAll', function() {
+            $(document).on('click', '#selectAll', function () {
 
                 let rows = table.rows({
                     search: 'applied'
@@ -149,7 +151,7 @@ require_once "includes/auth_check.php";
             });
 
             //individual select
-            $(document).on('change', '.row-check', function() {
+            $(document).on('change', '.row-check', function () {
 
                 let rows = table.rows({
                     search: 'applied'
@@ -160,13 +162,13 @@ require_once "includes/auth_check.php";
 
                 $('#selectAll').prop('checked', total === checked);
             });
-           
+
             //archive multiple 
-            $('#archiveSelected').on('click', function() {
+            $('#archiveSelected').on('click', function () {
 
                 let ids = [];
 
-                table.rows().every(function() {
+                table.rows().every(function () {
 
                     let row = this.node();
                     let checkbox = $(row).find('.row-check');
@@ -198,7 +200,7 @@ require_once "includes/auth_check.php";
                             data: {
                                 ids: ids
                             },
-                            success: function(response) {
+                            success: function (response) {
 
                                 if (response.trim() === "success") {
 
@@ -216,11 +218,11 @@ require_once "includes/auth_check.php";
             });
 
             //Delete multiple 
-            $('#deleteSelected').on('click', function() {
+            $('#deleteSelected').on('click', function () {
 
                 let ids = [];
 
-                table.rows().every(function() {
+                table.rows().every(function () {
 
                     let row = this.node();
                     let checkbox = $(row).find('.row-check');
@@ -252,7 +254,7 @@ require_once "includes/auth_check.php";
                             data: {
                                 ids: ids
                             },
-                            success: function(response) {
+                            success: function (response) {
 
                                 if (response.trim() === "success") {
 
@@ -270,7 +272,7 @@ require_once "includes/auth_check.php";
             });
 
             //redirect when click on row anywhere
-            $('#contactsTable tbody').on('click', 'tr', function(e) {
+            $('#contactsTable tbody').on('click', 'tr', function (e) {
 
                 // Don't redirect when edit/archive button clicked
                 if ($(e.target).closest('a, button, input[type="checkbox"]').length) {
@@ -283,7 +285,7 @@ require_once "includes/auth_check.php";
             });
 
             //archive single
-            $(document).on('click', '.archive-btn', function(e) {
+            $(document).on('click', '.archive-btn', function (e) {
                 e.preventDefault();
 
                 let id = $(this).data('id');
@@ -294,7 +296,7 @@ require_once "includes/auth_check.php";
                     data: {
                         id: id
                     },
-                    success: function(response) {
+                    success: function (response) {
 
                         if (response.trim() === "success") {
 
@@ -307,14 +309,14 @@ require_once "includes/auth_check.php";
                             Swal.fire("Error", "Archive failed!", "error");
                         }
                     },
-                    error: function() {
+                    error: function () {
                         Swal.fire("Error", "Something went wrong!", "error");
                     }
                 });
             });
 
             //Delete
-            $(document).on('click', '.delete-btn', function(e) {
+            $(document).on('click', '.delete-btn', function (e) {
                 e.preventDefault();
 
                 let id = $(this).data('id');
@@ -337,7 +339,7 @@ require_once "includes/auth_check.php";
                             data: {
                                 id: id
                             },
-                            success: function(response) {
+                            success: function (response) {
 
                                 if (response.trim() === "success") {
 
@@ -356,7 +358,7 @@ require_once "includes/auth_check.php";
                                     Swal.fire("Error", "Delete failed!", "error");
                                 }
                             },
-                            error: function() {
+                            error: function () {
                                 Swal.fire("Error", "Something went wrong!", "error");
                             }
                         });
@@ -366,7 +368,7 @@ require_once "includes/auth_check.php";
             });
 
             //archived contacts
-            $("#archivedContacts").click(function() {
+            $("#archivedContacts").click(function () {
                 window.location.href = "manage_archived_contacts.php";
             });
 

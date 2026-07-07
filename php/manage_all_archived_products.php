@@ -22,10 +22,10 @@ if (mysqli_num_rows($sql) > 0) {
             $row['selling_price'],
             $row['tax'],
 
-            '<a href="#" class="btn btn-primary btn-sm unarchive-btn" data-id="' . $row['id'] . '">                  
+            '<a href="#" class="btn btn-primary btn-sm unarchive-btn" title="Unarchive" data-id="' . $row['id'] . '">                  
             <i class="bi bi-box-arrow-up"></i>
             </a>
-            <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="' . $row['id'] . '">                  
+            <a href="#" class="btn btn-danger btn-sm delete-btn" title="Delete" data-id="' . $row['id'] . '">                  
             <i class="bi bi-trash"></i>
             </a>'
         ];

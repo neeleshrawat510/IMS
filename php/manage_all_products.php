@@ -23,13 +23,13 @@ if (mysqli_num_rows($sql) > 0) {
             $row['selling_price'],
             $row['tax'],
 
-            '<a href="edit_product.php?id=' . $row['id'] . '" class="btn btn-success btn-sm me-1">
+            '<a href="edit_product.php?id=' . $row['id'] . '" class="btn btn-success btn-sm me-1" title="Edit">
                 <i class="bi bi-pencil"></i>
             </a>
-            <a href="#" class="btn btn-primary btn-sm archive-btn" data-id="' . $row['id'] . '">                  
+            <a href="#" class="btn btn-primary btn-sm archive-btn" title="Archive" data-id="' . $row['id'] . '">                  
             <i class="bi bi-box-arrow-down"></i>
             </a>
-            <a href="#" class="btn btn-danger btn-sm delete-btn" data-id="' . $row['id'] . '">                  
+            <a href="#" class="btn btn-danger btn-sm delete-btn" title="Delete" data-id="' . $row['id'] . '">                  
             <i class="bi bi-trash"></i>
             </a>'
         ];
