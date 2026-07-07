@@ -212,11 +212,9 @@
                     if ($("#rememberMe").is(":checked")) {
                         localStorage.setItem("rememberMe", true);
                         localStorage.setItem("email", $("#email").val());
-                        localStorage.setItem("password", $("#password").val());
                     } else {
                         localStorage.removeItem("rememberMe");
                         localStorage.removeItem("email");
-                        localStorage.removeItem("password");
                     }
 
                     $.ajax({
