@@ -45,7 +45,7 @@ try {
     $mail->Password = getenv("SMTP_PASS");
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = getenv("SMTP_PORT");
+    $mail->Port = 465;
     $mail->Timeout = 10;
     $mail->setFrom(
         getenv("MAIL_FROM"),
