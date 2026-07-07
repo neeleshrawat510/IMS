@@ -29,76 +29,91 @@ if (!$updateToken) {
     exit;
 }
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+$link = getenv("APP_URL") . "/update_password.php?token=" . $token;
 
-require '../vendor/autoload.php';
+$data = [
 
-$mail = new PHPMailer(true);
+    "sender" => [
+        "name" => "Invoice Management System",
+        "email" => getenv("MAIL_FROM")
+    ],
 
-try {
-    $mail->isSMTP();
+    "to" => [
+        [
+            "email" => $email
+        ]
+    ],
 
-    $mail->Host = getenv("SMTP_HOST");
-    $mail->SMTPAuth = true;
-    $mail->Username = getenv("SMTP_USER");
-    $mail->Password = getenv("SMTP_PASS");
+    "subject" => "Password Reset Request",
 
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 465;
-    $mail->Timeout = 10;
-    $mail->setFrom(
-        getenv("MAIL_FROM"),
-        getenv("MAIL_FROM_NAME")
-    );
+    "htmlContent" => '
+    <div style="max-width:600px;margin:auto;padding:30px;font-family:Arial,sans-serif;border:1px solid #ddd;border-radius:8px;">
 
-    $mail->addAddress($email);
+        <h2 style="color:#0d6efd;">
+            Invoice Management System
+        </h2>
 
-    $mail->isHTML(true);
-    $mail->Subject = "Password Reset Request";
+        <p>Hello,</p>
 
-    $link = getenv('APP_URL') . "/update_password.php?token=" . $token;
-    $mail->Body = '
-                <div style="max-width:600px;margin:auto;padding:30px;font-family:Arial,sans-serif;border:1px solid #ddd;border-radius:8px;">
-                    <h2 style="color:#0d6efd;">Invoice Management System</h2>
+        <p>We received a request to reset your password.</p>
 
-                    <p>Hello,</p>
+        <p style="text-align:center;margin:30px 0;">
 
-                    <p>We received a request to reset your password.</p>
+            <a href="' . $link . '"
+               style="
+               background:#0d6efd;
+               color:white;
+               padding:12px 24px;
+               text-decoration:none;
+               border-radius:5px;
+               display:inline-block;">
 
-                    <p style="text-align:center;margin:30px 0;">
-                        <a href="' . $link . '" style="
-                            background:#0d6efd;
-                            color:#fff;
-                            text-decoration:none;
-                            padding:12px 24px;
-                            border-radius:5px;
-                            display:inline-block;">
-                            Reset Password
-                        </a>
-                    </p>
+               Reset Password
 
-                    <p>This link is valid for <strong>1 hour</strong>.</p>
+            </a>
 
-                    <p>If you did not request a password reset, you can safely ignore this email.</p>
+        </p>
 
-                    <hr>
+        <p>
+            This link is valid for
+            <strong>1 hour</strong>.
+        </p>
 
-                    <small>
-                        Invoice Management System
-                    </small>
+        <p>
+            If you did not request this,
+            you can ignore this email.
+        </p>
 
-                </div>';
-                $mail->SMTPDebug = 3;
-$mail->Debugoutput = function($str, $level) {
-    error_log("SMTP[$level]: $str");
-};
+    </div>'
+];
 
-    $mail->send();
+$ch = curl_init();
+
+curl_setopt($ch, CURLOPT_URL, "https://api.brevo.com/v3/smtp/email");
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "accept: application/json",
+    "api-key: " . getenv("BREVO_API_KEY"),
+    "content-type: application/json"
+]);
+
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+
+$response = curl_exec($ch);
+
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+curl_close($ch);
+
+if ($httpCode == 201) {
 
     echo "success";
-} catch (Exception $e) {
-    echo "Mailer Error: {$mail->ErrorInfo}";
-}
 
+} else {
+
+    echo $response;
+
+}
 ?>
