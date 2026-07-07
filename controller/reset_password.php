@@ -11,12 +11,12 @@ $email = trim($_POST['email']);
 
 $checkMail = mysqli_query($conn, "SELECT * FROM `users` WHERE `email` = '$email'");
 
-if(mysqli_num_rows($checkMail) == '0'){
-echo "failed";
-exit;
+if (mysqli_num_rows($checkMail) == '0') {
+    echo "failed";
+    exit;
 }
 
-$token = md5(rand());
+$token = bin2hex(random_bytes(32));
 $expiry = date("Y-m-d H:i:s", strtotime("+1 hour"));
 
 $updateToken = mysqli_query($conn, "UPDATE `users` SET `reset_token` = '$token', `token_expiry` = '$expiry' WHERE `email` = '$email'");
@@ -35,35 +35,60 @@ $mail = new PHPMailer(true);
 
 try {
     $mail->isSMTP();
-    $mail->Host = 'sandbox.smtp.mailtrap.io';
-    $mail->SMTPAuth = true;
-    $mail->Username = '13f154c474bcfb';
-    $mail->Password = 'e784d9ad6a3a1a';
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port = 2525;
 
-    $mail->setFrom('no-reply@yourapp.com', 'Your App');
+    $mail->Host = getenv("SMTP_HOST");
+    $mail->SMTPAuth = true;
+    $mail->Username = getenv("SMTP_USER");
+    $mail->Password = getenv("SMTP_PASS");
+
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+    $mail->Port = getenv("SMTP_PORT");
+
+    $mail->setFrom(
+        getenv("MAIL_FROM"),
+        getenv("MAIL_FROM_NAME")
+    );
+
     $mail->addAddress($email);
 
     $mail->isHTML(true);
-    $mail->Subject = 'Password Reset Request';
+    $mail->Subject = "Password Reset Request";
 
-    $link = "http://localhost/invoice_management_system/update_password.php?token=" . $token;
-
+    $link = getenv('APP_URL') . "/update_password.php?token=" . $token;
     $mail->Body = '
-        <div style="max-width:400px;margin:auto;padding:20px;border:1px solid #ddd;border-radius:8px;font-family:Arial;">
-            <p>Reset your password using the link below:</p>
-            <p>
-                <a href="' . $link . '" style="display:inline-block;padding:10px 15px;background:#007bff;color:#fff;text-decoration:none;border-radius:5px;">
-                    Click here to reset password
-                </a>
-            </p>   
-            <p>This link will expire in 1 hour</p>
-        </div>
-    ';
+                <div style="max-width:600px;margin:auto;padding:30px;font-family:Arial,sans-serif;border:1px solid #ddd;border-radius:8px;">
+                    <h2 style="color:#0d6efd;">Invoice Management System</h2>
+
+                    <p>Hello,</p>
+
+                    <p>We received a request to reset your password.</p>
+
+                    <p style="text-align:center;margin:30px 0;">
+                        <a href="' . $link . '" style="
+                            background:#0d6efd;
+                            color:#fff;
+                            text-decoration:none;
+                            padding:12px 24px;
+                            border-radius:5px;
+                            display:inline-block;">
+                            Reset Password
+                        </a>
+                    </p>
+
+                    <p>This link is valid for <strong>1 hour</strong>.</p>
+
+                    <p>If you did not request a password reset, you can safely ignore this email.</p>
+
+                    <hr>
+
+                    <small>
+                        Invoice Management System
+                    </small>
+
+                </div>';
 
     $mail->send();
-    
+
     echo "success";
 } catch (Exception $e) {
     echo "Mailer Error: {$mail->ErrorInfo}";
