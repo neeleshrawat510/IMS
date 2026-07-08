@@ -12,7 +12,5 @@ mysqli_query(
      AND status='Unpaid'"   
 );
 
-echo "Done";
-
 
 ?>
