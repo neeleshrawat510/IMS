@@ -4,19 +4,17 @@ include("config/connection.php");
 $token = $_GET['token'] ?? '';
 
 if (!$token) {
-    die("Invalid reset link.");
-}
+die("Invalid or missing reset token.");}
 
 // validate token once
 $query = mysqli_query($conn, "
-    SELECT * FROM users 
+    SELECT id FROM users 
     WHERE reset_token='$token' 
     AND token_expiry > NOW()
 ");
 
 if (mysqli_num_rows($query) == 0) {
-    die("This reset link is invalid or expired.");
-}
+die("This password reset link is invalid or has expired.");}
 ?>
 
 <!DOCTYPE html>
@@ -25,7 +23,7 @@ if (mysqli_num_rows($query) == 0) {
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Forgot Password</title>
+    <title>Update Password</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -61,19 +59,18 @@ if (mysqli_num_rows($query) == 0) {
 <body>
 
     <!-- Login Card -->
-    <section class=" text-center text-lg-start vh-100">
-
-        <div class="card mb-3">
-            <div class="row g-0 d-flex align-items-center">
-                <div class="col-lg-4 d-none d-lg-flex">
-                    <img src="uploads/login_img1.jpg" alt="Login Image"
-                        class="w-100 rounded-t-5 rounded-tr-lg-0 rounded-bl-lg-5" />
+    <section class="vh-100">
+        <div class="card h-100 border-0 rounded-0">
+            <div class="row g-0 h-100">
+                <div class="col-lg-4 d-none d-lg-block">
+                    <img src="uploads/login_img1.jpg" class="img-fluid w-100 h-100" alt="Login"
+                        style="object-fit: cover;">
                 </div>
-                <div class="col-lg-8">
-                    <div class="card-body py-5 px-md-5">
+                <div class="col-lg-8 d-flex align-items-center">
+                    <div class="card-body">
 
                         <form method="post" id="resetForm">
-                            <h3 class="text-primary text-center mb-5">RESET YOUR PASSWORD</h3>
+                            <h3 class="text-primary text-center mb-5">Create New Password</h3>
                            
                             <!-- reset token -->
                             <input type="hidden" name="token" value="<?= $token ?>">
@@ -88,7 +85,7 @@ if (mysqli_num_rows($query) == 0) {
                             </div>
 
                             <!-- Submit button -->
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Send Reset Link</button>
+                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Update Password</button>
 
                         </form>
 

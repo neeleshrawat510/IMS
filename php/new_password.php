@@ -6,9 +6,21 @@ $token = $_POST['token'];
 
 $password = md5($_POST['password']);
 
-$updatePass = mysqli_query($conn, "UPDATE `users` SET `password` = '$password', `reset_token` = 'NULL', `token_expiry` = 'NULL' WHERE `reset_token` = '$token'");
+// Verify token again
+$checkToken = mysqli_query($conn, "
+    SELECT * FROM users
+    WHERE reset_token = '$token'
+    AND token_expiry > NOW()
+");
 
-if($updatePass){
+if (mysqli_num_rows($checkToken) == 0) {
+    echo "failed";
+    exit;
+}
+
+$updatePass = mysqli_query($conn, "UPDATE `users` SET `password` = '$password', `reset_token` = NULL, `token_expiry` = NULL WHERE `reset_token` = '$token'");
+
+if($updatePass && mysqli_affected_rows($conn) > 0){
     echo "success";
 }else{
     echo "failed";
