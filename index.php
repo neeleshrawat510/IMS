@@ -175,9 +175,7 @@
                     data: JSON.stringify({ id_token: response.credential }),
                     success: function (res) {
                         res = typeof res === "string" ? JSON.parse(res) : res;
-
-console.log(res);
-console.log("Refresh Token:", res.refresh_token);                        
+                    
                         if (res.status === "success") {
                             onLoginSuccess(res.token, res.refresh_token);
                         } else {

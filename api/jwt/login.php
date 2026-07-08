@@ -8,61 +8,52 @@ $data = json_decode(file_get_contents("php://input"), true);
 $email = $data['email'];
 $password = md5($data['password']);
 
+$result = mysqli_query($conn, "
+    SELECT * 
+    FROM users 
+    WHERE email='$email' 
+    AND password='$password'
+");
 
-// if (empty($email) || empty($password)) {
-//     echo json_encode([
-//         "status" => "error",
-//         "message" => "Email and password required"
-//     ]);
-//     exit;
-// }
+if (mysqli_num_rows($result) == 0) {
 
-// // email format validation
-// if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-//     echo json_encode([
-//         "status" => "error",
-//         "message" => "Invalid email format"
-//     ]);
-//     exit;
-// }
-
-// //password format validation
-// $pattern = "/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/";
-
-// if (!preg_match($pattern, $password)) {
-//     echo json_encode([
-//         "status" => "error",
-//         "message" => "Invalid password format"
-//     ]);
-//     exit;
-// }
-
-
-
-$result = mysqli_query($conn, "SELECT * FROM `users` WHERE `email` = '$email' AND `password` = '$password'");
-
-if(mysqli_num_rows($result) == 0){
     echo json_encode([
-        "response"=> "error",
+        "status" => "error",
         "message" => "User not found"
     ]);
+
     exit;
 }
 
-$user = mysqli_fetch_array($result);
+$user = mysqli_fetch_assoc($result);
 
 $payload = [
     "user_id" => $user['id'],
     "user_name" => $user['name'],
-    "email" => $user['email'],
-    "iat" => time()
-
+    "email" => $user['email']
 ];
 
 $token = generateJWT($payload);
 
+
+// Generate Refresh Token
+$refreshToken = bin2hex(random_bytes(64));
+$expiresAt = date("Y-m-d H:i:s", strtotime("+30 days"));
+
+mysqli_query(
+    $conn,
+    "UPDATE users
+     SET
+        refresh_token='$refreshToken',
+        refresh_token_expires_at='$expiresAt'
+     WHERE id=".$user['id']
+);
+
+
 echo json_encode([
     "status" => "success",
-    "token" => $token
+    "token" => $token,
+    "refresh_token" => $refreshToken
 ]);
+
 ?>
