@@ -1,6 +1,5 @@
 vendor.zip
 vendor
-invoices
 includes/test.php
 api.zip
 api/jwt/jwt.php
