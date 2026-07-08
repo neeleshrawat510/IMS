@@ -169,7 +169,11 @@ require_once "includes/auth_check.php";
                     },
                     email: {
                         required: true,
-                        email: true
+                        email: true,
+                        remote: {
+                            url: "controller/check_contact_email.php",
+                            type: "POST"
+                        }
                     },
                     company: {
                         required: true
@@ -195,7 +199,8 @@ require_once "includes/auth_check.php";
                     },
                     email: {
                         required: "Email is required",
-                        email: "abc@gmail.com format required"
+                        email: "abc@gmail.com format required",
+                        remote: "This email is alreay exist"
                     },
                     company: {
                         required: "Company Name is required"
