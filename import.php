@@ -34,7 +34,7 @@ foreach ($queries as $query) {
     if ($query === '') continue;
 
     if (!$conn->query($query)) {
-        echo "<h3>❌ SQL ERROR:</h3>";
+        echo "<h3> SQL ERROR:</h3>";
         echo "<b>" . $conn->error . "</b><br><br>";
         echo "<pre>" . htmlspecialchars($query) . "</pre>";
         exit;
@@ -43,4 +43,4 @@ foreach ($queries as $query) {
 
 $conn->query("SET FOREIGN_KEY_CHECKS=1");
 
-echo "✅ Import completed successfully!";
+echo " Import completed successfully!";
