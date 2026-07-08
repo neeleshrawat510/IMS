@@ -1,4 +1,5 @@
 <?php
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
 
 header('Content-Type: application/json');

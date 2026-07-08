@@ -1,14 +1,6 @@
 <?php
-session_start();
-
-//setting up connection with DB
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
-
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
-
 
 
 $email = $_GET['email'];

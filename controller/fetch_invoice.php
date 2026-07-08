@@ -1,11 +1,5 @@
 <?php
-session_start();
-
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
-//conneciton setup
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
 
 $sql = mysqli_query($conn, "

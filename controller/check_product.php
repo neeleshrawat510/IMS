@@ -1,13 +1,6 @@
 <?php
-session_start();
-
-//connection setup
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
-
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
 
 $product_code = $_POST['product_code'];
 $product_id = isset($_POST['id']) ? (int) $_POST['id'] : 0;

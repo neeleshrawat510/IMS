@@ -1,13 +1,6 @@
 <?php
-session_start();
-
-//connection setup
+require_once "../includes/api_auth.php";
 include("../config/connection.php");
-
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
 
 $contactID = $_GET['id'];
 
