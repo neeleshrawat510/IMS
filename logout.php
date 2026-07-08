@@ -6,7 +6,7 @@ session_start();
 include("config/connection.php");
 
 //remove refresh token from db
-If (isset($_SESSION['user_id'])){
+if (isset($_SESSION['user_id'])){
     $userId = $_SESSION['user_id'];
 
     mysqli_query($conn, "UPDATE users SET refresh_token = NULL, refresh_token_expires_at = NULL 
@@ -24,6 +24,11 @@ session_destroy();
 
 setcookie(
     "auth_token", "", time() -3600, "/"
+);
+
+//delete refresh token
+setcookie(
+    "refresh_token", "", time() -3600, "/"
 );
 
 echo "success";
