@@ -5,9 +5,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $host = "hayabusa.proxy.rlwy.net";
-$port = "28665";
+$port = "48371";
 $user = "root";
-$password = "WrQipwjnRMzSQlQWEPJoklzlGKVdkKcv";
+$password = "GnlPozjLbsSsIZtuyjRHNfdTWHYGrjVW";
 $database = "railway";
 
 $conn = new mysqli($host, $user, $password, $database, $port);
