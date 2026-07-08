@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 03, 2026 at 06:50 AM
+-- Generation Time: Jul 08, 2026 at 05:49 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,7 +67,9 @@ CREATE TABLE `invoices` (
   `subtotal` decimal(50,2) NOT NULL,
   `tax_total` decimal(50,2) NOT NULL,
   `grand_total` decimal(50,2) NOT NULL,
-  `status` varchar(20) NOT NULL,
+  `status` enum('Paid','Unpaid','Overdue') DEFAULT NULL,
+  `notes` varchar(255) DEFAULT NULL,
+  `payment_method` varchar(50) DEFAULT NULL,
   `pdf_path` varchar(100) NOT NULL,
   `created_at` varchar(20) DEFAULT NULL,
   `created_by` varchar(100) DEFAULT NULL,
@@ -80,20 +82,20 @@ CREATE TABLE `invoices` (
 -- Dumping data for table `invoices`
 --
 
-INSERT INTO `invoices` (`id`, `contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `pdf_path`, `created_at`, `created_by`, `updated_at`, `updated_by`, `remove`) VALUES
-(1, '6', 'INV-10001', '2026-06-10', '2026-06-26', 10500.00, 525.00, 11025.00, 'Unpaid', 'invoices/invoice_1.pdf', '2026-06-10 11:25:03', '', '2026-06-26 14:39:35', 'Neelesh Rawat', 0),
-(2, '6', 'INV-10002', '2026-06-10', '2026-06-26', 9940.00, 37.80, 9977.80, 'paid', 'invoices/invoice_2.pdf', '2026-06-10 12:33:01', '', '2026-06-29 07:19:39', 'Neelesh Rawat', 0),
-(3, '5', 'INV-10003', '2026-06-11', '2026-06-11', 12740.00, 1901.90, 14641.90, 'Unpaid', 'invoices/invoice_3.pdf', '2026-06-11 08:00:24', '', '', '', 0),
-(8, '6', 'INV-10004', '2026-06-23', '2026-06-25', 70.00, 12.60, 82.60, 'Unpaid', 'invoices/invoice_8.pdf', '2026-06-23 10:09:55', '', '', '', 0),
-(9, '6', 'INV-10005', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', '', '2026-06-23 12:59:11', 'Neelesh Rawat', '', '', 0),
-(10, '6', 'INV-10006', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', '', '2026-06-23 13:04:01', 'Neelesh Rawat', '', '', 0),
-(11, '6', 'INV-10007', '2026-06-23', '2026-06-24', 165.00, 29.70, 165.00, 'Unpaid', '', '2026-06-23 13:10:23', 'Neelesh Rawat', '', '', 0),
-(12, '6', 'INV-10009', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', 'invoices/invoice_12.pdf', '2026-06-23 13:14:03', 'Neelesh Rawat', '', '', 0),
-(13, '6', 'INV-10010', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', '', '2026-06-23 13:21:26', 'Neelesh Rawat', '', '', 0),
-(14, '12', 'INV_10007', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'unpaid', '', '2026-06-24 09:27:03', 'Neelesh Rawat', '', '', 0),
-(17, '6', 'INV-10008', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Paid', 'invoices/invoice_17.pdf', '2026-06-24 09:49:22', 'Neelesh Rawat', '2026-06-24 10:31:42', 'Neelesh Rawat', 0),
-(18, '12', 'INV-10015', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'unpaid', 'invoices/invoice_18.pdf', '2026-06-24 14:38:03', 'Neelesh Rawat', '', '', 0),
-(19, '6', 'INV-10016', '2026-06-24', '2026-07-24', 27000.00, 3950.00, 30950.00, 'unpaid', 'invoices/invoice_19.pdf', '2026-06-24 16:37:19', 'Neelesh Rawat', '', '', 0);
+INSERT INTO `invoices` (`id`, `contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `notes`, `payment_method`, `pdf_path`, `created_at`, `created_by`, `updated_at`, `updated_by`, `remove`) VALUES
+(1, '6', 'INV-10001', '2026-06-10', '2026-06-26', 10500.00, 525.00, 11025.00, 'Unpaid', NULL, NULL, 'invoices/invoice_1.pdf', '2026-06-10 11:25:03', '', '2026-06-26 14:39:35', 'Neelesh Rawat', 0),
+(2, '6', 'INV-10002', '2026-06-10', '2026-06-26', 9940.00, 37.80, 9977.80, 'Paid', NULL, NULL, 'invoices/invoice_2.pdf', '2026-06-10 12:33:01', '', '2026-06-29 07:19:39', 'Neelesh Rawat', 0),
+(3, '5', 'INV-10003', '2026-06-11', '2026-06-11', 12740.00, 1901.90, 14641.90, 'Unpaid', NULL, NULL, 'invoices/invoice_3.pdf', '2026-06-11 08:00:24', '', '', '', 0),
+(8, '6', 'INV-10004', '2026-06-23', '2026-06-25', 70.00, 12.60, 82.60, 'Unpaid', NULL, NULL, 'invoices/invoice_8.pdf', '2026-06-23 10:09:55', '', '', '', 0),
+(9, '6', 'INV-10005', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', NULL, NULL, '', '2026-06-23 12:59:11', 'Neelesh Rawat', '', '', 0),
+(10, '6', 'INV-10006', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', NULL, NULL, '', '2026-06-23 13:04:01', 'Neelesh Rawat', '', '', 0),
+(11, '6', 'INV-10007', '2026-06-23', '2026-06-24', 165.00, 29.70, 165.00, 'Unpaid', NULL, NULL, '', '2026-06-23 13:10:23', 'Neelesh Rawat', '', '', 0),
+(12, '6', 'INV-10009', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', NULL, NULL, 'invoices/invoice_12.pdf', '2026-06-23 13:14:03', 'Neelesh Rawat', '', '', 0),
+(13, '6', 'INV-10010', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', NULL, NULL, '', '2026-06-23 13:21:26', 'Neelesh Rawat', '', '', 0),
+(14, '12', 'INV_10007', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Unpaid', NULL, NULL, '', '2026-06-24 09:27:03', 'Neelesh Rawat', '', '', 0),
+(17, '6', 'INV-10008', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Paid', NULL, NULL, 'invoices/invoice_17.pdf', '2026-06-24 09:49:22', 'Neelesh Rawat', '2026-06-24 10:31:42', 'Neelesh Rawat', 0),
+(18, '12', 'INV-10015', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Unpaid', NULL, NULL, 'invoices/invoice_18.pdf', '2026-06-24 14:38:03', 'Neelesh Rawat', '', '', 0),
+(19, '6', 'INV-10016', '2026-06-24', '2026-07-24', 27000.00, 3950.00, 30950.00, 'Unpaid', NULL, NULL, 'invoices/invoice_19.pdf', '2026-06-24 16:37:19', 'Neelesh Rawat', '', '', 0);
 
 -- --------------------------------------------------------
 
@@ -163,6 +165,7 @@ CREATE TABLE `products` (
   `cost_price` decimal(50,2) NOT NULL,
   `selling_price` decimal(50,2) NOT NULL,
   `tax` decimal(10,2) NOT NULL,
+  `stock` varchar(100) DEFAULT '0',
   `created_by` varchar(100) DEFAULT NULL,
   `created_at` varchar(50) DEFAULT NULL,
   `updated_by` varchar(100) DEFAULT NULL,
@@ -174,11 +177,11 @@ CREATE TABLE `products` (
 -- Dumping data for table `products`
 --
 
-INSERT INTO `products` (`id`, `product_code`, `product_name`, `cost_price`, `selling_price`, `tax`, `created_by`, `created_at`, `updated_by`, `updated_at`, `remove`) VALUES
-(10, '108', 'Adapter', 15.00, 25.00, 18.00, '', '', 'Neelesh Rawat', '2026-06-26 12:30:03', 1),
-(20, '109', 'Monitor', 8500.00, 10000.00, 18.00, 'Neelesh Rawat', '', '', '', 0),
-(26, '111', 'UPS', 3000.00, 3001.00, 5.00, 'Neelesh Rawat', '2026-06-18 16:18:47', 'Neelesh Rawat', '2026-06-25 11:17:07', 0),
-(29, '255', 'Keyboard', 80.00, 100.00, 5.00, 'Neelesh Rawat', '2026-06-24 13:31:49', 'Neelesh Rawat', '2026-06-26 12:55:02', 0);
+INSERT INTO `products` (`id`, `product_code`, `product_name`, `cost_price`, `selling_price`, `tax`, `stock`, `created_by`, `created_at`, `updated_by`, `updated_at`, `remove`) VALUES
+(10, '108', 'Adapter', 15.00, 25.00, 18.00, '', '', '', 'Neelesh Rawat', '2026-06-26 12:30:03', 1),
+(20, '109', 'Monitor', 8500.00, 10000.00, 18.00, '', 'Neelesh Rawat', '', '', '', 0),
+(26, '111', 'UPS', 3000.00, 3001.00, 5.00, '', 'Neelesh Rawat', '2026-06-18 16:18:47', 'Neelesh Rawat', '2026-06-25 11:17:07', 0),
+(29, '255', 'Keyboard', 80.00, 100.00, 5.00, '', 'Neelesh Rawat', '2026-06-24 13:31:49', 'Neelesh Rawat', '2026-06-26 12:55:02', 0);
 
 -- --------------------------------------------------------
 
@@ -189,26 +192,29 @@ INSERT INTO `products` (`id`, `product_code`, `product_name`, `cost_price`, `sel
 CREATE TABLE `users` (
   `id` int(15) NOT NULL,
   `name` varchar(100) NOT NULL,
-  `number` varchar(20) NOT NULL,
+  `number` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `reset_token` varchar(255) DEFAULT NULL,
-  `token_expiry` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `token_expiry` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `password` varchar(200) DEFAULT NULL,
+  `role` enum('Admin','User') NOT NULL DEFAULT 'User',
+  `google_id` varchar(255) DEFAULT NULL,
   `refresh_token` text DEFAULT NULL,
-  `refresh_token_expires_at` datetime(6) DEFAULT NULL
+  `refresh_token_expires_at` datetime(6) DEFAULT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `number`, `email`, `reset_token`, `token_expiry`, `password`, `refresh_token`, `refresh_token_expires_at`) VALUES
-(1, 'Neelesh Rawat', '1231231231', 'n@gmail.com', 'NULL', '0000-00-00 00:00:00', '27ffe01ed5a14ff897a42e89d64d8339', '', NULL),
-(2, 'naman', '7485965478', 'naman@gmail.com', 'NULL', '0000-00-00 00:00:00', 'd41d8cd98f00b204e9800998ecf8427e', '', NULL),
-(3, 'Neeraj', '7485748596', 'neeraj@gmail.com', 'NULL', '2026-06-16 05:02:51', 'dde31f3ae4ab30ecb8b7e1b800fa6229', '', NULL),
-(4, 'Aman', '9874563210', 'simranjeetsingh8561111@gmail.com', '06ce6b2ee8c90883bce615c51a9760f0', '2026-06-11 06:16:18', 'dde31f3ae4ab30ecb8b7e1b800fa6229', '', NULL),
-(5, 'Neeraj', '7485964587', 'neelesh55@gmail.com', '', '2026-06-23 04:41:12', '27ffe01ed5a14ff897a42e89d64d8339', '', NULL),
-(6, 'Neelesh Rawat', '', 'neeleshrawat510@gmail.com', '', '2026-07-01 08:52:33', '', '95e3fc9688a2e72d7cbf6dbbb710786f9fd23dc7d38bf65508eeeb55c257d6d2134ab3ca544deebf492af3ae7572d183cb440b8b08bee3aabba8eee66dd982d8', '2026-07-31 12:57:32.000000');
+INSERT INTO `users` (`id`, `name`, `number`, `email`, `reset_token`, `token_expiry`, `password`, `role`, `google_id`, `refresh_token`, `refresh_token_expires_at`, `is_active`) VALUES
+(1, 'Neelesh Rawat', '1231231231', 'n@gmail.com', 'NULL', '0000-00-00 00:00:00', '27ffe01ed5a14ff897a42e89d64d8339', 'User', NULL, '', NULL, 1),
+(2, 'naman', '7485965478', 'naman@gmail.com', 'NULL', '0000-00-00 00:00:00', 'd41d8cd98f00b204e9800998ecf8427e', 'User', NULL, '', NULL, 1),
+(3, 'Neeraj', '7485748596', 'neeraj@gmail.com', 'NULL', '2026-06-16 05:02:51', 'dde31f3ae4ab30ecb8b7e1b800fa6229', 'User', NULL, '', NULL, 1),
+(4, 'Aman', '9874563210', 'simranjeetsingh8561111@gmail.com', '06ce6b2ee8c90883bce615c51a9760f0', '2026-06-11 06:16:18', 'dde31f3ae4ab30ecb8b7e1b800fa6229', 'User', NULL, '', NULL, 1),
+(5, 'Neeraj', '7485964587', 'neelesh55@gmail.com', '', '2026-06-23 04:41:12', '27ffe01ed5a14ff897a42e89d64d8339', 'User', NULL, '', NULL, 1),
+(6, 'Neelesh Rawat', '', 'neeleshrawat510@gmail.com', '', '2026-07-01 08:52:33', '', 'User', NULL, '95e3fc9688a2e72d7cbf6dbbb710786f9fd23dc7d38bf65508eeeb55c257d6d2134ab3ca544deebf492af3ae7572d183cb440b8b08bee3aabba8eee66dd982d8', '2026-07-31 12:57:32.000000', 1);
 
 --
 -- Indexes for dumped tables
