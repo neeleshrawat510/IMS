@@ -145,6 +145,8 @@ $html = '
     </tr>
     <tr>
         <td><b>Due Date:</b> ' . $due_date . '</td>
+        <td><b>Status:</b> ' . $status . '</td>
+
         <td></td>
     </tr>
 </table>
