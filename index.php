@@ -145,9 +145,14 @@
             }
 
             // Shared success handler for both login methods
-            function onLoginSuccess(token) {
+            function onLoginSuccess(token, refreshToken) {
                 // Store JWT in a cookie so it travels with normal page navigation
                 document.cookie = "auth_token=" + token + "; path=/; max-age=3600; SameSite=Lax" +
+                    (location.protocol === "https:" ? "; Secure" : "");
+
+                document.cookie =
+                    "refresh_token=" + refreshToken +
+                    "; path=/; max-age=" + (30 * 24 * 60 * 60) + "; SameSite=Lax" +
                     (location.protocol === "https:" ? "; Secure" : "");
 
                 Swal.fire({
@@ -171,7 +176,7 @@
                     success: function (res) {
                         res = typeof res === "string" ? JSON.parse(res) : res;
                         if (res.status === "success") {
-                            onLoginSuccess(res.token);
+                            onLoginSuccess(res.token, res.refresh_token);
                         } else {
                             Swal.fire({
                                 icon: "error",
@@ -235,8 +240,7 @@
 
                             if (res.status === "success") {
 
-                                onLoginSuccess(res.token);
-
+                                onLoginSuccess(res.token, res.refresh_token);
                             } else {
 
                                 Swal.fire({

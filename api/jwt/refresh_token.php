@@ -17,7 +17,9 @@ $refreshToken = $data['refresh_token'];
 
 $result = mysqli_query(
     $conn,
-    "SELECT * FROM users WHERE refresh_token='$refreshToken'"
+    "SELECT * FROM users
+     WHERE refresh_token='$refreshToken'
+     AND refresh_token_expires_at > NOW()"
 );
 
 if (mysqli_num_rows($result) == 0) {
@@ -35,23 +37,27 @@ $user = mysqli_fetch_assoc($result);
 
 // Generate new JWT
 $payload = [
-    "user_id" => $user['id'],
-    "email"   => $user['email'],
-    "name"    => $user['name'],
-    "iat"     => time(),
-    "exp"     => time() + 3600
+    "user_id"   => $user['id'],
+    "user_name" => $user['name'],
+    "email"     => $user['email']
 ];
 
 $newJwt = generateJWT($payload);
 
 // Rotate refresh token
 $newRefreshToken = bin2hex(random_bytes(64));
+$newExpiry = date(
+    "Y-m-d H:i:s",
+    strtotime("+30 days")
+);
 
 // Save new refresh token
 mysqli_query(
     $conn,
     "UPDATE users
-     SET refresh_token='$newRefreshToken'
+     SET
+        refresh_token='$newRefreshToken',
+        refresh_token_expires_at='$newExpiry'
      WHERE id=".$user['id']
 );
 
