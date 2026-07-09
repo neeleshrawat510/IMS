@@ -13,9 +13,9 @@
             <div class="flex-grow-1"></div>
 
             <!-- Username -->
-            <div class="flex-grow-1 text-center">
+            <!-- <div class="flex-grow-1 text-center">
                 <span id="userName" class="fw-bold"></span>
-            </div>
+            </div> -->
 
             <!-- Right Buttons -->
             <div class="flex-grow-1 d-flex justify-content-end">
