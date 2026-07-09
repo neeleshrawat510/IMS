@@ -55,6 +55,4 @@ if (
     $_SESSION['email'] = $payload['email'];
     $_SESSION['role'] = $payload['role'];
 
-    echo $_SESSION['role'];
-exit;
 }
