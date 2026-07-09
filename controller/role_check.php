@@ -7,12 +7,12 @@ if (session_status() === PHP_SESSION_NONE) {
 function requireRole($role)
 {
     if (!isset($_SESSION['role'])) {
-        header("Location: /index.php");
+        header("Location: " . getenv("APP_URL") . "/index.php");
         exit;
     }
 
     if ($_SESSION['role'] != $role) {
-        header("Location: /dashboard.php");
+        header("Location: " . getenv("APP_URL") . "/dashboard.php");
         exit;
     }
 }
