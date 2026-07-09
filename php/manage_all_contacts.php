@@ -2,9 +2,6 @@
 
 require_once "../includes/api_auth.php";
 include("../controller/role_check.php");
-var_dump(headers_sent($file, $line));
-var_dump($file, $line);
-exit;
 
 requireRole("Admin");
 
