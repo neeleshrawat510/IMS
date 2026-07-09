@@ -1,11 +1,10 @@
 <?php
-session_start();
-if(!isset($_SESSION['user_id'])){
-    header("location: index.php");
-    exit();
-}
+require_once "../includes/api_auth.php";
 //setting up connection with DB
 include("../config/connection.php");
+include("../controller/role_check.php");
+
+requireRole("Admin");
 
 
 //input fields with mysql injection

@@ -2,7 +2,9 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
+include("../controller/role_check.php");
 
+requireRole("Admin");
 $allUsers = mysqli_query($conn, "SELECT * FROM `users` ORDER BY id DESC");
 
 $data = [];

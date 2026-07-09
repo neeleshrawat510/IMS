@@ -3,6 +3,7 @@
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
 
+
 $name = trim(mysqli_real_escape_string($conn, $_POST['name']  ??  ''));
 $number = trim(mysqli_real_escape_string($conn, $_POST['number']  ??  ''));
 $email = trim(mysqli_real_escape_string($conn, $_POST['email']  ??  ''));

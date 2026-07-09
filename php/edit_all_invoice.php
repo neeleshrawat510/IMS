@@ -1,6 +1,10 @@
 <?php
 
 require_once "../includes/api_auth.php";
+
+//indian timezone
+date_default_timezone_set('Asia/Kolkata');
+
 include("../config/connection.php");
 
 require_once("../vendor/autoload.php");
@@ -8,7 +12,10 @@ require_once("../vendor/autoload.php");
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-date_default_timezone_set('Asia/Kolkata');
+include("../controller/role_check.php");
+
+requireRole("Admin");
+
 
 
 // POST DATA

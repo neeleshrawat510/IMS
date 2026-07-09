@@ -1,9 +1,10 @@
 <?php
 
 require_once "../includes/api_auth.php";
-include("../config/connection.php");
 //Indian Timezone
 date_default_timezone_set("ASIA/KOLKATA");
+
+include("../config/connection.php");
 
 
 

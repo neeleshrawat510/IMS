@@ -2,6 +2,9 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
+include("../controller/role_check.php");
+
+requireRole("Admin");
 
 if (!isset($_POST['ids']) || empty($_POST['ids'])) {
     die("No invoices selected");

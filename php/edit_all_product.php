@@ -1,8 +1,15 @@
 <?php
 
 require_once "../includes/api_auth.php";
-include("../config/connection.php");
+
+//indian timezone
 date_default_timezone_set('Asia/Kolkata');
+
+
+include("../config/connection.php");
+include("../controller/role_check.php");
+
+requireRole("Admin");
 
 
 
