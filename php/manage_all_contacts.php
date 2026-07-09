@@ -1,10 +1,15 @@
 <?php
 
 require_once "../includes/api_auth.php";
-include("../config/connection.php");
 include("../controller/role_check.php");
+var_dump(headers_sent($file, $line));
+var_dump($file, $line);
+exit;
 
 requireRole("Admin");
+
+include("../config/connection.php");
+
 
 $sql = mysqli_query($conn, "SELECT * FROM `contacts` WHERE `remove` = '0' ORDER BY id DESC");
 
