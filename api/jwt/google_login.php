@@ -53,7 +53,9 @@ try {
     $jwtPayload = [
         "user_id" => $userId,
         "user_name" => $user['name'],
-        "email" => $user['email']
+        "email" => $user['email'],
+        "role"      => $user['role']
+
     ];
 
     $jwt = generateJWT($jwtPayload);

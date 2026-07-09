@@ -63,4 +63,6 @@ if (
     $_SESSION['user_id'] = $payload['user_id'];
     $_SESSION['user_name'] = $payload['user_name'];
     $_SESSION['email'] = $payload['email'];
+    $_SESSION['role'] = $payload['role'];
+
 }

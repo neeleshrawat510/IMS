@@ -30,7 +30,9 @@ $user = mysqli_fetch_assoc($result);
 $payload = [
     "user_id" => $user['id'],
     "user_name" => $user['name'],
-    "email" => $user['email']
+    "email" => $user['email'],
+    "role"  => $user['role']
+
 ];
 
 $token = generateJWT($payload);
