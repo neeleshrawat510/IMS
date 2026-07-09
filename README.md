@@ -182,7 +182,7 @@ JSON responses with pagination and filtering.
 ## 1. Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/invoice-management-system.git
+git clone https://github.com/neeleshrawat510/ims.git
 ```
 
 ## 2. Move Project
