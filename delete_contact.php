@@ -4,7 +4,9 @@ require_once "includes/auth_check.php";
 
 //connection setup
 include("config/connection.php");
+include("controller/role_check.php");
 
+requireRole("Admin");
 
 $contactId = $_POST['id'];
 

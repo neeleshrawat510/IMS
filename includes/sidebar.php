@@ -1,4 +1,4 @@
-//SIDEBAR
+<!-- SIDEBAR -->
 
 <aside class="admin-sidebar" id="adminSidebar" aria-label="Main navigation">
   <div class="sidebar-header">
@@ -7,7 +7,7 @@
       <span class="brand-copy">
         <span class="brand-title">InvoiceSys</span>
         <span class="brand-subtitle">
-            <?= htmlspecialchars($_SESSION['user_name']) ?>
+          <?= htmlspecialchars($_SESSION['user_name']) ?>
         </span>
     </a>
   </div>
@@ -18,7 +18,7 @@
       <span class="nav-text">Dashboard</span>
     </a>
 
-    //ADMIN DASHBOARD
+    <!-- ADMIN DASHBOARD -->
     <?php if ($_SESSION['role'] == "Admin") { ?>
 
       <!-- CONTACTS / CLIENTS -->
@@ -61,23 +61,23 @@
         <span class="nav-text">Settings</span>
       </a>
 
-      // USER DASHBOARD
+      <!-- USER DASHBOARD -->
 
     <?php } else { ?>
 
-      //add contact
+      <!-- add contact -->
       <a class="nav-link" href="add_contact.php">
         <span class="nav-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
         <span class="nav-text">Add Contact</span>
       </a>
 
-      //add product
+      <!-- add product -->
       <a class="nav-link" href="add_product.php">
         <span class="nav-icon"><i class="bi bi-plus-circle" aria-hidden="true"></i></span>
         <span class="nav-text">Add Product</span>
       </a>
 
-      //add invoice
+      <!-- add invoice -->
       <a class="nav-link" href="add_invoice.php">
         <span class="nav-icon"><i class="bi bi-plus-square" aria-hidden="true"></i></span>
         <span class="nav-text">Add Invoice</span>

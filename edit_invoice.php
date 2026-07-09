@@ -4,7 +4,9 @@ require_once "includes/auth_check.php";
 
 //setup conneciton
 include("config/connection.php");
+include("controller/role_check.php");
 
+requireRole("Admin");
 ?>
 <!DOCTYPE html>
 <html lang="en">
