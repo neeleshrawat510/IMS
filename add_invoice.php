@@ -1049,6 +1049,9 @@ require_once "includes/auth_check.php";
                     invoice_date: {
                         required: true
                     },
+                    due_date: {
+                        required: true
+                    },
                     status: {
                         required: true
                     }
@@ -1058,6 +1061,9 @@ require_once "includes/auth_check.php";
                         required: "This field is required"
                     },
                     invoice_date: {
+                        required: "This field is required"
+                    },
+                    due_date: {
                         required: "This field is required"
                     },
                     status: {
