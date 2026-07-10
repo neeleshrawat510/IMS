@@ -1,5 +1,6 @@
 <?php
-
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 require_once "includes/auth_check.php";
 require_once "update_overdue_invoices.php";
 
