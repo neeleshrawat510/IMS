@@ -3,30 +3,30 @@
 require_once "includes/auth_check.php";
 
 
-    include("config/connection.php");
-    date_default_timezone_set('Asia/Kolkata');
+include("config/connection.php");
+date_default_timezone_set('Asia/Kolkata');
 
-    //invoice no and date to fetch 
+//invoice no and date to fetch 
 
-    $invoice_no = "INV-10001";
+$invoice_no = "INV-10001";
 
-    $getInvoice = mysqli_query($conn, "SELECT invoice_no FROM invoices ORDER BY id DESC LIMIT 1");
+$getInvoice = mysqli_query($conn, "SELECT invoice_no FROM invoices ORDER BY id DESC LIMIT 1");
 
-    if (mysqli_num_rows($getInvoice) > 0) {
+if (mysqli_num_rows($getInvoice) > 0) {
 
-        $row = mysqli_fetch_assoc($getInvoice);
+    $row = mysqli_fetch_assoc($getInvoice);
 
-        // Remove INV-
-        $last_number = str_replace("INV-", "", $row['invoice_no']);
+    // Remove INV-
+    $last_number = str_replace("INV-", "", $row['invoice_no']);
 
-        // Increment number
-        $new_number = (int)$last_number + 1;
+    // Increment number
+    $new_number = (int) $last_number + 1;
 
-        $invoice_no = "INV-" . $new_number;
-    }
+    $invoice_no = "INV-" . $new_number;
+}
 
 
-    $invoice_date = date("Y-m-d");
+$invoice_date = date("Y-m-d");
 
 ?>
 <!DOCTYPE html>
@@ -565,9 +565,15 @@ require_once "includes/auth_check.php";
 
                     <!-- Header -->
                     <div class="invoice-header">
-                        <h5>New Invoice</h5>
-                        <button type="button" class="online-pay-btn">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <div class="d-flex align-items-center gap-2">
+                            <h5 class="mb-0">New Invoice</h5>
+
+                            <span id="invoiceStatusBadge" class="badge bg-secondary">
+                                Draft
+                            </span>
+                        </div> <button type="button" class="online-pay-btn">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
                                 <rect x="1" y="4" width="22" height="16" rx="2" />
                                 <line x1="1" y1="10" x2="23" y2="10" />
                             </svg>
@@ -593,7 +599,8 @@ require_once "includes/auth_check.php";
                         <!-- Issue Date -->
                         <div class="field-group">
                             <label>Issue Date</label>
-                            <input type="date" class="" name="invoice_date" id="invoiceDate" value="<?= $invoice_date ?>" readonly>
+                            <input type="date" class="" name="invoice_date" id="invoiceDate"
+                                value="<?= $invoice_date ?>" readonly>
                         </div>
 
                         <!-- Due Date -->
@@ -608,15 +615,11 @@ require_once "includes/auth_check.php";
                             <input type="text" class="" name="invoice_no" value="<?= $invoice_no ?>" readonly>
                         </div>
 
-                        <!-- Reference -->
-                        <!-- <div class="field-group">
-                            <label>Reference</label>
-                            <input type="text" class="" name="reference" placeholder="">
-                        </div> -->
+                        <input type="hidden" name="status" id="status" value="Draft">
                     </div>
 
                     <!-- Bill Status -->
-                    <div class="tax-inclusive">
+                    <!-- <div class="tax-inclusive">
                         <div class="field-group">
                             <label>Status</label>
                             <select class="form-select" id="status" name="status">
@@ -625,7 +628,7 @@ require_once "includes/auth_check.php";
                                 <option value="Unpaid">Unpaid</option>
                             </select>
                         </div>
-                        <!-- <div class="field-group">
+                        <div class="field-group">
                             <label>Tax Type</label>
                             <select class="form-select" name="tax_type">
                                 <option selected disabled class="text-center">Select tax</option>
@@ -633,8 +636,8 @@ require_once "includes/auth_check.php";
                                 <option value="exclusive">Tax exclusive</option>
                                 <option value="notax">No tax</option>
                             </select>
-                        </div> -->
-                    </div>
+                        </div>
+                    </div> -->
 
                     <!-- Line Items Table -->
                     <table class="invoice-table">
@@ -656,26 +659,32 @@ require_once "includes/auth_check.php";
                                 <td><span class="drag-handle">⠿</span></td>
                                 <td>
                                     <div class="position-relative">
-                                        <input type="text" class="table-input productSearch" placeholder="Search product…">
+                                        <input type="text" class="table-input productSearch"
+                                            placeholder="Search product…">
                                         <input type="hidden" class="productId" name="product_id[]">
                                         <span class="product-error text-danger"></span>
                                         <div class="search-dropdown productDropdown"></div>
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="text" class="table-input description" name="description[]" placeholder="Description" readonly>
+                                    <input type="text" class="table-input description" name="description[]"
+                                        placeholder="Description" readonly>
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1" min="1">
+                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1"
+                                        min="1">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input price text-end" name="price[]" value="0" step="0.01">
+                                    <input type="number" class="table-input price text-end" name="price[]" value="0"
+                                        step="0.01">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00" readonly>
+                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00"
+                                        readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="table-input amount text-end" name="amount[]" value="0.00" readonly>
+                                    <input type="text" class="table-input amount text-end" name="amount[]" value="0.00"
+                                        readonly>
                                 </td>
                                 <td>
                                     <button type="button" class="del-btn remove-row" title="Remove">&times;</button>
@@ -687,7 +696,8 @@ require_once "includes/auth_check.php";
                     <!-- Add Line Buttons -->
                     <div class="add-line-row">
                         <button type="button" class="add-line-btn" id="addRow">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
@@ -716,7 +726,8 @@ require_once "includes/auth_check.php";
                                 <tbody>
                                     <tr>
                                         <td style="color:#777">Subtotal</td>
-                                        <td><input type="hidden" name="subtotal" id="subTotal"><span id="displaySubtotal">0.00</span></td>
+                                        <td><input type="hidden" name="subtotal" id="subTotal"><span
+                                                id="displaySubtotal">0.00</span></td>
                                     </tr>
                                     <tr class="muted-row">
                                         <td>Includes tax</td>
@@ -741,6 +752,7 @@ require_once "includes/auth_check.php";
                     <div class="form-actions">
                         <!-- <button type="button" class="btn-cancel">Cancel</button>
                         <button type="button" class="btn-more" title="More options">&#8943;</button> -->
+                        <button type="button" class="btn btn-secondary" id="draftBtn">Save Draft</button>
                         <button type="submit" class="btn-save" id="saveBtn">Save Invoice</button>
                     </div>
 
@@ -768,7 +780,7 @@ require_once "includes/auth_check.php";
     <script src="controller/logout.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             //DUE DATE VALIDATION
 
             let today = new Date().toISOString().split('T')[0];
@@ -776,7 +788,7 @@ require_once "includes/auth_check.php";
 
 
             //FOR DYNAMIC CONTACTS
-            $("#contactSearch").keyup(function() {
+            $("#contactSearch").keyup(function () {
                 let keyword = $(this).val();
                 if (keyword.length < 1) {
                     $("#contactDropdown").hide();
@@ -789,7 +801,7 @@ require_once "includes/auth_check.php";
                     data: {
                         keyword: keyword
                     },
-                    success: function(response) {
+                    success: function (response) {
 
                         let data = JSON.parse(response);
                         let html = '';
@@ -798,7 +810,7 @@ require_once "includes/auth_check.php";
 
                         //all contacts dynamically 
                         if (data.length > 0) {
-                            $.each(data, function(index, row) {
+                            $.each(data, function (index, row) {
 
                                 html += `<div class="contact-item p-2 border-bottom"
                                 data-id ="${row.id}" data-name = "${row.name}">
@@ -820,7 +832,7 @@ require_once "includes/auth_check.php";
             });
 
             //select contact
-            $(document).on("click", ".contact-item", function() {
+            $(document).on("click", ".contact-item", function () {
                 if ($(this).hasClass("add-contact")) {
                     window.location.href = "add_contact.php";
                     return;
@@ -836,7 +848,7 @@ require_once "includes/auth_check.php";
             });
 
             //FOR DYNAMIC PRODUCTS
-            $(document).on("keyup", ".productSearch", function() {
+            $(document).on("keyup", ".productSearch", function () {
                 let keyword = $(this).val();
                 let row = $(this).closest("tr");
                 let dropdown = row.find(".productDropdown");
@@ -851,11 +863,11 @@ require_once "includes/auth_check.php";
                     data: {
                         keyword: keyword
                     },
-                    success: function(response) {
+                    success: function (response) {
                         let data = JSON.parse(response);
                         let html = '';
                         if (data.length > 0) {
-                            $.each(data, function(index, row) {
+                            $.each(data, function (index, row) {
                                 html += `<div class="product-item p-2 border-bottom"
                                             data-id = "${row.id}" 
                                             data-code = "${row.product_code}" 
@@ -880,7 +892,7 @@ require_once "includes/auth_check.php";
             });
 
             //select product
-            $(document).on("click", ".product-item", function() {
+            $(document).on("click", ".product-item", function () {
                 let id = $(this).data("id");
                 let code = $(this).data("code");
                 let name = $(this).data("name");
@@ -893,7 +905,7 @@ require_once "includes/auth_check.php";
                 //check if already selected
                 let existingRow = null;
 
-                $("#invoiceItems tr").each(function() {
+                $("#invoiceItems tr").each(function () {
                     if ($(this).find(".productId").val() == id) {
                         existingRow = $(this);
                     }
@@ -931,7 +943,7 @@ require_once "includes/auth_check.php";
             });
 
             //add new row
-            $("#addRow").click(function() {
+            $("#addRow").click(function () {
 
                 //no new row until last row filled
                 let lastRow = $("#invoiceItems tr:last");
@@ -976,7 +988,7 @@ require_once "includes/auth_check.php";
             });
 
             //remove row
-            $(document).on("click", ".remove-row", function() {
+            $(document).on("click", ".remove-row", function () {
 
                 if ($("#invoiceItems tr").length > 1) {
 
@@ -1004,7 +1016,7 @@ require_once "includes/auth_check.php";
                 let taxTotal = 0;
                 let grandTotal = 0;
 
-                $("#invoiceItems tr").each(function() {
+                $("#invoiceItems tr").each(function () {
 
                     let qty = parseFloat($(this).find(".qty").val()) || 0;
                     let price = parseFloat($(this).find(".price").val()) || 0;
@@ -1029,13 +1041,23 @@ require_once "includes/auth_check.php";
             }
 
             // Total
-            $(document).on("input", ".qty, .price, .tax", function() {
+            $(document).on("input", ".qty, .price, .tax", function () {
 
                 let row = $(this).closest("tr");
 
                 calculateRow(row);
 
                 calculateTotals();
+            });
+
+
+
+            let isDraft = false;
+
+            $("#draftBtn").click(function () {
+                isDraft = true;
+                $("#status").val("Draft");
+                $("#invoiceForm").submit();
             });
 
 
@@ -1071,13 +1093,13 @@ require_once "includes/auth_check.php";
                     }
                 },
 
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     //validate dynamic row - Product
 
                     let valid = true;
                     $(".product-error").text("");
-                    $("#invoiceItems tr").each(function(index) {
+                    $("#invoiceItems tr").each(function (index) {
                         let productId = $(this).find(".productId").val();
 
 
@@ -1096,6 +1118,10 @@ require_once "includes/auth_check.php";
                         return false;
                     }
 
+
+                    if (!isDraft) {
+                        $("#status").val("Unpaid");
+                    }
                     let formData = new FormData(form);
                     $.ajax({
                         url: "php/save_invoice.php",
@@ -1104,7 +1130,7 @@ require_once "includes/auth_check.php";
                         contentType: false,
                         processData: false,
 
-                        success: function(response) {
+                        success: function (response) {
 
                             let res = JSON.parse(response);
 
@@ -1112,9 +1138,9 @@ require_once "includes/auth_check.php";
 
                                 Swal.fire({
                                     title: "Successful",
-                                    text: "Invoice saved",
+                                    text: isDraft ? "Draft saved successfully" : "Invoice saved successfully",
                                     icon: "success",
-                                    confirmButtonText: "View/Print Invoice",
+                                    confirmButtonText: isDraft ? "OK" : "View/Print Invoice",
                                     showCancelButton: true
                                 }).then((result) => {
 
@@ -1128,7 +1154,7 @@ require_once "includes/auth_check.php";
                                 });
                             }
                         },
-                        error: function() {
+                        error: function () {
                             Swal.fire({
                                 title: "error",
                                 text: "An error occured",
@@ -1144,7 +1170,7 @@ require_once "includes/auth_check.php";
             });
 
             //close dropdown when user click on screen
-            $(document).on("click", function(e) {
+            $(document).on("click", function (e) {
 
                 // Contact dropdown
                 if (!$(e.target).closest("#contactSearch, #contactDropdown").length) {
