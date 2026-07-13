@@ -12,9 +12,6 @@ require_once "../controller/send_email.php";
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
-include("../controller/role_check.php");
-
-requireRole("Admin");
 
 
 
