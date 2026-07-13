@@ -2,31 +2,8 @@
 
 require_once "includes/auth_check.php";
 
-
+//setup conneciton
 include("config/connection.php");
-date_default_timezone_set('Asia/Kolkata');
-
-//invoice no and date to fetch 
-
-$invoice_no = "INV-10001";
-
-$getInvoice = mysqli_query($conn, "SELECT invoice_no FROM invoices ORDER BY id DESC LIMIT 1");
-
-if (mysqli_num_rows($getInvoice) > 0) {
-
-    $row = mysqli_fetch_assoc($getInvoice);
-
-    // Remove INV-
-    $last_number = str_replace("INV-", "", $row['invoice_no']);
-
-    // Increment number
-    $new_number = (int) $last_number + 1;
-
-    $invoice_no = "INV-" . $new_number;
-}
-
-
-$invoice_date = date("Y-m-d");
 
 ?>
 <!DOCTYPE html>
@@ -36,7 +13,7 @@ $invoice_date = date("Y-m-d");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Invoice management System">
-    <title>Add Invoice | Invoice Management System</title>
+    <title>Edit Invoice | Invoice Management System</title>
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -565,15 +542,9 @@ $invoice_date = date("Y-m-d");
 
                     <!-- Header -->
                     <div class="invoice-header">
-                        <div class="d-flex align-items-center gap-2">
-                            <h5 class="mb-0">New Invoice</h5>
-
-                            <span id="invoiceStatusBadge" class="badge bg-secondary">
-                                Draft
-                            </span>
-                        </div> <button type="button" class="online-pay-btn">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
+                        <h5>Edit Invoice</h5>
+                        <button type="button" class="online-pay-btn">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <rect x="1" y="4" width="22" height="16" rx="2" />
                                 <line x1="1" y1="10" x2="23" y2="10" />
                             </svg>
@@ -585,6 +556,7 @@ $invoice_date = date("Y-m-d");
 
                     <!-- Top Fields -->
                     <div class="fields-grid">
+                        <input type="hidden" name="invoice_id" id="invoice_id">
                         <!-- Contact -->
                         <div class="field-group">
                             <label>To</label>
@@ -599,8 +571,7 @@ $invoice_date = date("Y-m-d");
                         <!-- Issue Date -->
                         <div class="field-group">
                             <label>Issue Date</label>
-                            <input type="date" class="" name="invoice_date" id="invoiceDate"
-                                value="<?= $invoice_date ?>" readonly>
+                            <input type="date" class="" name="invoice_date" id="invoiceDate" readonly>
                         </div>
 
                         <!-- Due Date -->
@@ -612,10 +583,12 @@ $invoice_date = date("Y-m-d");
                         <!-- Invoice Number -->
                         <div class="field-group">
                             <label>Invoice Number</label>
-                            <input type="text" class="" name="invoice_no" value="<?= $invoice_no ?>" readonly>
+                            <input type="text" class="" name="invoice_no" id="invoiceNo" readonly>
                         </div>
-
+                        
+                        //hidden field to send draft
                         <input type="hidden" name="status" id="status" value="Draft">
+
                     </div>
 
                     <!-- Bill Status -->
@@ -628,7 +601,7 @@ $invoice_date = date("Y-m-d");
                                 <option value="Unpaid">Unpaid</option>
                             </select>
                         </div>
-                        <div class="field-group">
+                         <div class="field-group">
                             <label>Tax Type</label>
                             <select class="form-select" name="tax_type">
                                 <option selected disabled class="text-center">Select tax</option>
@@ -659,32 +632,34 @@ $invoice_date = date("Y-m-d");
                                 <td><span class="drag-handle">⠿</span></td>
                                 <td>
                                     <div class="position-relative">
-                                        <input type="text" class="table-input productSearch"
-                                            placeholder="Search product…">
-                                        <input type="hidden" class="productId" name="product_id[]">
+                                        <input type="text"
+                                            class="table-input productSearch"
+                                            value="${item.product_code}">
+
+                                        <input type="hidden"
+                                            class="productId"
+                                            name="product_id[]"
+                                            value="${item.product_id}">
+
                                         <span class="product-error text-danger"></span>
+
                                         <div class="search-dropdown productDropdown"></div>
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="text" class="table-input description" name="description[]"
-                                        placeholder="Description" readonly>
+                                    <input type="text" class="table-input description" name="description[]" placeholder="Description" readonly>
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1"
-                                        min="1">
+                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1" min="1">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input price text-end" name="price[]" value="0"
-                                        step="0.01">
+                                    <input type="number" class="table-input price text-end" name="price[]" value="0" step="0.01">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00"
-                                        readonly>
+                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00" readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="table-input amount text-end" name="amount[]" value="0.00"
-                                        readonly>
+                                    <input type="text" class="table-input amount text-end" name="amount[]" value="0.00" readonly>
                                 </td>
                                 <td>
                                     <button type="button" class="del-btn remove-row" title="Remove">&times;</button>
@@ -696,27 +671,13 @@ $invoice_date = date("Y-m-d");
                     <!-- Add Line Buttons -->
                     <div class="add-line-row">
                         <button type="button" class="add-line-btn" id="addRow">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
-                                viewBox="0 0 24 24">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
                             Add a line item
                         </button>
-                        <!-- <button type="button" class="add-line-btn">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <line x1="3" y1="9" x2="21" y2="9" />
-                                <line x1="9" y1="21" x2="9" y2="9" />
-                            </svg>
-                            Show/hide fields
-                        </button>
-                        <button type="button" class="add-line-btn">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
-                            </svg>
-                            Attach files
-                        </button> -->
+                        
                     </div>
 
                     <!-- Totals -->
@@ -726,8 +687,7 @@ $invoice_date = date("Y-m-d");
                                 <tbody>
                                     <tr>
                                         <td style="color:#777">Subtotal</td>
-                                        <td><input type="hidden" name="subtotal" id="subTotal"><span
-                                                id="displaySubtotal">0.00</span></td>
+                                        <td><input type="hidden" name="subtotal" id="subTotal"><span id="displaySubtotal">0.00</span></td>
                                     </tr>
                                     <tr class="muted-row">
                                         <td>Includes tax</td>
@@ -753,7 +713,7 @@ $invoice_date = date("Y-m-d");
                         <!-- <button type="button" class="btn-cancel">Cancel</button>
                         <button type="button" class="btn-more" title="More options">&#8943;</button> -->
                         <button type="button" class="btn btn-secondary" id="draftBtn">Save Draft</button>
-                        <button type="submit" class="btn-save" id="saveBtn">Save Invoice</button>
+                        <button type="submit" class="btn-save" id="saveBtn">Edit Invoice</button>
                     </div>
 
                 </div>
@@ -767,8 +727,6 @@ $invoice_date = date("Y-m-d");
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- jQuery -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <!-- jQuery Validation Plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
@@ -780,15 +738,142 @@ $invoice_date = date("Y-m-d");
     <script src="controller/logout.js"></script>
 
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             //DUE DATE VALIDATION
 
             let today = new Date().toISOString().split('T')[0];
             $("#dueDate").attr("min", today);
 
+            let editInvoiceId = new URLSearchParams(window.location.search).get('id');
+
+        //alert if Invoice id not found
+            if (!editInvoiceId) {
+                Swal.fire({
+                    icon: "error",
+                    title: "Invalid Invoice ID"
+                });
+                return;
+            }
+
+            // FETCH DATA from DB
+            $.ajax({
+                url: "controller/fetch_edit_invoice.php",
+                type: "GET",
+                dataType: "json",
+                data: {
+                    id: editInvoiceId
+                },
+                success: function(res) {
+
+                    let invoice = res.invoice;
+                    let items = res.items;
+
+                    // INVOICE HEADER
+                    $("#invoice_id").val(invoice.id);
+                    $("#contactSearch").val(invoice.name);
+                    $("#contactId").val(invoice.contact_id);
+                    $("#invoiceDate").val(invoice.invoice_date);
+                    $("#dueDate").val(invoice.due_date);
+                    $("#invoiceNo").val(invoice.invoice_no);
+                    $("#status").val(invoice.status);
+
+                    $("#subTotal").val(invoice.subtotal);
+                    $("#tax_total").val(invoice.tax_total);
+                    $("#grand_total").val(invoice.grand_total);
+
+                    $("#displaySubtotal").text(invoice.subtotal);
+                    $("#displayTaxTotal").text(invoice.tax_total);
+                    $("#displayGrandTotal").text(invoice.grand_total);
+
+
+                    // INVOICE ITEMS
+
+                    $("#invoiceItems").html("");
+
+                    items.forEach(function(item) {
+
+                        let row = `
+                        <tr>
+                            <td><span class="drag-handle">⠿</span></td>
+
+                            <td>
+                                <div class="position-relative">
+                                    <input type="text"
+                                        class="table-input productSearch"
+                                        value="${item.product_code}">
+
+                                    <input type="hidden"
+                                        class="productId"
+                                        name="product_id[]"
+                                        value="${item.product_id}">
+
+                                    <span class="product-error text-danger"></span>
+
+                                    <div class="search-dropdown productDropdown"></div>
+                                </div>
+                            </td>
+
+                            <td>
+                                <input type="text"
+                                    class="table-input description"
+                                    name="description[]"
+                                    value="${item.description}"
+                                    readonly>
+                            </td>
+
+                            <td>
+                                <input type="number"
+                                    class="table-input qty text-end"
+                                    name="qty[]"
+                                    value="${item.qty}">
+                            </td>
+
+                            <td>
+                                <input type="number"
+                                    class="table-input price text-end"
+                                    name="price[]"
+                                    value="${item.price}">
+                            </td>
+
+                            <td>
+                                <input type="number"
+                                    class="table-input tax text-end"
+                                    name="tax[]"
+                                    value="${item.tax}"
+                                    readonly>
+                            </td>
+
+                            <td>
+                                <input type="text"
+                                    class="table-input amount text-end"
+                                    name="amount[]"
+                                    value="${item.amount}"
+                                    readonly>
+                            </td>
+
+                            <td>
+                                <button type="button"
+                                    class="del-btn remove-row">
+                                    &times;
+                                </button>
+                            </td>
+                        </tr>
+                        `;
+
+                        $("#invoiceItems").append(row);
+                    });
+
+                }
+            });
+
+            $("#invoiceItems tr").each(function() {
+                calculateRow($(this));
+            });
+
+            calculateTotals();
 
             //FOR DYNAMIC CONTACTS
-            $("#contactSearch").keyup(function () {
+            $("#contactSearch").keyup(function() {
                 let keyword = $(this).val();
                 if (keyword.length < 1) {
                     $("#contactDropdown").hide();
@@ -801,7 +886,7 @@ $invoice_date = date("Y-m-d");
                     data: {
                         keyword: keyword
                     },
-                    success: function (response) {
+                    success: function(response) {
 
                         let data = JSON.parse(response);
                         let html = '';
@@ -810,7 +895,7 @@ $invoice_date = date("Y-m-d");
 
                         //all contacts dynamically 
                         if (data.length > 0) {
-                            $.each(data, function (index, row) {
+                            $.each(data, function(index, row) {
 
                                 html += `<div class="contact-item p-2 border-bottom"
                                 data-id ="${row.id}" data-name = "${row.name}">
@@ -832,7 +917,7 @@ $invoice_date = date("Y-m-d");
             });
 
             //select contact
-            $(document).on("click", ".contact-item", function () {
+            $(document).on("click", ".contact-item", function() {
                 if ($(this).hasClass("add-contact")) {
                     window.location.href = "add_contact.php";
                     return;
@@ -848,7 +933,7 @@ $invoice_date = date("Y-m-d");
             });
 
             //FOR DYNAMIC PRODUCTS
-            $(document).on("keyup", ".productSearch", function () {
+            $(document).on("keyup", ".productSearch", function() {
                 let keyword = $(this).val();
                 let row = $(this).closest("tr");
                 let dropdown = row.find(".productDropdown");
@@ -863,11 +948,11 @@ $invoice_date = date("Y-m-d");
                     data: {
                         keyword: keyword
                     },
-                    success: function (response) {
+                    success: function(response) {
                         let data = JSON.parse(response);
                         let html = '';
                         if (data.length > 0) {
-                            $.each(data, function (index, row) {
+                            $.each(data, function(index, row) {
                                 html += `<div class="product-item p-2 border-bottom"
                                             data-id = "${row.id}" 
                                             data-code = "${row.product_code}" 
@@ -892,7 +977,7 @@ $invoice_date = date("Y-m-d");
             });
 
             //select product
-            $(document).on("click", ".product-item", function () {
+            $(document).on("click", ".product-item", function() {
                 let id = $(this).data("id");
                 let code = $(this).data("code");
                 let name = $(this).data("name");
@@ -905,7 +990,7 @@ $invoice_date = date("Y-m-d");
                 //check if already selected
                 let existingRow = null;
 
-                $("#invoiceItems tr").each(function () {
+                $("#invoiceItems tr").each(function() {
                     if ($(this).find(".productId").val() == id) {
                         existingRow = $(this);
                     }
@@ -943,7 +1028,7 @@ $invoice_date = date("Y-m-d");
             });
 
             //add new row
-            $("#addRow").click(function () {
+            $("#addRow").click(function() {
 
                 //no new row until last row filled
                 let lastRow = $("#invoiceItems tr:last");
@@ -988,7 +1073,7 @@ $invoice_date = date("Y-m-d");
             });
 
             //remove row
-            $(document).on("click", ".remove-row", function () {
+            $(document).on("click", ".remove-row", function() {
 
                 if ($("#invoiceItems tr").length > 1) {
 
@@ -1016,7 +1101,7 @@ $invoice_date = date("Y-m-d");
                 let taxTotal = 0;
                 let grandTotal = 0;
 
-                $("#invoiceItems tr").each(function () {
+                $("#invoiceItems tr").each(function() {
 
                     let qty = parseFloat($(this).find(".qty").val()) || 0;
                     let price = parseFloat($(this).find(".price").val()) || 0;
@@ -1041,7 +1126,7 @@ $invoice_date = date("Y-m-d");
             }
 
             // Total
-            $(document).on("input", ".qty, .price, .tax", function () {
+            $(document).on("input", ".qty, .price, .tax", function() {
 
                 let row = $(this).closest("tr");
 
@@ -1050,8 +1135,6 @@ $invoice_date = date("Y-m-d");
                 calculateTotals();
             });
 
-
-
             let isDraft = false;
 
             $("#draftBtn").click(function () {
@@ -1059,7 +1142,6 @@ $invoice_date = date("Y-m-d");
                 $("#status").val("Draft");
                 $("#invoiceForm").submit();
             });
-
 
             //Form Submission
             $("#invoiceForm").validate({
@@ -1070,12 +1152,6 @@ $invoice_date = date("Y-m-d");
                     },
                     invoice_date: {
                         required: true
-                    },
-                    due_date: {
-                        required: true
-                    },
-                    status: {
-                        required: true
                     }
                 },
                 messages: {
@@ -1084,25 +1160,17 @@ $invoice_date = date("Y-m-d");
                     },
                     invoice_date: {
                         required: "This field is required"
-                    },
-                    due_date: {
-                        required: "This field is required"
-                    },
-                    status: {
-                        required: "This field is required"
                     }
                 },
 
-                submitHandler: function (form) {
+                submitHandler: function(form) {
 
                     //validate dynamic row - Product
 
                     let valid = true;
                     $(".product-error").text("");
-                    $("#invoiceItems tr").each(function (index) {
+                    $("#invoiceItems tr").each(function(index) {
                         let productId = $(this).find(".productId").val();
-
-
 
                         if (!productId) {
 
@@ -1118,19 +1186,19 @@ $invoice_date = date("Y-m-d");
                         return false;
                     }
 
-
                     if (!isDraft) {
                         $("#status").val("Unpaid");
                     }
+
                     let formData = new FormData(form);
                     $.ajax({
-                        url: "php/save_invoice.php",
+                        url: "php/edit_all_draft_invoice.php",
                         type: "POST",
                         data: formData,
                         contentType: false,
                         processData: false,
 
-                        success: function (response) {
+                        success: function(response) {
 
                             let res = JSON.parse(response);
 
@@ -1150,7 +1218,7 @@ $invoice_date = date("Y-m-d");
                                 Swal.fire({
                                     icon: "success",
                                     title: "Invoice Saved",
-                                    text: "Invoice saved successfully and email sent to the customer."
+                                    text: "Invoice Updated successfully and email sent to the customer."
                                 }).then(() => {
                                     window.location.reload();
                                 });
@@ -1161,14 +1229,14 @@ $invoice_date = date("Y-m-d");
                                 Swal.fire({
                                     icon: "warning",
                                     title: "Invoice Saved",
-                                    text: "Invoice was saved successfully, but the email could not be sent."
+                                    text: "Invoice was Updated successfully, but the email could not be sent."
                                 }).then(() => {
                                     window.location.reload();
                                 });
 
                             }
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire({
                                 title: "error",
                                 text: "An error occured",
@@ -1184,7 +1252,7 @@ $invoice_date = date("Y-m-d");
             });
 
             //close dropdown when user click on screen
-            $(document).on("click", function (e) {
+            $(document).on("click", function(e) {
 
                 // Contact dropdown
                 if (!$(e.target).closest("#contactSearch, #contactDropdown").length) {
