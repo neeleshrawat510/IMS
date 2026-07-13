@@ -1161,6 +1161,7 @@ $invoice_date = date("Y-m-d");
                                 });
 
                             }
+                            window.location.reload();
                         },
                         error: function () {
                             Swal.fire({
