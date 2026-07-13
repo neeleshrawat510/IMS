@@ -1140,15 +1140,19 @@ $invoice_date = date("Y-m-d");
                                     icon: "success",
                                     title: "Draft Saved",
                                     text: "Invoice has been saved as a draft."
+                                }).then(() => {
+                                    window.location.reload();
                                 });
 
                             }
-                            else if (res.email_sent) {
+                            else if (res.email_status) {
 
                                 Swal.fire({
                                     icon: "success",
                                     title: "Invoice Saved",
                                     text: "Invoice saved successfully and email sent to the customer."
+                                }).then(() => {
+                                    window.location.reload();
                                 });
 
                             }
@@ -1158,6 +1162,8 @@ $invoice_date = date("Y-m-d");
                                     icon: "warning",
                                     title: "Invoice Saved",
                                     text: "Invoice was saved successfully, but the email could not be sent."
+                                }).then(() => {
+                                    window.location.reload();
                                 });
 
                             }
