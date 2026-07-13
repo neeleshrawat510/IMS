@@ -801,9 +801,9 @@ $invoice_date = date("Y-m-d");
                     data: {
                         keyword: keyword
                     },
-                    success: function (response) {
+                   success: function (response) {
 
-                        let data = JSON.parse(response);
+    console.log(response);
                         let html = '';
                         //add contact dropdown
                         html += `<div class="contact-item p-2 border-bottom text-primary fw-bold add-contact"> + Add contact </div>`;
