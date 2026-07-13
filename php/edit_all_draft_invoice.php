@@ -28,6 +28,7 @@ $subtotal     = $_POST['subtotal'];
 $tax_total    = $_POST['tax_total'];
 $grand_total  = $_POST['grand_total'];
 $status       = $_POST['status'];
+$isDraft = ($status === 'Draft');
 
 $product_id  = $_POST['product_id'];
 $description = $_POST['description'];
@@ -102,7 +103,15 @@ $contact_number = $contact['number'];
 $contact_email = $contact['email'];
 
 
+//skip pdf if status = draft
+if ($isDraft) {
 
+    echo json_encode([
+        "status" => "success",
+        "type"   => "draft"
+    ]);
+    exit;
+}
 
 // SAVING PDF
 
