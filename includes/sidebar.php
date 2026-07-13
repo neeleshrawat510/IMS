@@ -83,6 +83,12 @@
         <span class="nav-text">Add Invoice</span>
       </a>
 
+      <!-- Draft invoices -->
+      <a class="nav-link" href="manage_draft_invoice.php">
+        <span class="nav-icon"><i class="bi bi-plus-square" aria-hidden="true"></i></span>
+        <span class="nav-text">Draft Invoices</span>
+      </a>
+
     <?php } ?>
 
 
