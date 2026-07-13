@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 08, 2026 at 10:24 AM
+-- Generation Time: Jul 13, 2026 at 05:41 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -64,10 +64,12 @@ CREATE TABLE `invoices` (
   `invoice_no` varchar(100) NOT NULL,
   `invoice_date` varchar(100) NOT NULL,
   `due_date` varchar(100) NOT NULL,
-  `subtotal` decimal(50,2) NOT NULL,
-  `tax_total` decimal(50,2) NOT NULL,
-  `grand_total` decimal(50,2) NOT NULL,
-  `status` enum('Paid','Unpaid','Overdue') DEFAULT NULL,
+  `subtotal` decimal(50,2) NOT NULL DEFAULT 0.00,
+  `tax_total` decimal(50,2) NOT NULL DEFAULT 0.00,
+  `grand_total` decimal(50,2) NOT NULL DEFAULT 0.00,
+  `status` enum('Paid','Unpaid','Overdue','Draft','Cancelled') DEFAULT 'Draft',
+  `email_status` enum('Not Sent','Sent') NOT NULL DEFAULT 'Not Sent',
+  `emailed_at` datetime(6) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `payment_method` varchar(50) DEFAULT NULL,
   `pdf_path` varchar(100) DEFAULT NULL,
@@ -82,20 +84,20 @@ CREATE TABLE `invoices` (
 -- Dumping data for table `invoices`
 --
 
-INSERT INTO `invoices` (`id`, `contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `notes`, `payment_method`, `pdf_path`, `created_at`, `created_by`, `updated_at`, `updated_by`, `remove`) VALUES
-(1, '6', 'INV-10001', '2026-06-10', '2026-06-26', 10500.00, 525.00, 11025.00, 'Unpaid', NULL, NULL, 'invoices/invoice_1.pdf', '2026-06-10 11:25:03', '', '2026-06-26 14:39:35', 'Neelesh Rawat', 0),
-(2, '6', 'INV-10002', '2026-06-10', '2026-06-26', 9940.00, 37.80, 9977.80, 'Paid', NULL, NULL, 'invoices/invoice_2.pdf', '2026-06-10 12:33:01', '', '2026-06-29 07:19:39', 'Neelesh Rawat', 0),
-(3, '5', 'INV-10003', '2026-06-11', '2026-06-11', 12740.00, 1901.90, 14641.90, 'Unpaid', NULL, NULL, 'invoices/invoice_3.pdf', '2026-06-11 08:00:24', '', '', '', 0),
-(8, '6', 'INV-10004', '2026-06-23', '2026-06-25', 70.00, 12.60, 82.60, 'Unpaid', NULL, NULL, 'invoices/invoice_8.pdf', '2026-06-23 10:09:55', '', '', '', 0),
-(9, '6', 'INV-10005', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', NULL, NULL, '', '2026-06-23 12:59:11', 'Neelesh Rawat', '', '', 0),
-(10, '6', 'INV-10006', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', NULL, NULL, '', '2026-06-23 13:04:01', 'Neelesh Rawat', '', '', 0),
-(11, '6', 'INV-10007', '2026-06-23', '2026-06-24', 165.00, 29.70, 165.00, 'Unpaid', NULL, NULL, '', '2026-06-23 13:10:23', 'Neelesh Rawat', '', '', 0),
-(12, '6', 'INV-10009', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', NULL, NULL, 'invoices/invoice_12.pdf', '2026-06-23 13:14:03', 'Neelesh Rawat', '', '', 0),
-(13, '6', 'INV-10010', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', NULL, NULL, '', '2026-06-23 13:21:26', 'Neelesh Rawat', '', '', 0),
-(14, '12', 'INV_10007', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Unpaid', NULL, NULL, '', '2026-06-24 09:27:03', 'Neelesh Rawat', '', '', 0),
-(17, '6', 'INV-10008', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Paid', NULL, NULL, 'invoices/invoice_17.pdf', '2026-06-24 09:49:22', 'Neelesh Rawat', '2026-06-24 10:31:42', 'Neelesh Rawat', 0),
-(18, '12', 'INV-10015', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Unpaid', NULL, NULL, 'invoices/invoice_18.pdf', '2026-06-24 14:38:03', 'Neelesh Rawat', '', '', 0),
-(19, '6', 'INV-10016', '2026-06-24', '2026-07-24', 27000.00, 3950.00, 30950.00, 'Unpaid', NULL, NULL, 'invoices/invoice_19.pdf', '2026-06-24 16:37:19', 'Neelesh Rawat', '', '', 0);
+INSERT INTO `invoices` (`id`, `contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `email_status`, `emailed_at`, `notes`, `payment_method`, `pdf_path`, `created_at`, `created_by`, `updated_at`, `updated_by`, `remove`) VALUES
+(1, '6', 'INV-10001', '2026-06-10', '2026-06-26', 10500.00, 525.00, 11025.00, 'Unpaid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_1.pdf', '2026-06-10 11:25:03', '', '2026-06-26 14:39:35', 'Neelesh Rawat', 0),
+(2, '6', 'INV-10002', '2026-06-10', '2026-06-26', 9940.00, 37.80, 9977.80, 'Paid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_2.pdf', '2026-06-10 12:33:01', '', '2026-06-29 07:19:39', 'Neelesh Rawat', 0),
+(3, '5', 'INV-10003', '2026-06-11', '2026-06-11', 12740.00, 1901.90, 14641.90, 'Unpaid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_3.pdf', '2026-06-11 08:00:24', '', '', '', 0),
+(8, '6', 'INV-10004', '2026-06-23', '2026-06-25', 70.00, 12.60, 82.60, 'Unpaid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_8.pdf', '2026-06-23 10:09:55', '', '', '', 0),
+(9, '6', 'INV-10005', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', 'Not Sent', NULL, NULL, NULL, '', '2026-06-23 12:59:11', 'Neelesh Rawat', '', '', 0),
+(10, '6', 'INV-10006', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, 'Paid', 'Not Sent', NULL, NULL, NULL, '', '2026-06-23 13:04:01', 'Neelesh Rawat', '', '', 0),
+(11, '6', 'INV-10007', '2026-06-23', '2026-06-24', 165.00, 29.70, 165.00, 'Unpaid', 'Not Sent', NULL, NULL, NULL, '', '2026-06-23 13:10:23', 'Neelesh Rawat', '', '', 0),
+(12, '6', 'INV-10009', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_12.pdf', '2026-06-23 13:14:03', 'Neelesh Rawat', '', '', 0),
+(13, '6', 'INV-10010', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, 'Unpaid', 'Not Sent', NULL, NULL, NULL, '', '2026-06-23 13:21:26', 'Neelesh Rawat', '', '', 0),
+(14, '12', 'INV_10007', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Unpaid', 'Not Sent', NULL, NULL, NULL, '', '2026-06-24 09:27:03', 'Neelesh Rawat', '', '', 0),
+(17, '6', 'INV-10008', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Paid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_17.pdf', '2026-06-24 09:49:22', 'Neelesh Rawat', '2026-06-24 10:31:42', 'Neelesh Rawat', 0),
+(18, '12', 'INV-10015', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, 'Unpaid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_18.pdf', '2026-06-24 14:38:03', 'Neelesh Rawat', '', '', 0),
+(19, '6', 'INV-10016', '2026-06-24', '2026-07-24', 27000.00, 3950.00, 30950.00, 'Unpaid', 'Not Sent', NULL, NULL, NULL, 'invoices/invoice_19.pdf', '2026-06-24 16:37:19', 'Neelesh Rawat', '', '', 0);
 
 -- --------------------------------------------------------
 
