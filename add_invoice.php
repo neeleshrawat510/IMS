@@ -1134,24 +1134,33 @@ $invoice_date = date("Y-m-d");
 
                             let res = JSON.parse(response);
 
-                            if (res.status === 'success') {
+                            if (res.type === 'draft') {
+
+                                Swal.fire({
+                                    title: "Success",
+                                    text: "Draft saved",
+                                    icon: "success"
+                                }).then(() => {
+                                    location.reload();
+                                });
+
+                            } else {
 
                                 Swal.fire({
                                     title: "Successful",
-                                    text: isDraft ? "Draft saved successfully" : "Invoice saved successfully",
+                                    text: "Invoice saved successfully",
                                     icon: "success",
-                                    confirmButtonText: isDraft ? "OK" : "View/Print Invoice",
+                                    confirmButtonText: "View/Print Invoice",
                                     showCancelButton: true
                                 }).then((result) => {
 
                                     if (result.isConfirmed) {
-                                        window.open(res.pdf, '_blank'); // OPEN PDF
-                                        location.reload();
-                                    } else {
-                                        location.reload();
+                                        window.open(res.pdf, '_blank');
                                     }
 
+                                    location.reload();
                                 });
+
                             }
                         },
                         error: function () {

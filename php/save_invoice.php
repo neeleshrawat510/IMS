@@ -33,6 +33,7 @@ $price       = $_POST['price'];
 $tax         = $_POST['tax'];
 $amount      = $_POST['amount'];
 $status = $_POST['status'];
+$isDraft = ($status === 'Draft');
 $dateToday = date('Y-m-d H:i:s');
 $created_by = $_SESSION['user_name'];
 
@@ -85,6 +86,15 @@ $contact_number = $contact['number'];
 $contact_email = $contact['email'];
 
 
+//skip pdf if status = draft
+if ($isDraft) {
+
+    echo json_encode([
+        "status" => "success",
+        "type"   => "draft"
+    ]);
+    exit;
+}
 
 
 // SAVING PDF
