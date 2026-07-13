@@ -8,7 +8,7 @@ date_default_timezone_set('Asia/Kolkata');
 include("../config/connection.php");
 
 require_once("../vendor/autoload.php");
-
+require_once "../controller/send_email.php";
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
@@ -281,15 +281,47 @@ file_put_contents($fullPath, $pdfOutput);
 
 //db path
 
-mysqli_query($conn, "
-UPDATE invoices 
-SET pdf_path = '$fileName'
-WHERE id = '$invoice_id'
-");
+if(file_put_contents($fullPath, $pdfOutput)){
+
+    mysqli_query($conn,
+        "UPDATE invoices
+         SET pdf_path='$fileName'
+         WHERE id='$invoice_id'");
+
+}
+
+
+//Send Invoive over mail
+
+$emailSent = sendInvoiceEmail(
+    $contact_email,
+    $contact_name,
+    $invoice_no,
+    $fullPath
+);
+
+if ($emailSent) {
+
+    mysqli_query($conn,
+        "UPDATE invoices
+         SET email_status='Sent'
+         WHERE id='$invoice_id'"
+    );
+
+} else {
+
+    mysqli_query($conn,
+        "UPDATE invoices
+         SET email_status='Failed'
+         WHERE id='$invoice_id'"
+    );
+
+}
 
 echo json_encode([
     "status" => "success",
-    "pdf" => $fileName
+    "pdf" => $fileName,
+    "email_status" => $emailSent
 ]);
 exit;
 ?>

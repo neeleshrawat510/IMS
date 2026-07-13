@@ -586,7 +586,7 @@ include("config/connection.php");
                             <input type="text" class="" name="invoice_no" id="invoiceNo" readonly>
                         </div>
                         
-                        //hidden field to send draft
+                        <!-- hidden field to send draft -->
                         <input type="hidden" name="status" id="status" value="Draft">
 
                     </div>
