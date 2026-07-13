@@ -1132,7 +1132,8 @@ $invoice_date = date("Y-m-d");
 
                         success: function (response) {
 
-console.log(response);
+                            let res = JSON.parse(response);
+
                             if (res.type === 'draft') {
 
                                 Swal.fire({
