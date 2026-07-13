@@ -1134,31 +1134,30 @@ $invoice_date = date("Y-m-d");
 
                             let res = JSON.parse(response);
 
-                            if (res.type === 'draft') {
+                            if (res.type === "draft") {
 
                                 Swal.fire({
-                                    title: "Success",
-                                    text: "Draft saved",
-                                    icon: "success"
-                                }).then(() => {
-                                    location.reload();
+                                    icon: "success",
+                                    title: "Draft Saved",
+                                    text: "Invoice has been saved as a draft."
                                 });
 
-                            } else {
+                            }
+                            else if (res.email_sent) {
 
                                 Swal.fire({
-                                    title: "Successful",
-                                    text: "Invoice saved successfully",
                                     icon: "success",
-                                    confirmButtonText: "View/Print Invoice",
-                                    showCancelButton: true
-                                }).then((result) => {
+                                    title: "Invoice Saved",
+                                    text: "Invoice saved successfully and email sent to the customer."
+                                });
 
-                                    if (result.isConfirmed) {
-                                        window.open(res.pdf, '_blank');
-                                    }
+                            }
+                            else {
 
-                                    location.reload();
+                                Swal.fire({
+                                    icon: "warning",
+                                    title: "Invoice Saved",
+                                    text: "Invoice was saved successfully, but the email could not be sent."
                                 });
 
                             }

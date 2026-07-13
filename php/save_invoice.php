@@ -9,6 +9,7 @@ include("../config/connection.php");
 
 
 require_once("../vendor/autoload.php");
+require_once "../controller/send_email.php";
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -270,12 +271,19 @@ $fullPath = "../" . $fileName;
 
 file_put_contents($fullPath, $pdfOutput);
 
-//db path
+//check if pdf is available
 
-mysqli_query($conn, "UPDATE invoices SET pdf_path = '$fileName' WHERE id = '$invoice_id'");
+if(file_put_contents($fullPath, $pdfOutput)){
+
+    mysqli_query($conn,
+        "UPDATE invoices
+         SET pdf_path='$fileName'
+         WHERE id='$invoice_id'");
+
+}
+
 
 //Send Invoive over mail
-require_once "../controller/send_email.php";
 
 $emailSent = sendInvoiceEmail(
     $contact_email,
