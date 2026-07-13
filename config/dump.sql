@@ -68,7 +68,7 @@ CREATE TABLE `invoices` (
   `tax_total` decimal(50,2) NOT NULL DEFAULT 0.00,
   `grand_total` decimal(50,2) NOT NULL DEFAULT 0.00,
   `status` enum('Paid','Unpaid','Overdue','Draft','Cancelled') DEFAULT 'Draft',
-  `email_status` enum('Not Sent','Sent') NOT NULL DEFAULT 'Not Sent',
+  `email_status` enum('Pending','Sent','Failed') NOT NULL DEFAULT 'Pending',
   `emailed_at` datetime(6) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `payment_method` varchar(50) DEFAULT NULL,
