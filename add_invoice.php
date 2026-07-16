@@ -1120,7 +1120,7 @@ $invoice_date = date("Y-m-d");
 
 
                     if (!isDraft) {
-                        $("#status").val("Unpaid");
+                        $("#status").val("Sent");
                     }
                     let formData = new FormData(form);
                     $.ajax({
