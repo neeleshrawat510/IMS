@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2026 at 11:54 AM
+-- Generation Time: Jul 16, 2026 at 01:29 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -84,25 +84,6 @@ CREATE TABLE `invoices` (
   `amount_due` decimal(10,2) NOT NULL DEFAULT 0.00
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `invoices`
---
-
-INSERT INTO `invoices` (`id`, `contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `email_status`, `emailed_at`, `notes`, `payment_method`, `invoice_public_token`, `pdf_path`, `created_at`, `created_by`, `updated_at`, `updated_by`, `remove`, `payment_status`, `amount_paid`, `amount_due`) VALUES
-(1, '6', 'INV-10001', '2026-06-10', '2026-06-26', 10500.00, 525.00, 11025.00, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_1.pdf', '2026-06-10 11:25:03', '', '2026-06-26 14:39:35', 'Neelesh Rawat', 0, 'Unpaid', 0.00, 0.00),
-(2, '6', 'INV-10002', '2026-06-10', '2026-06-26', 9940.00, 37.80, 9977.80, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_2.pdf', '2026-06-10 12:33:01', '', '2026-06-29 07:19:39', 'Neelesh Rawat', 0, 'Unpaid', 0.00, 0.00),
-(3, '5', 'INV-10003', '2026-06-11', '2026-06-11', 12740.00, 1901.90, 14641.90, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_3.pdf', '2026-06-11 08:00:24', '', '', '', 0, 'Unpaid', 0.00, 0.00),
-(8, '6', 'INV-10004', '2026-06-23', '2026-06-25', 70.00, 12.60, 82.60, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_8.pdf', '2026-06-23 10:09:55', '', '', '', 0, 'Unpaid', 0.00, 0.00),
-(9, '6', 'INV-10005', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, '', '', NULL, NULL, NULL, NULL, '', '2026-06-23 12:59:11', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00),
-(10, '6', 'INV-10006', '2026-06-23', '2026-06-23', 0.00, 0.00, 0.00, '', '', NULL, NULL, NULL, NULL, '', '2026-06-23 13:04:01', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00),
-(11, '6', 'INV-10007', '2026-06-23', '2026-06-24', 165.00, 29.70, 165.00, '', '', NULL, NULL, NULL, NULL, '', '2026-06-23 13:10:23', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00),
-(12, '6', 'INV-10009', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_12.pdf', '2026-06-23 13:14:03', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00),
-(13, '6', 'INV-10010', '2026-06-23', '2026-06-24', 23500.00, 3775.00, 27275.00, '', '', NULL, NULL, NULL, NULL, '', '2026-06-23 13:21:26', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00),
-(14, '12', 'INV_10007', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, '', '', NULL, NULL, NULL, NULL, '', '2026-06-24 09:27:03', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00),
-(17, '6', 'INV-10008', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_17.pdf', '2026-06-24 09:49:22', 'Neelesh Rawat', '2026-06-24 10:31:42', 'Neelesh Rawat', 0, 'Unpaid', 0.00, 0.00),
-(18, '12', 'INV-10015', '2026-06-24', '2026-07-24', 20050.00, 3609.00, 23659.00, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_18.pdf', '2026-06-24 14:38:03', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00),
-(19, '6', 'INV-10016', '2026-06-24', '2026-07-24', 27000.00, 3950.00, 30950.00, '', '', NULL, NULL, NULL, NULL, 'invoices/invoice_19.pdf', '2026-06-24 16:37:19', 'Neelesh Rawat', '', '', 0, 'Unpaid', 0.00, 0.00);
-
 -- --------------------------------------------------------
 
 --
@@ -119,44 +100,6 @@ CREATE TABLE `invoice_items` (
   `tax` decimal(10,2) NOT NULL,
   `amount` decimal(50,2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `invoice_items`
---
-
-INSERT INTO `invoice_items` (`id`, `invoice_id`, `product_id`, `description`, `qty`, `price`, `tax`, `amount`) VALUES
-(3, '1', '5', 'Keyboard', 2.00, 70.00, 18.00, 140.00),
-(4, '2', '7', 'laptop', 1.00, 4865.00, 0.00, 4865.00),
-(6, '2', '5', 'Keyboard', 3.00, 70.00, 18.00, 210.00),
-(7, '2', '7', 'laptop', 2.00, 4865.00, 0.00, 9730.00),
-(13, '3', '7', 'laptop', 2.00, 4865.00, 18.00, 9730.00),
-(14, '3', '9', 'Mouse', 1.00, 10.00, 5.00, 10.00),
-(15, '3', '11', 'Mobile', 1.00, 3000.00, 5.00, 3000.00),
-(18, '7', '5', '', 2.00, 0.00, 0.00, 0.00),
-(19, '7', '10', '', 1.00, 0.00, 0.00, 0.00),
-(20, '8', '5', 'Keyboard', 1.00, 70.00, 18.00, 70.00),
-(21, '11', '5', 'Keyboard', 2.00, 70.00, 18.00, 158.00),
-(22, '11', '10', 'Adapter', 1.00, 25.00, 18.00, 43.00),
-(25, '13', '20', 'Monitor', 2.00, 10000.00, 18.00, 20018.00),
-(26, '13', '26', 'UPS', 1.00, 3500.00, 5.00, 3505.00),
-(27, '12', '20', 'Monitor', 2.00, 10000.00, 18.00, 20018.00),
-(28, '12', '26', 'UPS', 1.00, 3500.00, 5.00, 3500.00),
-(31, '0', '26', 'UPS', 2.00, 3500.00, 5.00, 7000.00),
-(32, '0', '26', 'UPS', 1.00, 3500.00, 5.00, 3500.00),
-(37, '6', '26', 'UPS', 2.00, 3500.00, 5.00, 7000.00),
-(38, '6', '26', 'UPS', 1.00, 3500.00, 5.00, 3500.00),
-(45, '', '10', 'Adapter', 2.00, 25.00, 18.00, 50.00),
-(46, '', '20', 'Monitor', 2.00, 10000.00, 18.00, 20000.00),
-(47, '', '10', 'Adapter', 2.00, 25.00, 18.00, 50.00),
-(48, '', '20', 'Monitor', 2.00, 10000.00, 18.00, 20000.00),
-(49, '', '10', 'Adapter', 2.00, 25.00, 18.00, 50.00),
-(50, '', '20', 'Monitor', 2.00, 10000.00, 18.00, 20000.00),
-(71, '17', '10', 'Adapter', 2.00, 25.00, 18.00, 50.00),
-(72, '17', '20', 'Monitor', 2.00, 10000.00, 18.00, 20000.00),
-(73, '18', '10', 'Adapter', 2.00, 25.00, 18.00, 50.00),
-(74, '18', '20', 'Monitor', 2.00, 10000.00, 18.00, 20000.00),
-(75, '19', '26', 'UPS', 2.00, 3500.00, 5.00, 7000.00),
-(76, '19', '20', 'Monitor', 2.00, 10000.00, 18.00, 20000.00);
 
 -- --------------------------------------------------------
 
@@ -421,13 +364,13 @@ ALTER TABLE `contacts`
 -- AUTO_INCREMENT for table `invoices`
 --
 ALTER TABLE `invoices`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoice_items`
 --
 ALTER TABLE `invoice_items`
-  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=77;
+  MODIFY `id` int(12) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payments`
@@ -470,7 +413,6 @@ ALTER TABLE `refunds`
 --
 ALTER TABLE `users`
   MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-
 
 --
 -- AUTO_INCREMENT for table `webhook_logs`

@@ -5,9 +5,9 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $host = "tokaido.proxy.rlwy.net";
-$port = "58142";
+$port = "33601";
 $user = "root";
-$password = "wIxQXPYEROmdOPSuSfjFoySbHIRHpjQH";
+$password = "xddweurWYfffaARDAXqAmgJuTJtjGoJb";
 $database = "railway";
 $conn = new mysqli($host, $user, $password, $database, $port);
 
