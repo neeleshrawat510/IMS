@@ -1,6 +1,6 @@
 <?php
 
-function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $pdfPath)
+function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $invoicePublicToken, $pdfPath)
 {
     $apiKey = getenv('BREVO_API_KEY');
 
@@ -21,6 +21,8 @@ function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $pdfPath)
         ]
     ];
 
+    $payUrl = getenv('APP_URL') . "/pay.php?token=" . $invoicePublicToken;
+
     $data = [
         "sender" => [
             "name" => "Baseline IT",
@@ -34,7 +36,7 @@ function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $pdfPath)
             ]
         ],
 
-        "subject" => "Invoice #".$invoiceNo,
+        "subject" => "Invoice #" . $invoiceNo,
 
         "htmlContent" => "
             <h2>Hello {$toName},</h2>
@@ -43,8 +45,30 @@ function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $pdfPath)
 
             <p><strong>Invoice Number:</strong> {$invoiceNo}</p>
 
-            <p>Please find your invoice attached.</p>
+<p>Please find your invoice attached.</p>
 
+<p>
+    <a href='{$payUrl}'
+       style='
+            display:inline-block;
+            padding:12px 24px;
+            background:#635BFF;
+            color:#ffffff;
+            text-decoration:none;
+            border-radius:6px;
+            font-weight:bold;
+       '>
+        Pay Now
+    </a>
+</p>
+
+<p>If the button doesn't work, copy and paste this link into your browser:</p>
+
+<p>{$payUrl}</p>
+
+<br>
+
+<p>Thank you.</p>
             <br>
 
             <p>Thank you.</p>
