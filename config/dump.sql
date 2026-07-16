@@ -471,6 +471,7 @@ ALTER TABLE `refunds`
 ALTER TABLE `users`
   MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
+
 --
 -- AUTO_INCREMENT for table `webhook_logs`
 --

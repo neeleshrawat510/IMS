@@ -15,6 +15,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
+
 $conn->set_charset("utf8mb4");
 
 $sql = file_get_contents(__DIR__ . '/config/dump.sql');
