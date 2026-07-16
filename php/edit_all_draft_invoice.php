@@ -103,6 +103,7 @@ $contact_number = $contact['number'];
 $contact_email = $contact['email'];
 
 
+
 //skip pdf if status = draft
 if ($isDraft) {
 
