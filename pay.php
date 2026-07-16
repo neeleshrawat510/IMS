@@ -1,30 +1,23 @@
 <?php
 
-require_once 'config/database.php';
+include "config/connection.php";
 
-$token = $_GET['token'] ?? '';
-
-if (empty($token)) {
+if (!isset($_GET['token'])) {
     die("Invalid payment link.");
 }
 
-$stmt = $conn->prepare("
-    SELECT *
-    FROM invoices
-    WHERE invoice_public_token = ?
-    LIMIT 1
-");
+$token = $_GET['token'];
 
-$stmt->bind_param("s", $token);
-$stmt->execute();
+$sql = "SELECT * FROM invoices WHERE invoice_public_token = '$token'";
 
-$result = $stmt->get_result();
+$result = mysqli_query($conn, $sql);
 
-if ($result->num_rows === 0) {
+if (mysqli_num_rows($result) == 0) {
     die("Invalid payment link.");
 }
 
-$invoice = $result->fetch_assoc();
+$invoice = mysqli_fetch_assoc($result);
 
 echo "<pre>";
 print_r($invoice);
+echo "</pre>";
