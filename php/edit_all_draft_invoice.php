@@ -304,6 +304,7 @@ $emailSent = sendInvoiceEmail(
     $contact_email,
     $contact_name,
     $invoice_no,
+    $invoicePublicToken,
     $fullPath
 );
 
