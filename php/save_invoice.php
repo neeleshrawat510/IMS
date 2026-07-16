@@ -33,13 +33,14 @@ $status = $_POST['status'];
 $isDraft = ($status === 'Draft');
 $dateToday = date('Y-m-d H:i:s');
 $created_by = $_SESSION['user_name'];
+$invoicePublicToken = bin2hex(random_bytes(32));
 
 // Save invoice 
 $insertInvoice = mysqli_query($conn, "
     INSERT INTO invoices 
-    (`contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `created_at`, `created_by`)
+    (`contact_id`, `invoice_no`, `invoice_date`, `due_date`, `subtotal`, `tax_total`, `grand_total`, `status`, `created_at`, `created_by`, `invoice_public_token`)
     VALUES 
-    ('$contact_id', '$invoice_no', '$invoice_date', '$due_date', '$subtotal', '$tax_total', '$grand_total', '$status', '$dateToday', '$created_by')
+    ('$contact_id', '$invoice_no', '$invoice_date', '$due_date', '$subtotal', '$tax_total', '$grand_total', '$status', '$dateToday', '$created_by', '$invoicePublicToken')
 ");
 
 // Get invoice ID 
