@@ -51,9 +51,9 @@ try {
 $session = Session::create([
     'mode' => 'payment',
 
-    'success_url' => getenv('APP_URL') . '/payment-success.php',
+    'success_url' => getenv('APP_URL') . '/payment_success.php',
 
-    'cancel_url' => getenv('APP_URL') . '/payment-cancel.php',
+    'cancel_url' => getenv('APP_URL') . '/payment_cancel.php',
 
     'line_items' => [
         [
