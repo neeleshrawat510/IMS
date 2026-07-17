@@ -41,6 +41,8 @@ if ($invoice['grand_total'] <= 0) {
 // Set Stripe Secret Key
 Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
+try {
+
 // Create Checkout Session
 $session = Session::create([
     'mode' => 'payment',
@@ -73,7 +75,9 @@ $session = Session::create([
         'invoice_no' => $invoice['invoice_no']
     ]
 ]);
-
+} catch (Exception $e) {
+    die($e->getMessage());
+}
 // Save Payment Record
 $sql = "INSERT INTO payments
 (
@@ -98,6 +102,10 @@ $result = mysqli_query($conn, $sql);
 
 if (!$result) {
     die("Unable to create payment record.");
+}
+
+if (!$result) {
+    die(mysqli_error($conn));
 }
 
 // Redirect Customer
