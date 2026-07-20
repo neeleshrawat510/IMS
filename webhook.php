@@ -25,19 +25,14 @@ try {
         $sigHeader,
         $endpointSecret
     );
-
-
 } catch (\UnexpectedValueException $e) {
 
     http_response_code(400);
     exit("Invalid Payload");
-
-
 } catch (\Stripe\Exception\SignatureVerificationException $e) {
 
     http_response_code(400);
     exit("Invalid Signature");
-
 }
 
 
@@ -65,19 +60,19 @@ if ($event->type === 'checkout.session.completed') {
 
 
     //Update payments table
-    
+
 
     $updatePaymentSql = "
         UPDATE payments
-        SET
-            gateway_payment_id = '$paymentIntentId',
-            transaction_id = '$paymentIntentId',
-            status = 'paid',
-            payment_method = 'card',
-            gateway_response = '$gatewayResponse',
-            paid_at = NOW()
-        WHERE checkout_session_id = '$checkoutSessionId'
-    ";
+SET
+    gateway_payment_id = '$paymentIntentId',
+    transaction_id = '$paymentIntentId',
+    status = 'paid',
+    payment_method = 'card',
+    gateway_response = '$gatewayResponse',
+    paid_at = NOW()
+WHERE checkout_session_id = '$checkoutSessionId'
+AND status != 'paid'";
 
 
     $paymentResult = mysqli_query($conn, $updatePaymentSql);
@@ -87,13 +82,12 @@ if ($event->type === 'checkout.session.completed') {
 
         http_response_code(500);
         exit(mysqli_error($conn));
-
     }
 
 
 
     //Update invoice payment status
-    
+
 
     $updateInvoiceSql = "
         UPDATE invoices
@@ -110,10 +104,7 @@ if ($event->type === 'checkout.session.completed') {
 
         http_response_code(500);
         exit(mysqli_error($conn));
-
     }
-
-
 }
 
 

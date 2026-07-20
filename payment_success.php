@@ -30,6 +30,7 @@ try {
 // Get invoice id from metadata
 $invoiceId = $session->metadata->invoice_id;
 
+
 // Fetch invoice
 $sql = "SELECT invoice_no, grand_total, payment_status
         FROM invoices
