@@ -92,6 +92,7 @@ $sql = "INSERT INTO payments
     currency,
     status
 )
+
 VALUES
 (
     '{$invoice['id']}',
