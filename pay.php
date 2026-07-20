@@ -1,8 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 
 require_once 'vendor/autoload.php';
 include "config/connection.php";
@@ -18,8 +14,8 @@ if (!isset($_GET['token']) || empty($_GET['token'])) {
 $token = trim($_GET['token']);
 
 // Get Invoice
-$sql = "SELECT * FROM invoices WHERE invoice_public_token = '$token'";
-$result = mysqli_query($conn, $sql);
+$getInvoiceSql = "SELECT * FROM invoices WHERE invoice_public_token = '$token'";
+$result = mysqli_query($conn, $getInvoiceSql);
 
 if (!$result || mysqli_num_rows($result) == 0) {
     die("Invalid payment link.");
@@ -42,8 +38,9 @@ if ($invoice['grand_total'] <= 0) {
     die("Invalid invoice amount.");
 }
 
+// Set Stripe Secret Key
+Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
-//check existing pending payments
 // Check existing pending payment session
 
 $paymentQuery = "
@@ -63,7 +60,6 @@ if ($paymentResult && mysqli_num_rows($paymentResult) > 0) {
 
     if (!empty($payment['checkout_session_id'])) {
 
-        Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
         try {
 
@@ -88,8 +84,6 @@ if ($paymentResult && mysqli_num_rows($paymentResult) > 0) {
     }
 }
 
-// Set Stripe Secret Key
-Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
 try {
 
@@ -128,14 +122,14 @@ try {
     die($e->getMessage());
 }
 // Save Payment Record
-$sql = "INSERT INTO payments
+$insertPaymentSql = "INSERT INTO payments
 (
-    invoice_id,
-    gateway,
-    checkout_session_id,
-    amount,
-    currency,
-    status
+    `invoice_id`,
+    `gateway`,
+    `checkout_session_id`,
+    `amount`,
+    `currency`,
+    `status`
 )
 
 VALUES
@@ -148,11 +142,7 @@ VALUES
     'pending'
 )";
 
-$result = mysqli_query($conn, $sql);
-
-if (!$result) {
-    die("Unable to create payment record.");
-}
+$result = mysqli_query($conn, $insertPaymentSql);
 
 if (!$result) {
     die(mysqli_error($conn));
