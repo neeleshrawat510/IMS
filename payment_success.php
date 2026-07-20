@@ -16,4 +16,5 @@ $sessionId = $_GET['session_id'];
 $session = Session::retrieve($sessionId);
 
 echo "<pre>";
-print_r($session);
+print_r($existingSession);
+exit;
