@@ -33,3 +33,12 @@ try {
     exit("Invalid Signature");
 
 }
+
+if ($event->type == 'checkout.session.completed') {
+
+    $session = $event->data->object;
+
+    echo "<pre>";
+    print_r($session);
+    exit;
+}
