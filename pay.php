@@ -42,6 +42,52 @@ if ($invoice['grand_total'] <= 0) {
     die("Invalid invoice amount.");
 }
 
+
+//check existing pending payments
+// Check existing pending payment session
+
+$paymentQuery = "
+    SELECT checkout_session_id 
+    FROM payments
+    WHERE invoice_id = '{$invoice['id']}'
+    AND status = 'pending'
+    ORDER BY id DESC
+    LIMIT 1
+";
+
+$paymentResult = mysqli_query($conn, $paymentQuery);
+
+if ($paymentResult && mysqli_num_rows($paymentResult) > 0) {
+
+    $payment = mysqli_fetch_assoc($paymentResult);
+
+    if (!empty($payment['checkout_session_id'])) {
+
+        Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
+
+        try {
+
+            $existingSession = Session::retrieve(
+                $payment['checkout_session_id']
+            );
+
+            // Redirect to existing checkout session
+            if ($existingSession->status === 'open') {
+
+                header("Location: " . $existingSession->url);
+                exit;
+
+            }
+
+        } catch (Exception $e) {
+
+            // If session invalid/expired,
+            // create a new one below
+
+        }
+    }
+}
+
 // Set Stripe Secret Key
 Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
