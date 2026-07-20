@@ -35,10 +35,35 @@ try {
 }
 
 if ($event->type == 'checkout.session.completed') {
-
+    
     $session = $event->data->object;
 
-    echo "<pre>";
-    print_r($session);
-    exit;
+    $invoiceId = $session->metadata->invoice_id;
+    $checkoutSessionId = $session->i;
+    $paymentIntentId = $session->payment_intent;
+
+}
+
+$gatewayResponse = mysqli_real_escape_string(
+    $conn,
+    json_encode($session)
+);
+
+$updatePaymentSql = "
+UPDATE payments
+SET
+    gateway_payment_id = '$paymentIntentId',
+    transaction_id = '$paymentIntentId',
+    status = 'paid',
+    payment_method = 'card',
+    gateway_response = '$gatewayResponse',
+    paid_at = NOW()
+WHERE checkout_session_id = '$checkoutSessionId'
+";
+
+$result = mysqli_query($conn, $updatePaymentSql);
+
+if (!$result) {
+    http_response_code(500);
+    exit(mysqli_error($conn));
 }
