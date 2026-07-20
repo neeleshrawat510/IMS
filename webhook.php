@@ -5,14 +5,18 @@ include 'config/connection.php';
 
 use Stripe\Webhook;
 
-// Read raw request body
+
+// Read Stripe request body
 $payload = @file_get_contents('php://input');
 
-// Stripe Signature
+
+// Get Stripe signature
 $sigHeader = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
 
-// Webhook Secret
+
+// Webhook secret from Railway variables
 $endpointSecret = getenv('STRIPE_WEBHOOK_SECRET');
+
 
 try {
 
@@ -22,10 +26,12 @@ try {
         $endpointSecret
     );
 
+
 } catch (\UnexpectedValueException $e) {
 
     http_response_code(400);
     exit("Invalid Payload");
+
 
 } catch (\Stripe\Exception\SignatureVerificationException $e) {
 
@@ -34,36 +40,84 @@ try {
 
 }
 
-if ($event->type == 'checkout.session.completed') {
-    
+
+
+// Handle successful payment
+if ($event->type === 'checkout.session.completed') {
+
+
     $session = $event->data->object;
 
+
+    // Get invoice details from metadata
     $invoiceId = $session->metadata->invoice_id;
-    $checkoutSessionId = $session->i;
+
+    $checkoutSessionId = $session->id;
+
     $paymentIntentId = $session->payment_intent;
 
+
+    // Store complete Stripe response
+    $gatewayResponse = mysqli_real_escape_string(
+        $conn,
+        json_encode($session)
+    );
+
+
+    //Update payments table
+    
+
+    $updatePaymentSql = "
+        UPDATE payments
+        SET
+            gateway_payment_id = '$paymentIntentId',
+            transaction_id = '$paymentIntentId',
+            status = 'paid',
+            payment_method = 'card',
+            gateway_response = '$gatewayResponse',
+            paid_at = NOW()
+        WHERE checkout_session_id = '$checkoutSessionId'
+    ";
+
+
+    $paymentResult = mysqli_query($conn, $updatePaymentSql);
+
+
+    if (!$paymentResult) {
+
+        http_response_code(500);
+        exit(mysqli_error($conn));
+
+    }
+
+
+
+    //Update invoice payment status
+    
+
+    $updateInvoiceSql = "
+        UPDATE invoices
+        SET
+            payment_status = 'paid'
+        WHERE id = '$invoiceId'
+    ";
+
+
+    $invoiceResult = mysqli_query($conn, $updateInvoiceSql);
+
+
+    if (!$invoiceResult) {
+
+        http_response_code(500);
+        exit(mysqli_error($conn));
+
+    }
+
+
 }
 
-$gatewayResponse = mysqli_real_escape_string(
-    $conn,
-    json_encode($session)
-);
 
-$updatePaymentSql = "
-UPDATE payments
-SET
-    gateway_payment_id = '$paymentIntentId',
-    transaction_id = '$paymentIntentId',
-    status = 'paid',
-    payment_method = 'card',
-    gateway_response = '$gatewayResponse',
-    paid_at = NOW()
-WHERE checkout_session_id = '$checkoutSessionId'
-";
+// Always return success to Stripe
+http_response_code(200);
 
-$result = mysqli_query($conn, $updatePaymentSql);
-
-if (!$result) {
-    http_response_code(500);
-    exit(mysqli_error($conn));
-}
+echo "Webhook received";
