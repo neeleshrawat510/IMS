@@ -30,7 +30,7 @@ exit;
 
 
 // Check payment status
-if ($invoice['payment_status'] == 'paid') {
+if ($invoice['payment_status'] == 'Paid') {
     die("This invoice has already been paid.");
 }
 
