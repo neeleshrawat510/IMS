@@ -69,13 +69,14 @@ if ($paymentResult && mysqli_num_rows($paymentResult) > 0) {
             );
 
             // Redirect to existing checkout session
-            if ($existingSession->status === 'open') {
+            if (
+                $existingSession->status === 'open' &&
+                !empty($existingSession->url)
+            ) {
 
                 header("Location: " . $existingSession->url);
                 exit;
-
             }
-
         } catch (Exception $e) {
 
             // If session invalid/expired,
