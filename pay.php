@@ -23,6 +23,12 @@ if (!$result || mysqli_num_rows($result) == 0) {
 
 $invoice = mysqli_fetch_assoc($result);
 
+//testing for errors
+echo "<pre>";
+print_r($invoice);
+exit;
+
+
 // Check payment status
 if ($invoice['payment_status'] == 'paid') {
     die("This invoice has already been paid.");
