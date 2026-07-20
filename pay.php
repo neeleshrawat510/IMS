@@ -47,38 +47,37 @@ Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
 try {
 
-// Create Checkout Session
-$session = Session::create([
-    'mode' => 'payment',
+    // Create Checkout Session
+    $session = Session::create([
+        'mode' => 'payment',
 
-    'success_url' => getenv('APP_URL') . '/payment_success.php',
+        'success_url' => getenv('APP_URL') . '/payment_success.php?session_id={CHECKOUT_SESSION_ID}',
 
-    'cancel_url' => getenv('APP_URL') . '/payment_cancel.php',
+        'cancel_url' => getenv('APP_URL') . '/payment_cancel.php',
+        'line_items' => [
+            [
+                'price_data' => [
+                    'currency' => 'inr',
 
-    'line_items' => [
-        [
-            'price_data' => [
-                'currency' => 'inr',
+                    'product_data' => [
+                        'name' => 'Invoice #' . $invoice['invoice_no']
+                    ],
 
-                'product_data' => [
-                    'name' => 'Invoice #' . $invoice['invoice_no']
+                    // Stripe accepts amount in paise
+                    'unit_amount' => (int) round($invoice['grand_total'] * 100)
                 ],
 
-                // Stripe accepts amount in paise
-                'unit_amount' => (int) round($invoice['grand_total'] * 100)
-            ],
+                'quantity' => 1
+            ]
+        ],
 
-            'quantity' => 1
+        'client_reference_id' => $invoice['id'],
+
+        'metadata' => [
+            'invoice_id' => $invoice['id'],
+            'invoice_no' => $invoice['invoice_no']
         ]
-    ],
-    
-    'client_reference_id' => $invoice['id'],
-
-    'metadata' => [
-        'invoice_id' => $invoice['id'],
-        'invoice_no' => $invoice['invoice_no']
-    ]
-]);
+    ]);
 } catch (Exception $e) {
     die($e->getMessage());
 }
