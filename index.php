@@ -90,17 +90,17 @@
         <div class="row g-0">
             <div class="col-lg-5 d-none d-lg-block left">
                 <img src="uploads/login_img1.jpg" alt="">
-                <div class="overlay">
+                <!-- <div class="overlay">
                     <h1>Invoice Management System</h1>
                     <p>Manage invoices, customers and payments from one secure platform.</p>
                     <ul>
                         <li>Create Professional Invoices</li>
-                        <li>Track Payments</li>
+                        <li>Manage Products</li>
                         <li>Manage Customers</li>
                         <li>Secure Authentication</li>
                     </ul>
                     <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
-                </div>
+                </div> -->
             </div>
             <div class="col-lg-7 right">
                 <div class="text-center mb-4">
@@ -130,8 +130,13 @@
                     </div>
                     <button class="btn btn-primary w-100" type="submit">Sign In</button>
                     <div class="text-center my-3 text-muted">or</div>
-                    <div id="g_id_onload"></div>
-                    <div class="g_id_signin d-flex justify-content-center" data-type="standard" data-width="300"></div>
+                     <!-- Google Sign-In -->
+                            <div id="g_id_onload"
+                                data-client_id="92348507939-74ujcuui4ce2g0pt2ipk287voa8io6sg.apps.googleusercontent.com"
+                                data-callback="handleGoogleLogin">
+                            </div>
+                            <div class="g_id_signin d-flex justify-content-center" data-type="standard"
+                                data-width="300"></div> 
                     <div class="footer">
                         © 2026 Invoice Management System<br>
                         Developed by <strong>Baseline IT Development Pvt Ltd</strong>
@@ -152,6 +157,20 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         $(document).ready(function () {
+
+             // Show/Hide Password
+            $("#togglePassword").click(function () {
+                const password = $("#password");
+                const icon = $(this).find("i");
+
+                if (password.attr("type") === "password") {
+                    password.attr("type", "text");
+                    icon.removeClass("bi-eye").addClass("bi-eye-slash");
+                } else {
+                    password.attr("type", "password");
+                    icon.removeClass("bi-eye-slash").addClass("bi-eye");
+                }
+            });
 
             //load saved data
             if (localStorage.getItem("rememberMe") === "true") {
