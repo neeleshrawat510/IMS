@@ -18,6 +18,19 @@ $sql = mysqli_query($conn, "
         ON invoices.contact_id = contacts.id
         WHERE invoices.remove = '0'
 ");
+$editButton = '';
+
+if ($row['status'] != 'Paid') {
+    $editButton = '
+        <a href="edit_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Edit">
+            <i class="bi bi-pencil"></i>
+        </a>';
+} else {
+    $editButton = '
+        <button class="btn btn-secondary btn-sm" title="Paid invoices cannot be edited" disabled>
+            <i class="bi bi-pencil"></i>
+        </button>';
+}
 
 $data = [];
 $sr = 1;
@@ -35,9 +48,9 @@ if (mysqli_num_rows($sql) > 0) {
                     '<a href="php/view_invoice.php?id=' . $row['id'] . '" target="_blank" class="btn btn-success btn-sm me-1" title="View">
                         <i class="bi bi-eye"></i> 
                     </a>
-                    <a href="edit_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Edit">
-                        <i class="bi bi-pencil"></i> 
-                    </a>
+
+                    ' . $editButton . '
+
                     <a href="php/download_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Download">
                         <i class="bi bi-download"></i> 
                     </a>
