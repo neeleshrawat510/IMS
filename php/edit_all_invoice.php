@@ -37,7 +37,6 @@ $due_date     = $_POST['due_date'];
 $subtotal     = $_POST['subtotal'];
 $tax_total    = $_POST['tax_total'];
 $grand_total  = $_POST['grand_total'];
-$status       = $_POST['status'];
 
 $product_id  = $_POST['product_id'];
 $description = $_POST['description'];
@@ -64,7 +63,6 @@ mysqli_query($conn, "
         subtotal = '$subtotal',
         tax_total = '$tax_total',
         grand_total = '$grand_total',
-        status = '$status'
     WHERE id = '$invoice_id'
 ");
 
