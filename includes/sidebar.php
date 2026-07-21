@@ -70,30 +70,43 @@
 
     <?php } else { ?>
 
-      <!-- add contact -->
+       <!-- CONTACTS / CLIENTS -->
       <a class="nav-link" href="add_contact.php">
         <span class="nav-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
         <span class="nav-text">Add Contact</span>
       </a>
+      <a class="nav-link" href="manage_contact.php">
+        <span class="nav-icon"><i class="bi bi-ui-checks-grid" aria-hidden="true"></i></span>
+        <span class="nav-text">Manage Contacts</span>
+      </a>
 
-      <!-- add product -->
+
+      <!-- PRODUCTS -->
       <a class="nav-link" href="add_product.php">
         <span class="nav-icon"><i class="bi bi-plus-circle" aria-hidden="true"></i></span>
         <span class="nav-text">Add Product</span>
       </a>
+      <a class="nav-link" href="manage_product.php">
+        <span class="nav-icon"><i class="bi bi-pencil-square" aria-hidden="true"></i></span>
+        <span class="nav-text">Manage Products</span>
+      </a>
 
-      <!-- add invoice -->
+
+      <!-- INVOICE -->
+
       <a class="nav-link" href="add_invoice.php">
         <span class="nav-icon"><i class="bi bi-plus-square" aria-hidden="true"></i></span>
         <span class="nav-text">Add Invoice</span>
       </a>
-
       <!-- Draft invoices -->
       <a class="nav-link" href="manage_draft_invoice.php">
         <span class="nav-icon"><i class="bi bi-file-text" aria-hidden="true"></i></span>
         <span class="nav-text">Draft Invoices</span>
       </a>
-
+      <a class="nav-link" href="manage_invoice.php">
+        <span class="nav-icon"><i class="bi bi-eye" aria-hidden="true"></i></span>
+        <span class="nav-text">Manage Invoice</span>
+      </a>
     <?php } ?>
 
 
