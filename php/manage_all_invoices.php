@@ -12,6 +12,7 @@ $sql = mysqli_query($conn, "
         invoices.invoice_date,
         invoices.invoice_no,
         invoices.status,
+        invoices.payment_status,
         invoices.grand_total
     FROM invoices 
     INNER JOIN contacts 
@@ -20,7 +21,7 @@ $sql = mysqli_query($conn, "
 ");
 $editButton = '';
 
-if ($row['status'] != 'Paid') {
+if ($row['payment_status'] != 'Paid') {
     $editButton = '
         <a href="edit_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Edit">
             <i class="bi bi-pencil"></i>
@@ -44,7 +45,7 @@ if (mysqli_num_rows($sql) > 0) {
                 $row['name'],
                 $row['invoice_date'],
                 $row['grand_total'],
-                $row['status'],
+                $row['payment_status'],
                     '<a href="php/view_invoice.php?id=' . $row['id'] . '" target="_blank" class="btn btn-success btn-sm me-1" title="View">
                         <i class="bi bi-eye"></i> 
                     </a>
