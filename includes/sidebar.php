@@ -49,6 +49,11 @@
         <span class="nav-icon"><i class="bi bi-plus-square" aria-hidden="true"></i></span>
         <span class="nav-text">Add Invoice</span>
       </a>
+      <!-- Draft invoices -->
+      <a class="nav-link" href="manage_draft_invoice.php">
+        <span class="nav-icon"><i class="bi bi-file-text" aria-hidden="true"></i></span>
+        <span class="nav-text">Draft Invoices</span>
+      </a>
       <a class="nav-link" href="manage_invoice.php">
         <span class="nav-icon"><i class="bi bi-eye" aria-hidden="true"></i></span>
         <span class="nav-text">Manage Invoice</span>
@@ -85,7 +90,7 @@
 
       <!-- Draft invoices -->
       <a class="nav-link" href="manage_draft_invoice.php">
-        <span class="nav-icon"><i class="bi bi-plus-square" aria-hidden="true"></i></span>
+        <span class="nav-icon"><i class="bi bi-file-text" aria-hidden="true"></i></span>
         <span class="nav-text">Draft Invoices</span>
       </a>
 
