@@ -1192,7 +1192,7 @@ include("config/connection.php");
 
                     let formData = new FormData(form);
                     $.ajax({
-                        url: "php/edit_all_draft_invoice.php",
+                        url: "php/edit_all_invoice.php",
                         type: "POST",
                         data: formData,
                         contentType: false,
