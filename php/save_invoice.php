@@ -311,5 +311,7 @@ echo json_encode([
     "pdf" => $fileName,
     "email_status" => $emailSent
 ]);
+
 exit;
+
 ?>
