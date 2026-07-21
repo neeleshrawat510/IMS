@@ -62,7 +62,7 @@ mysqli_query($conn, "
         due_date = '$due_date',
         subtotal = '$subtotal',
         tax_total = '$tax_total',
-        grand_total = '$grand_total',
+        grand_total = '$grand_total'
     WHERE id = '$invoice_id'
 ");
 
