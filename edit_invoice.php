@@ -549,7 +549,7 @@ requireRole("Admin");
                     <!-- Header -->
                     <div class="invoice-header">
                         <h5>Edit Invoice</h5>
-                        
+
                     </div>
 
                     <!-- Top Fields -->
@@ -606,13 +606,10 @@ requireRole("Admin");
                                 <td><span class="drag-handle">⠿</span></td>
                                 <td>
                                     <div class="position-relative">
-                                        <input type="text"
-                                            class="table-input productSearch"
+                                        <input type="text" class="table-input productSearch"
                                             value="${item.product_code}">
 
-                                        <input type="hidden"
-                                            class="productId"
-                                            name="product_id[]"
+                                        <input type="hidden" class="productId" name="product_id[]"
                                             value="${item.product_id}">
 
                                         <span class="product-error text-danger"></span>
@@ -621,19 +618,24 @@ requireRole("Admin");
                                     </div>
                                 </td>
                                 <td>
-                                    <input type="text" class="table-input description" name="description[]" placeholder="Description" readonly>
+                                    <input type="text" class="table-input description" name="description[]"
+                                        placeholder="Description" readonly>
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1" min="1">
+                                    <input type="number" class="table-input qty text-end" name="qty[]" value="1"
+                                        min="1">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input price text-end" name="price[]" value="0" step="0.01">
+                                    <input type="number" class="table-input price text-end" name="price[]" value="0"
+                                        step="0.01">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00" readonly>
+                                    <input type="number" class="table-input tax text-end" name="tax[]" value="0.00"
+                                        readonly>
                                 </td>
                                 <td>
-                                    <input type="text" class="table-input amount text-end" name="amount[]" value="0.00" readonly>
+                                    <input type="text" class="table-input amount text-end" name="amount[]" value="0.00"
+                                        readonly>
                                 </td>
                                 <td>
                                     <button type="button" class="del-btn remove-row" title="Remove">&times;</button>
@@ -645,13 +647,14 @@ requireRole("Admin");
                     <!-- Add Line Buttons -->
                     <div class="add-line-row">
                         <button type="button" class="add-line-btn" id="addRow">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5"
+                                viewBox="0 0 24 24">
                                 <line x1="12" y1="5" x2="12" y2="19" />
                                 <line x1="5" y1="12" x2="19" y2="12" />
                             </svg>
                             Add a line item
                         </button>
-                        
+
                     </div>
 
                     <!-- Totals -->
@@ -661,7 +664,8 @@ requireRole("Admin");
                                 <tbody>
                                     <tr>
                                         <td style="color:#777">Subtotal</td>
-                                        <td><input type="hidden" name="subtotal" id="subTotal"><span id="displaySubtotal">0.00</span></td>
+                                        <td><input type="hidden" name="subtotal" id="subTotal"><span
+                                                id="displaySubtotal">0.00</span></td>
                                     </tr>
                                     <tr class="muted-row">
                                         <td>Includes tax</td>
@@ -711,7 +715,7 @@ requireRole("Admin");
     <script src="controller/logout.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             //DUE DATE VALIDATION
 
             let today = new Date().toISOString().split('T')[0];
@@ -719,7 +723,7 @@ requireRole("Admin");
 
             let editInvoiceId = new URLSearchParams(window.location.search).get('id');
 
-        //alert if Invoice id not found
+            //alert if Invoice id not found
             if (!editInvoiceId) {
                 Swal.fire({
                     icon: "error",
@@ -736,7 +740,7 @@ requireRole("Admin");
                 data: {
                     id: editInvoiceId
                 },
-                success: function(res) {
+                success: function (res) {
 
                     let invoice = res.invoice;
                     let items = res.items;
@@ -763,7 +767,7 @@ requireRole("Admin");
 
                     $("#invoiceItems").html("");
 
-                    items.forEach(function(item) {
+                    items.forEach(function (item) {
 
                         let row = `
                         <tr>
@@ -839,14 +843,14 @@ requireRole("Admin");
                 }
             });
 
-            $("#invoiceItems tr").each(function() {
+            $("#invoiceItems tr").each(function () {
                 calculateRow($(this));
             });
 
             calculateTotals();
 
             //FOR DYNAMIC CONTACTS
-            $("#contactSearch").keyup(function() {
+            $("#contactSearch").keyup(function () {
                 let keyword = $(this).val();
                 if (keyword.length < 1) {
                     $("#contactDropdown").hide();
@@ -859,7 +863,7 @@ requireRole("Admin");
                     data: {
                         keyword: keyword
                     },
-                    success: function(response) {
+                    success: function (response) {
 
                         let data = JSON.parse(response);
                         let html = '';
@@ -868,7 +872,7 @@ requireRole("Admin");
 
                         //all contacts dynamically 
                         if (data.length > 0) {
-                            $.each(data, function(index, row) {
+                            $.each(data, function (index, row) {
 
                                 html += `<div class="contact-item p-2 border-bottom"
                                 data-id ="${row.id}" data-name = "${row.name}">
@@ -890,7 +894,7 @@ requireRole("Admin");
             });
 
             //select contact
-            $(document).on("click", ".contact-item", function() {
+            $(document).on("click", ".contact-item", function () {
                 if ($(this).hasClass("add-contact")) {
                     window.location.href = "add_contact.php";
                     return;
@@ -906,7 +910,7 @@ requireRole("Admin");
             });
 
             //FOR DYNAMIC PRODUCTS
-            $(document).on("keyup", ".productSearch", function() {
+            $(document).on("keyup", ".productSearch", function () {
                 let keyword = $(this).val();
                 let row = $(this).closest("tr");
                 let dropdown = row.find(".productDropdown");
@@ -921,11 +925,11 @@ requireRole("Admin");
                     data: {
                         keyword: keyword
                     },
-                    success: function(response) {
+                    success: function (response) {
                         let data = JSON.parse(response);
                         let html = '';
                         if (data.length > 0) {
-                            $.each(data, function(index, row) {
+                            $.each(data, function (index, row) {
                                 html += `<div class="product-item p-2 border-bottom"
                                             data-id = "${row.id}" 
                                             data-code = "${row.product_code}" 
@@ -950,7 +954,7 @@ requireRole("Admin");
             });
 
             //select product
-            $(document).on("click", ".product-item", function() {
+            $(document).on("click", ".product-item", function () {
                 let id = $(this).data("id");
                 let code = $(this).data("code");
                 let name = $(this).data("name");
@@ -963,7 +967,7 @@ requireRole("Admin");
                 //check if already selected
                 let existingRow = null;
 
-                $("#invoiceItems tr").each(function() {
+                $("#invoiceItems tr").each(function () {
                     if ($(this).find(".productId").val() == id) {
                         existingRow = $(this);
                     }
@@ -1001,7 +1005,7 @@ requireRole("Admin");
             });
 
             //add new row
-            $("#addRow").click(function() {
+            $("#addRow").click(function () {
 
                 //no new row until last row filled
                 let lastRow = $("#invoiceItems tr:last");
@@ -1046,7 +1050,7 @@ requireRole("Admin");
             });
 
             //remove row
-            $(document).on("click", ".remove-row", function() {
+            $(document).on("click", ".remove-row", function () {
 
                 if ($("#invoiceItems tr").length > 1) {
 
@@ -1074,7 +1078,7 @@ requireRole("Admin");
                 let taxTotal = 0;
                 let grandTotal = 0;
 
-                $("#invoiceItems tr").each(function() {
+                $("#invoiceItems tr").each(function () {
 
                     let qty = parseFloat($(this).find(".qty").val()) || 0;
                     let price = parseFloat($(this).find(".price").val()) || 0;
@@ -1099,7 +1103,7 @@ requireRole("Admin");
             }
 
             // Total
-            $(document).on("input", ".qty, .price, .tax", function() {
+            $(document).on("input", ".qty, .price, .tax", function () {
 
                 let row = $(this).closest("tr");
 
@@ -1129,103 +1133,109 @@ requireRole("Admin");
                     }
                 },
 
-submitHandler: function(form) {
+                submitHandler: function (form) {
 
-    // Validate dynamic rows
-    let valid = true;
-    $(".product-error").text("");
+                    // Validate dynamic rows
+                    let valid = true;
+                    $(".product-error").text("");
 
-    $("#invoiceItems tr").each(function() {
+                    $("#invoiceItems tr").each(function () {
 
-        let productId = $(this).find(".productId").val();
+                        let productId = $(this).find(".productId").val();
 
-        if (!productId) {
-            $(this).find(".product-error").text("Please select a product");
-            valid = false;
-            return false;
-        }
-
-    });
-
-    if (!valid) {
-        return false;
-    }
-
- Swal.fire({
-    title: "Update Invoice?",
-    text: "Would you also like to send this invoice by email?",
-    icon: "question",
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: "Update & Send Email",
-    denyButtonText: "Update Only",
-    cancelButtonText: "Cancel"
-})
-.then((result) => {
-
-    if (result.isDismissed) {
-        return;
-    }
-
-    let formData = new FormData(form);
-    formData.append("send_email", result.isConfirmed ? 1 : 0);
-        $.ajax({
-            url: "php/edit_all_invoice.php",
-            type: "POST",
-            data: formData,
-            contentType: false,
-            processData: false,
-
-            success: function(response) {
-
-                let res = JSON.parse(response);
-
-                if (res.status === "success") {
-
-                    let message = res.email_status
-                        ? "Invoice updated and email sent successfully."
-                        : "Invoice updated successfully.";
-
-                    Swal.fire({
-                        title: "Success",
-                        text: message,
-                        icon: "success",
-                        confirmButtonText: "View / Print Invoice",
-                        showCancelButton: true
-                    }).then((result) => {
-
-                        if (result.isConfirmed) {
-                            window.open(res.pdf, "_blank");
+                        if (!productId) {
+                            $(this).find(".product-error").text("Please select a product");
+                            valid = false;
+                            return false;
                         }
 
-                        location.reload();
+                    });
+
+                    if (!valid) {
+                        return false;
+                    }
+
+                    Swal.fire({
+                        title: "Update Invoice",
+                        text: "Would you like to send this invoice to the customer after updating it?",
+                        icon: "question",
+                        showCancelButton: true,
+                        showDenyButton: true,
+                        confirmButtonText: "Update & Send Email",
+                        denyButtonText: "Update Only",
+                        cancelButtonText: "Cancel",
+                        allowOutsideClick: false,
+                        allowEscapeKey: true
+                    }).then((result) => {
+
+                        // Cancel button
+                        if (result.isDismissed) {
+                            return;
+                        }
+
+                        let formData = new FormData(form);
+
+                        // Send email only if Confirm button is clicked
+                        formData.append("send_email", result.isConfirmed ? 1 : 0);
+
+                        $.ajax({
+                            url: "php/edit_all_invoice.php",
+                            type: "POST",
+                            data: formData,
+                            contentType: false,
+                            processData: false,
+
+                            success: function (response) {
+
+                                let res = JSON.parse(response);
+
+                                if (res.status === "success") {
+
+                                    let message = res.email_status
+                                        ? "Invoice updated and email sent successfully."
+                                        : "Invoice updated successfully.";
+
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Success",
+                                        text: message,
+                                        confirmButtonText: "OK"
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+
+                                } else {
+
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: res.msg || "Unable to update invoice."
+                                    });
+
+                                }
+
+                            },
+
+                            error: function () {
+
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: "Something went wrong. Please try again."
+                                });
+
+                            }
+
+                        });
 
                     });
 
                 }
 
-            },
-
-            error: function() {
-
-                Swal.fire({
-                    title: "Error",
-                    text: "An error occurred.",
-                    icon: "error"
-                });
-
-            }
-
-        });
-
-    });
-
-}
-
             });
 
             //close dropdown when user click on screen
-            $(document).on("click", function(e) {
+            $(document).on("click", function (e) {
 
                 // Contact dropdown
                 if (!$(e.target).closest("#contactSearch, #contactDropdown").length) {
