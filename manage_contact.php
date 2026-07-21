@@ -258,7 +258,7 @@ require_once "includes/auth_check.php";
 
                                 if (response.trim() === "success") {
 
-                                    Swal.fire("Archived!", "Contacts deleted successfully", "success");
+                                    Swal.fire("Deleted!", "Contacts deleted successfully", "success");
 
                                     table.ajax.reload();
 
