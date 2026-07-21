@@ -77,18 +77,20 @@ requireRole("Admin");
                 <div class="container-fluid px-3 px-lg-4 py-4">
 
                     <form class="panel needs-validation" id="UpdateContactForm">
-                        <div class="panel-header">
-                            <input type="hidden" id="editContactId" name="id">
-                            <button type="button" class="btn btn-outline-secondary mb-3" onclick="history.back()">
-    <i class="bi bi-arrow-left"></i> Back
-</button>
+                        <div class="panel-header d-flex justify-content-between align-items-start">
                             <div>
+                                <input type="hidden" id="editContactId" name="id">
+
                                 <h2 class="h5 mb-1 section-title">
                                     <i class="bi bi-ui-checks-grid" aria-hidden="true"></i>
                                     <span>Contacts</span>
                                 </h2>
-                                <p class="text-muted mb-0">Add new contact</p>
+                                <p class="text-muted mb-0">Edit Contact</p>
                             </div>
+
+                            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </button>
                         </div>
 
                         <div class="row g-3">
@@ -149,7 +151,7 @@ requireRole("Admin");
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             let editContactId = new URLSearchParams(window.location.search).get('id');
 
@@ -161,7 +163,7 @@ requireRole("Admin");
                 data: {
                     id: editContactId
                 },
-                success: function(data) {
+                success: function (data) {
                     $("#editContactId").val(data.id);
                     $("#name").val(data.name);
                     $("#number").val(data.number);
@@ -185,7 +187,7 @@ requireRole("Admin");
                             url: "controller/check_number.php",
                             type: "POST",
                             data: {
-                                id: function() {
+                                id: function () {
                                     return $("#editContactId").val();
                                 }
                             }
@@ -198,7 +200,7 @@ requireRole("Admin");
                             url: "controller/check_contact_email.php",
                             type: "POST",
                             data: {
-                                id: function() {
+                                id: function () {
                                     return $("#editContactId").val();
                                 }
                             }
@@ -240,7 +242,7 @@ requireRole("Admin");
                         required: "Address is required"
                     }
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     Swal.fire({
                         title: "Are you sure?",
                         text: "You won't be able to revert this!",
@@ -258,7 +260,7 @@ requireRole("Admin");
                                 data: formData,
                                 processData: false,
                                 contentType: false,
-                                success: function(response) {
+                                success: function (response) {
                                     if (response.trim() == 'success') {
                                         Swal.fire({
                                             title: "Successful",
@@ -267,17 +269,17 @@ requireRole("Admin");
                                         }).then(() => {
                                             window.location.href = "manage_contact.php";
                                         });
-                                    }else{
-                                       Swal.fire({
-                                        title: "Failed",
-                                        text: "Contact not updated",
-                                        icon: "error"
-                                    }); 
+                                    } else {
+                                        Swal.fire({
+                                            title: "Failed",
+                                            text: "Contact not updated",
+                                            icon: "error"
+                                        });
                                     }
-                                    
+
 
                                 },
-                                error: function() {
+                                error: function () {
                                     Swal.fire({
                                         title: "Error",
                                         text: "Something went wrong! ry again",
