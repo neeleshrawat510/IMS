@@ -2,136 +2,144 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login Page</title>
-
-    <!-- Bootstrap 5 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management System | Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    <!-- Google Identity Services -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        html,
         body {
-            height: 100%;
             margin: 0;
+            font-family: Segoe UI, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px
         }
 
-        section {
-            height: 100vh;
+        .card {
+            max-width: 1150px;
+            width: 100%;
+            border: none;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .25)
         }
 
-        .card,
-        .row,
-        .col-lg-4 {
-            height: 100%;
+        .left {
+            position: relative;
+            min-height: 700px
         }
 
-        img {
-            display: block;
+        .left img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: cover
         }
 
-        .rounded-t-5 {
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 40, 90, .55);
+            color: #fff;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end
         }
 
-        @media (min-width: 992px) {
-            .rounded-tr-lg-0 {
-                border-top-right-radius: 0;
-            }
-
-            .rounded-bl-lg-5 {
-                border-bottom-left-radius: 0.5rem;
-            }
+        .right {
+            padding: 55px
         }
 
-        label.error {
-            color: red;
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: auto
+        }
+
+        .form-control {
+            height: 52px
+        }
+
+        .btn-primary {
+            height: 52px;
+            border-radius: 10px
+        }
+
+        .footer {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 25px
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Login Card -->
-    <section class="vh-100">
-        <div class="card h-100 border-0 rounded-0">
-            <div class="row g-0 h-100">
-                <div class="col-lg-4 d-none d-lg-block">
-                    <img src="uploads/login_img1.jpg" class="img-fluid w-100 h-100" alt="Login"
-                        style="object-fit: cover;">
-                </div>
-                <div class="col-lg-8 d-flex align-items-center">
-                    <div class="card-body">
-
-                        <form method="post" id="login">
-                            <h3 class="text-primary text-center mb-5">LOGIN</h3>
-                            <!-- Email input -->
-                            <div data-mdb-input-init class="form-outline mb-4">
-                                <label class="form-label" for="email">Email address</label>
-                                <input type="email" id="email" class="form-control" name="email"
-                                    placeholder="Enter your Email" />
-                            </div>
-
-                            <!-- Password input -->
-                            <div class="form-outline mb-4">
-                                <label class="form-label" for="password">Password</label>
-
-                                <div class="input-group">
-                                    <input type="password" id="password" class="form-control" name="password"
-                                        placeholder="Enter your Password">
-
-                                    <span class="input-group-text" id="togglePassword" style="cursor:pointer;">
-                                        <i class="bi bi-eye"></i>
-                                    </span>
-                                </div>
-                            </div>
-
-
-                            <!-- Remember me & forgot password -->
-                            <div class="row mb-4">
-                                <div class="col d-flex justify-content-start">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="rememberMe" />
-                                        <label class="form-check-label" for="rememberMe">
-                                            Remember me
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="col text-end">
-                                    <a href="forgot_password.php">Forgot password?</a>
-                                </div>
-                            </div>
-
-                            <!-- Submit button -->
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                                class="btn btn-primary btn-block mb-4">Sign in</button>
-
-                            <div class="text-center mb-3 text-muted">or</div>
-
-                            <!-- Google Sign-In -->
-                            <div id="g_id_onload"
-                                data-client_id="92348507939-74ujcuui4ce2g0pt2ipk287voa8io6sg.apps.googleusercontent.com"
-                                data-callback="handleGoogleLogin">
-                            </div>
-                            <div class="g_id_signin d-flex justify-content-center" data-type="standard"
-                                data-width="300"></div>
-
-                        </form>
-
-                    </div>
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-lg-5 d-none d-lg-block left">
+                <img src="uploads/login_img1.jpg" alt="">
+                <div class="overlay">
+                    <h1>Invoice Management System</h1>
+                    <p>Manage invoices, customers and payments from one secure platform.</p>
+                    <ul>
+                        <li>Create Professional Invoices</li>
+                        <li>Track Payments</li>
+                        <li>Manage Customers</li>
+                        <li>Secure Authentication</li>
+                    </ul>
+                    <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
                 </div>
             </div>
+            <div class="col-lg-7 right">
+                <div class="text-center mb-4">
+                    <div class="logo"><i class="bi bi-receipt"></i></div>
+                    <h2 class="mt-3">Welcome Back</h2>
+                    <p class="text-muted">Sign in to continue</p>
+                </div>
+                <form id="login">
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your Email">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <div class="input-group">
+                            <input type="password" id="password" name="password" class="form-control"
+                                placeholder="Enter your Password">
+                            <span class="input-group-text" id="togglePassword"><i class="bi bi-eye"></i></span>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rememberMe">
+                            <label class="form-check-label" for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="forgot_password.php">Forgot password?</a>
+                    </div>
+                    <button class="btn btn-primary w-100" type="submit">Sign In</button>
+                    <div class="text-center my-3 text-muted">or</div>
+                    <div id="g_id_onload"></div>
+                    <div class="g_id_signin d-flex justify-content-center" data-type="standard" data-width="300"></div>
+                    <div class="footer">
+                        © 2026 Invoice Management System<br>
+                        Developed by <strong>Baseline IT Development Pvt Ltd</strong>
+                    </div>
+                </form>
+            </div>
         </div>
-    </section>
-    <!-- Section: Design Block -->
+    </div>
 
 
     <!-- jQuery -->
@@ -183,7 +191,7 @@
                     data: JSON.stringify({ id_token: response.credential }),
                     success: function (res) {
                         res = typeof res === "string" ? JSON.parse(res) : res;
-                    
+
                         if (res.status === "success") {
                             onLoginSuccess(res.token, res.refresh_token);
                         } else {
