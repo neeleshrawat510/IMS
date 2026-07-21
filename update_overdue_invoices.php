@@ -9,7 +9,7 @@ mysqli_query(
     "UPDATE invoices
      SET status='Overdue'
      WHERE due_date < CURDATE()
-     AND status='Unpaid'"   
+     AND status='Sent' AND payment_status='Unpaid'"   
 );
 
 
