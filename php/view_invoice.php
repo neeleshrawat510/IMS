@@ -2,9 +2,7 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
-include("../controller/role_check.php");
 
-requireRole("Admin");
 
 if (!isset($_GET['id'])) {
     die("Invalid request");
@@ -20,6 +18,9 @@ if (!$row || empty($row['pdf_path'])) {
 }
 
 $file = "../" . $row['pdf_path'];
+
+echo $file;
+exit;
 
 if (!file_exists($file)) {
     die("File missing on server");
