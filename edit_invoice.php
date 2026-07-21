@@ -1,8 +1,4 @@
 <?php
-// Force PHP to display all errors and warnings
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 require_once "includes/auth_check.php";
 
@@ -1187,12 +1183,7 @@ requireRole("Admin");
 
                             success: function (response) {
 
-                               console.log("Raw response:", response);
-
-    let res = JSON.parse(response);
-
-    console.log("Parsed response:", res);
-
+                                let res = JSON.parse(response);
 
                                 if (res.status === "success") {
 
