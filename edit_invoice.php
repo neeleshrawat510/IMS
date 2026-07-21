@@ -545,11 +545,11 @@ requireRole("Admin");
                     <!-- Header -->
                     <div class="invoice-header">
                         <h5>Edit Invoice</h5>
-
+                        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </button>
                     </div>
-                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
-                        <i class="bi bi-arrow-left"></i> Back
-                    </button>
+
 
                     <!-- Top Fields -->
                     <div class="fields-grid">
