@@ -221,10 +221,10 @@ require_once "update_overdue_invoices.php";
                 new Chart($("#invoiceChart")[0], {
                     type: "pie",
                     data: {
-                        labels: ['Paid', 'Unpaid', 'Overdue'],
+                        labels: ['Sent', 'Draft', 'Overdue'],
                         datasets: [{
-                            data: [charts.status.Paid,
-                                charts.status.Unpaid,
+                            data: [charts.status.Sent,
+                                charts.status.Draft,
                                 charts.status.Overdue
                             ],
                             backgroundColor: ["#1cc88a", "#f6c23e", "#e74a3b"]
