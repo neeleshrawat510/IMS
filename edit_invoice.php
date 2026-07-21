@@ -741,7 +741,11 @@ requireRole("Admin");
                     id: editInvoiceId
                 },
                 success: function (res) {
+                  console.log(response);
 
+    let res = JSON.parse(response);
+
+    console.log(res);
                     let invoice = res.invoice;
                     let items = res.items;
 
