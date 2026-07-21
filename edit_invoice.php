@@ -741,11 +741,7 @@ requireRole("Admin");
                     id: editInvoiceId
                 },
                 success: function (res) {
-                  console.log(response);
-
-    let res = JSON.parse(response);
-
-    console.log(res);
+            
                     let invoice = res.invoice;
                     let items = res.items;
 
@@ -1191,7 +1187,12 @@ requireRole("Admin");
 
                             success: function (response) {
 
-                                let res = JSON.parse(response);
+                               console.log("Raw response:", response);
+
+    let res = JSON.parse(response);
+
+    console.log("Parsed response:", res);
+
 
                                 if (res.status === "success") {
 
