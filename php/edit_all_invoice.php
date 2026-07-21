@@ -46,13 +46,17 @@ $dateToday = date('Y-m-d H:i:s');
 
 $count = count($product_id);
 // Get current invoice status
-$statusQuery = mysqli_query($conn, "
-    SELECT status
+// Get current invoice status and public token
+$invoiceQuery = mysqli_query($conn, "
+    SELECT status, invoice_public_token
     FROM invoices
     WHERE id = '$invoice_id'
 ");
 
-$currentStatus = mysqli_fetch_assoc($statusQuery)['status'];
+$invoice = mysqli_fetch_assoc($invoiceQuery);
+
+$currentStatus = $invoice['status'];
+$invoicePublicToken = $invoice['invoice_public_token'];
 
 // If Draft, change to Sent. Otherwise keep existing status.
 $newStatus = ($currentStatus == 'Draft') ? 'Sent' : $currentStatus;
@@ -290,7 +294,7 @@ $pdfOutput = $dompdf->output();
 $fileName = "invoices/invoice_" . $invoice_id . ".pdf";
 $fullPath = "../" . $fileName;
 
-file_put_contents($fullPath, $pdfOutput);
+if(file_put_contents($fullPath, $pdfOutput)){
 
 //db path
 
@@ -299,6 +303,7 @@ UPDATE invoices
 SET pdf_path = '$fileName'
 WHERE id = '$invoice_id'
 ");
+}
 
 $emailSent = false;
 
