@@ -567,20 +567,7 @@ $invoice_date = date("Y-m-d");
                     <div class="invoice-header">
                         <div class="d-flex align-items-center gap-2">
                             <h5 class="mb-0">New Invoice</h5>
-
-                            <span id="invoiceStatusBadge" class="badge bg-secondary">
-                                Draft
-                            </span>
-                        </div> <button type="button" class="online-pay-btn">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"
-                                viewBox="0 0 24 24">
-                                <rect x="1" y="4" width="22" height="16" rx="2" />
-                                <line x1="1" y1="10" x2="23" y2="10" />
-                            </svg>
-                            Set up online payments
-                            <span class="pay-badge visa-badge">VISA</span>
-                            <span class="pay-badge mc-badge">MC</span>
-                        </button>
+                        </div> 
                     </div>
 
                     <!-- Top Fields -->
@@ -617,27 +604,6 @@ $invoice_date = date("Y-m-d");
 
                         <input type="hidden" name="status" id="status" value="Draft">
                     </div>
-
-                    <!-- Bill Status -->
-                    <!-- <div class="tax-inclusive">
-                        <div class="field-group">
-                            <label>Status</label>
-                            <select class="form-select" id="status" name="status">
-                                <option selected disabled class="text-center">Select Status</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Unpaid">Unpaid</option>
-                            </select>
-                        </div>
-                        <div class="field-group">
-                            <label>Tax Type</label>
-                            <select class="form-select" name="tax_type">
-                                <option selected disabled class="text-center">Select tax</option>
-                                <option value="inclusive">Tax inclusive</option>
-                                <option value="exclusive">Tax exclusive</option>
-                                <option value="notax">No tax</option>
-                            </select>
-                        </div>
-                    </div> -->
 
                     <!-- Line Items Table -->
                     <table class="invoice-table">
@@ -703,20 +669,7 @@ $invoice_date = date("Y-m-d");
                             </svg>
                             Add a line item
                         </button>
-                        <!-- <button type="button" class="add-line-btn">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="18" height="18" rx="2" />
-                                <line x1="3" y1="9" x2="21" y2="9" />
-                                <line x1="9" y1="21" x2="9" y2="9" />
-                            </svg>
-                            Show/hide fields
-                        </button>
-                        <button type="button" class="add-line-btn">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48" />
-                            </svg>
-                            Attach files
-                        </button> -->
+                       
                     </div>
 
                     <!-- Totals -->
@@ -750,8 +703,6 @@ $invoice_date = date("Y-m-d");
 
                     <!-- Actions -->
                     <div class="form-actions">
-                        <!-- <button type="button" class="btn-cancel">Cancel</button>
-                        <button type="button" class="btn-more" title="More options">&#8943;</button> -->
                         <button type="button" class="btn btn-secondary" id="draftBtn">Save Draft</button>
                         <button type="submit" class="btn-save" id="saveBtn">Save Invoice</button>
                     </div>
