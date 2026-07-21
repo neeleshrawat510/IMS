@@ -547,6 +547,9 @@ requireRole("Admin");
                         <h5>Edit Invoice</h5>
 
                     </div>
+                    <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                        <i class="bi bi-arrow-left"></i> Back
+                    </button>
 
                     <!-- Top Fields -->
                     <div class="fields-grid">
@@ -737,7 +740,7 @@ requireRole("Admin");
                     id: editInvoiceId
                 },
                 success: function (res) {
-            
+
                     let invoice = res.invoice;
                     let items = res.items;
 

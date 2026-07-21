@@ -84,6 +84,9 @@ requireRole("Admin");
                                 </h2>
                                 <p class="text-muted mb-0">Add new product</p>
                             </div>
+                            <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </button>
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
