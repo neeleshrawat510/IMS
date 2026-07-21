@@ -79,6 +79,9 @@ requireRole("Admin");
                     <form class="panel needs-validation" id="UpdateContactForm">
                         <div class="panel-header">
                             <input type="hidden" id="editContactId" name="id">
+                            <button type="button" class="btn btn-outline-secondary mb-3" onclick="history.back()">
+    <i class="bi bi-arrow-left"></i> Back
+</button>
                             <div>
                                 <h2 class="h5 mb-1 section-title">
                                     <i class="bi bi-ui-checks-grid" aria-hidden="true"></i>
