@@ -8,6 +8,7 @@
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -79,10 +80,17 @@
                             </div>
 
                             <!-- Password input -->
-                            <div data-mdb-input-init class="form-outline mb-4">
+                            <div class="form-outline mb-4">
                                 <label class="form-label" for="password">Password</label>
-                                <input type="password" id="password" class="form-control" name="password"
-                                    placeholder="Enter your Password" />
+
+                                <div class="input-group">
+                                    <input type="password" id="password" class="form-control" name="password"
+                                        placeholder="Enter your Password">
+
+                                    <span class="input-group-text" id="togglePassword" style="cursor:pointer;">
+                                        <i class="bi bi-eye"></i>
+                                    </span>
+                                </div>
                             </div>
 
 
@@ -210,6 +218,13 @@
                     },
                     password: {
                         required: "Password is required"
+                    }
+                },
+                errorPlacement: function (error, element) {
+                    if (element.parent(".input-group").length) {
+                        error.insertAfter(element.parent());   // Place error after the entire input-group
+                    } else {
+                        error.insertAfter(element);
                     }
                 },
 
