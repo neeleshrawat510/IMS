@@ -7,8 +7,8 @@ include("../config/connection.php");
 $counts = mysqli_fetch_assoc(mysqli_query($conn, "
     SELECT
         COUNT(*) AS invoices,
-        SUM(status = 'Paid') AS paidInvoices,
-        SUM(status = 'Unpaid') AS unpaidInvoices,
+        SUM(payment_status = 'Paid') AS paidInvoices,
+        SUM(payment_status = 'Unpaid') AS unpaidInvoices,
         SUM(status = 'Overdue') AS overdueInvoices,
         COALESCE(SUM(grand_total),0) AS totalRevenue
     FROM invoices
@@ -58,8 +58,8 @@ while ($row = mysqli_fetch_assoc($sql2)) {
 
 //pie chart -Invoice
 $status = [
-    "Paid" => 0,
-    "Unpaid" => 0,
+    "Sent" => 0,
+    "Draft" => 0,
     "Overdue" => 0
 ];
 
