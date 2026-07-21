@@ -588,32 +588,6 @@ requireRole("Admin");
                             <input type="text" class="" name="invoice_no" id="invoiceNo" readonly>
                         </div>
 
-                        <!-- Reference -->
-                        <!-- <div class="field-group">
-                            <label>Reference</label>
-                            <input type="text" class="" name="reference" placeholder="">
-                        </div> -->
-                    </div>
-
-                    <!-- Bill Status -->
-                    <div class="tax-inclusive">
-                        <div class="field-group">
-                            <label>Status</label>
-                            <select class="form-select" id="status" name="status">
-                                <option selected disabled class="text-center">Select Status</option>
-                                <option value="Paid">Paid</option>
-                                <option value="Unpaid">Unpaid</option>
-                            </select>
-                        </div>
-                        <!-- <div class="field-group">
-                            <label>Tax Type</label>
-                            <select class="form-select" name="tax_type">
-                                <option selected disabled class="text-center">Select tax</option>
-                                <option value="inclusive">Tax inclusive</option>
-                                <option value="exclusive">Tax exclusive</option>
-                                <option value="notax">No tax</option>
-                            </select>
-                        </div> -->
                     </div>
 
                     <!-- Line Items Table -->
@@ -1148,9 +1122,6 @@ requireRole("Admin");
                     },
                     invoice_date: {
                         required: true
-                    },
-                    status: {
-                        required: true
                     }
                 },
                 messages: {
@@ -1158,9 +1129,6 @@ requireRole("Admin");
                         required: "This field is required"
                     },
                     invoice_date: {
-                        required: "This field is required"
-                    },
-                    status: {
                         required: "This field is required"
                     }
                 },
