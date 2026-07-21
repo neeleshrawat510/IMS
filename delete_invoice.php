@@ -4,9 +4,7 @@ require_once "includes/auth_check.php";
 
 //conneciton setup
 include("config/connection.php");
-include("controller/role_check.php");
 
-requireRole("Admin");
 
 $invoice_id = $_POST['id'];
 

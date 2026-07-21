@@ -2,9 +2,7 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
-include("../controller/role_check.php");
 
-requireRole("Admin");
 
 $restoreProducts = mysqli_query($conn, "UPDATE `products` SET `remove` = '0'");
 

@@ -1,9 +1,7 @@
 <?php
 
 require_once "../includes/api_auth.php";
-include("../controller/role_check.php");
 
-requireRole("Admin");
 
 include("../config/connection.php");
 

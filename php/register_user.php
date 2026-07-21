@@ -2,9 +2,7 @@
 require_once "../includes/api_auth.php";
 //setting up connection with DB
 include("../config/connection.php");
-include("../controller/role_check.php");
 
-requireRole("Admin");
 
 
 //input fields with mysql injection

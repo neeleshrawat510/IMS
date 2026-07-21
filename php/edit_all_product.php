@@ -7,9 +7,7 @@ date_default_timezone_set('Asia/Kolkata');
 
 
 include("../config/connection.php");
-include("../controller/role_check.php");
 
-requireRole("Admin");
 
 
 

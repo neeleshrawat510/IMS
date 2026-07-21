@@ -2,9 +2,7 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
-include("../controller/role_check.php");
 
-requireRole("Admin");
 
 $sql = mysqli_query($conn, "SELECT * FROM  `products` WHERE `remove` = '1' ORDER BY id DESC");
 
