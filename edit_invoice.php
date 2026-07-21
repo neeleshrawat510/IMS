@@ -549,15 +549,7 @@ requireRole("Admin");
                     <!-- Header -->
                     <div class="invoice-header">
                         <h5>Edit Invoice</h5>
-                        <button type="button" class="online-pay-btn">
-                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <rect x="1" y="4" width="22" height="16" rx="2" />
-                                <line x1="1" y1="10" x2="23" y2="10" />
-                            </svg>
-                            Set up online payments
-                            <span class="pay-badge visa-badge">VISA</span>
-                            <span class="pay-badge mc-badge">MC</span>
-                        </button>
+                        
                     </div>
 
                     <!-- Top Fields -->
@@ -1137,73 +1129,98 @@ requireRole("Admin");
                     }
                 },
 
-                submitHandler: function(form) {
+submitHandler: function(form) {
 
-                    //validate dynamic row - Product
+    // Validate dynamic rows
+    let valid = true;
+    $(".product-error").text("");
 
-                    let valid = true;
-                    $(".product-error").text("");
-                    $("#invoiceItems tr").each(function(index) {
-                        let productId = $(this).find(".productId").val();
+    $("#invoiceItems tr").each(function() {
 
-                        if (!productId) {
+        let productId = $(this).find(".productId").val();
 
-                            $(this).find(".product-error")
-                                .text("Please select a product");
+        if (!productId) {
+            $(this).find(".product-error").text("Please select a product");
+            valid = false;
+            return false;
+        }
 
-                            valid = false;
-                            return false;
+    });
+
+    if (!valid) {
+        return false;
+    }
+
+ Swal.fire({
+    title: "Update Invoice?",
+    text: "Would you also like to send this invoice by email?",
+    icon: "question",
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: "Update & Send Email",
+    denyButtonText: "Update Only",
+    cancelButtonText: "Cancel"
+})
+.then((result) => {
+
+    if (result.isDismissed) {
+        return;
+    }
+
+    let formData = new FormData(form);
+    formData.append("send_email", result.isConfirmed ? 1 : 0);
+        $.ajax({
+            url: "php/edit_all_invoice.php",
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+
+            success: function(response) {
+
+                let res = JSON.parse(response);
+
+                if (res.status === "success") {
+
+                    let message = res.email_status
+                        ? "Invoice updated and email sent successfully."
+                        : "Invoice updated successfully.";
+
+                    Swal.fire({
+                        title: "Success",
+                        text: message,
+                        icon: "success",
+                        confirmButtonText: "View / Print Invoice",
+                        showCancelButton: true
+                    }).then((result) => {
+
+                        if (result.isConfirmed) {
+                            window.open(res.pdf, "_blank");
                         }
 
-                    });
-                    if (!valid) {
-                        return false;
-                    }
-
-                    let formData = new FormData(form);
-                    $.ajax({
-                        url: "php/edit_all_invoice.php",
-                        type: "POST",
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-
-                        success: function(response) {
-
-                            let res = JSON.parse(response);
-
-                            if (res.status === 'success') {
-
-                                Swal.fire({
-                                    title: "Successful",
-                                    text: "Invoice Edited",
-                                    icon: "success",
-                                    confirmButtonText: "View/Print Invoice",
-                                    showCancelButton: true
-                                }).then((result) => {
-
-                                    if (result.isConfirmed) {
-                                        window.open(res.pdf, '_blank'); // OPEN PDF
-                                        location.reload();
-                                    } else {
-                                        location.reload();
-                                    }
-
-                                });
-                            }
-                        },
-                        error: function() {
-                            Swal.fire({
-                                title: "error",
-                                text: "An error occured",
-                                icon: "error"
-                            });
-                        }
+                        location.reload();
 
                     });
 
                 }
 
+            },
+
+            error: function() {
+
+                Swal.fire({
+                    title: "Error",
+                    text: "An error occurred.",
+                    icon: "error"
+                });
+
+            }
+
+        });
+
+    });
+
+}
 
             });
 

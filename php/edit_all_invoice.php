@@ -15,13 +15,10 @@ date_default_timezone_set('Asia/Kolkata');
 include("../config/connection.php");
 
 require_once("../vendor/autoload.php");
+require_once "../controller/send_email.php";
 
 use Dompdf\Dompdf;
 use Dompdf\Options;
-
-include("../controller/role_check.php");
-
-requireRole("Admin");   
 
 
 
@@ -44,10 +41,21 @@ $qty         = $_POST['qty'];
 $price       = $_POST['price'];
 $tax         = $_POST['tax'];
 $amount      = $_POST['amount'];
-
+$sendEmail = isset($_POST['send_email']) ? (int)$_POST['send_email'] : 0;
 $dateToday = date('Y-m-d H:i:s');
 
 $count = count($product_id);
+// Get current invoice status
+$statusQuery = mysqli_query($conn, "
+    SELECT status
+    FROM invoices
+    WHERE id = '$invoice_id'
+");
+
+$currentStatus = mysqli_fetch_assoc($statusQuery)['status'];
+
+// If Draft, change to Sent. Otherwise keep existing status.
+$newStatus = ($currentStatus == 'Draft') ? 'Sent' : $currentStatus;
 
 if (!$invoice_id) {
     echo json_encode(["status" => "error", "msg" => "Invoice ID missing"]);
@@ -62,7 +70,8 @@ mysqli_query($conn, "
         due_date = '$due_date',
         subtotal = '$subtotal',
         tax_total = '$tax_total',
-        grand_total = '$grand_total'
+        grand_total = '$grand_total',
+                status = '$newStatus'
     WHERE id = '$invoice_id'
 ");
 
@@ -291,6 +300,26 @@ SET pdf_path = '$fileName'
 WHERE id = '$invoice_id'
 ");
 
+$emailSent = false;
+
+if ($sendEmail == 1) {
+
+    $emailSent = sendInvoiceEmail(
+        $contact_email,
+        $contact_name,
+        $invoice_no,
+        $invoicePublicToken,
+        $fullPath
+    );
+
+    $emailStatus = $emailSent ? "Sent" : "Failed";
+
+    mysqli_query($conn,"
+        UPDATE invoices
+        SET email_status='$emailStatus'
+        WHERE id='$invoice_id'
+    ");
+}
 echo json_encode([
     "status" => "success",
     "pdf" => $fileName
