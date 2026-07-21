@@ -19,11 +19,6 @@ if (!$row || empty($row['pdf_path'])) {
 
 $file = "../" . $row['pdf_path'];
 
-echo "DB Path: " . $row['pdf_path'] . "<br>";
-echo "Current Directory: " . __DIR__ . "<br>";
-echo "Checking File: " . $file . "<br>";
-echo "Absolute Path: " . realpath(dirname($file)) . "<br>";
-
 if (!file_exists($file)) {
     die("File missing on server");
 }
