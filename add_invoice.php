@@ -567,7 +567,7 @@ $invoice_date = date("Y-m-d");
                     <div class="invoice-header">
                         <div class="d-flex align-items-center gap-2">
                             <h5 class="mb-0">New Invoice</h5>
-                        </div> 
+                        </div>
                     </div>
 
                     <!-- Top Fields -->
@@ -669,7 +669,7 @@ $invoice_date = date("Y-m-d");
                             </svg>
                             Add a line item
                         </button>
-                       
+
                     </div>
 
                     <!-- Totals -->
@@ -1080,7 +1080,16 @@ $invoice_date = date("Y-m-d");
                         data: formData,
                         contentType: false,
                         processData: false,
+                        beforeSend: function () {
+                            $("#saveBtn, #draftBtn")
+                                .prop("disabled", true);
 
+                            if (isDraft) {
+                                $("#draftBtn").text("Saving...");
+                            } else {
+                                $("#saveBtn").text("Saving...");
+                            }
+                        },
                         success: function (response) {
 
                             let res = JSON.parse(response);
@@ -1125,6 +1134,17 @@ $invoice_date = date("Y-m-d");
                                 text: "An error occured",
                                 icon: "error"
                             });
+                        },
+                        complete: function () {
+                            $("#saveBtn")
+                                .prop("disabled", false)
+                                .text("Save Invoice");
+
+                            $("#draftBtn")
+                                .prop("disabled", false)
+                                .text("Save Draft");
+
+                            isDraft = false;
                         }
 
                     });
