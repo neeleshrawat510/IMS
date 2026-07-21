@@ -322,7 +322,9 @@ if ($sendEmail == 1) {
 }
 echo json_encode([
     "status" => "success",
-    "pdf" => $fileName
+    "pdf" => $fileName,
+    "email_status" => $emailSent
+
 ]);
 exit;
 ?>
