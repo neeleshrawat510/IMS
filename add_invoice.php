@@ -567,7 +567,7 @@ $invoice_date = date("Y-m-d");
                     <div class="invoice-header">
                         <div class="d-flex align-items-center gap-2">
                             <h5 class="mb-0">New Invoice</h5>
-                        </div>
+                        </div> 
                     </div>
 
                     <!-- Top Fields -->
@@ -603,7 +603,6 @@ $invoice_date = date("Y-m-d");
                         </div>
 
                         <input type="hidden" name="status" id="status" value="Draft">
-                        <input type="hidden" name="action" id="action" value="save_send">
                     </div>
 
                     <!-- Line Items Table -->
@@ -670,7 +669,7 @@ $invoice_date = date("Y-m-d");
                             </svg>
                             Add a line item
                         </button>
-
+                       
                     </div>
 
                     <!-- Totals -->
@@ -705,20 +704,7 @@ $invoice_date = date("Y-m-d");
                     <!-- Actions -->
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" id="draftBtn">Save Draft</button>
-                        <div class="dropdown">
-                            <button class="btn-save dropdown-toggle" type="button" id="saveDropdown"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Save &amp; Send Email
-                            </button>
-
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a class="dropdown-item" href="#" id="saveInvoiceOnly">
-                                        Save Invoice
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        <button type="submit" class="btn-save" id="saveBtn">Save Invoice</button>
                     </div>
 
                 </div>
