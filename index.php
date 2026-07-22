@@ -7,7 +7,7 @@
     <title>Invoice Management System | Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-      <!-- Google Identity Services -->
+    <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
@@ -132,15 +132,14 @@
                     </div>
                     <button class="btn btn-primary w-100" type="submit">Sign In</button>
                     <div class="text-center my-3 text-muted">or</div>
-                     <!-- Google Sign-In -->
-                            <div id="g_id_onload"
-                                data-client_id="92348507939-74ujcuui4ce2g0pt2ipk287voa8io6sg.apps.googleusercontent.com"
-                                data-callback="handleGoogleLogin">
-                            </div>
-                            <div class="g_id_signin d-flex justify-content-center" data-type="standard"
-                                data-width="300"></div> 
+                    <!-- Google Sign-In -->
+                    <div id="g_id_onload"
+                        data-client_id="92348507939-74ujcuui4ce2g0pt2ipk287voa8io6sg.apps.googleusercontent.com"
+                        data-callback="handleGoogleLogin">
+                    </div>
+                    <div class="g_id_signin d-flex justify-content-center" data-type="standard" data-width="300"></div>
                     <div class="footer">
-                        © 2026 Invoice Management System<br>
+                        © <?= date('Y') ?> Invoice Management System<br>
                         Developed by <strong>Baseline IT Development Pvt Ltd</strong>
                     </div>
                 </form>
@@ -160,7 +159,7 @@
     <script>
         $(document).ready(function () {
 
-             // Show/Hide Password
+            // Show/Hide Password
             $("#togglePassword").click(function () {
                 const password = $("#password");
                 const icon = $(this).find("i");
