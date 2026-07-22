@@ -22,10 +22,6 @@ require_once "includes/auth_check.php";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery  -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
-    <!-- js -->
-     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <style>
         #contactsTable th,
         #contactsTable td {
@@ -33,6 +29,13 @@ require_once "includes/auth_check.php";
             vertical-align: middle !important;
         }
 
+        input.error {
+            border: 1px solid red;
+        }
+
+        label.error {
+            color: red;
+        }
     </style>
 </head>
 
@@ -167,34 +170,8 @@ require_once "includes/auth_check.php";
     <!-- DATATABLE -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
     <script>
         $(document).ready(function() {
-
-        //Country list
-        <script>
-const input = document.querySelector("#number");
-
-const iti = window.intlTelInput(input, {
-    initialCountry: "auto",
-    preferredCountries: ["in", "us", "gb"],
-    separateDialCode: true,
-    nationalMode: true,
-    geoIpLookup: function(callback) {
-        fetch("https://ipapi.co/json/")
-            .then(res => res.json())
-            .then(data => callback(data.country_code))
-            .catch(() => callback("in"));
-    }
-});
-
-// Before form submit, keep only the national number
-document.querySelector("form").addEventListener("submit", function () {
-    input.value = iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL)
-                     .replace(/\D/g, "");
-});
-
-
             // Add validator for strong password
             $.validator.addMethod("strongPassword", function(value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
