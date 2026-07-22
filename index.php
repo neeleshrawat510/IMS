@@ -84,7 +84,8 @@
             text-align: center;
             margin-top: 25px
         }
-              .rounded-t-5 {
+
+        .rounded-t-5 {
             border-top-left-radius: 0.5rem;
             border-top-right-radius: 0.5rem;
         }
@@ -106,7 +107,7 @@
             }
         }
 
-        .success-msg{
+        .success-msg {
             color: green;
         }
     </style>

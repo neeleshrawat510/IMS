@@ -4,7 +4,8 @@ include("config/connection.php");
 $token = $_GET['token'] ?? '';
 
 if (!$token) {
-die("Invalid or missing reset token.");}
+    die("Invalid or missing reset token.");
+}
 
 // validate token once
 $query = mysqli_query($conn, "
@@ -14,20 +15,97 @@ $query = mysqli_query($conn, "
 ");
 
 if (mysqli_num_rows($query) == 0) {
-die("This password reset link is invalid or has expired.");}
+    die("This password reset link is invalid or has expired.");
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Update Password</title>
-
-    <!-- Bootstrap 5 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management System | Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
+        body {
+            margin: 0;
+            font-family: Segoe UI, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px
+        }
+
+        .card {
+            max-width: 1150px;
+            width: 100%;
+            border: none;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .25)
+        }
+
+        .left {
+            position: relative;
+            min-height: 700px
+        }
+
+        .left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 40, 90, .55);
+            color: #fff;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end
+        }
+
+        .right {
+            padding: 55px
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: auto
+        }
+
+        .form-control {
+            height: 52px
+        }
+
+        .btn-primary {
+            height: 52px;
+            border-radius: 10px
+        }
+
+        .footer {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 25px
+        }
+
         .rounded-t-5 {
             border-top-left-radius: 0.5rem;
             border-top-right-radius: 0.5rem;
@@ -50,50 +128,61 @@ die("This password reset link is invalid or has expired.");}
             }
         }
 
-        .success-msg{
+        .success-msg {
             color: green;
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Login Card -->
-    <section class="vh-100">
-        <div class="card h-100 border-0 rounded-0">
-            <div class="row g-0 h-100">
-                <div class="col-lg-4 d-none d-lg-block">
-                    <img src="uploads/login_img1.jpg" class="img-fluid w-100 h-100" alt="Login"
-                        style="object-fit: cover;">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-lg-5 d-none d-lg-block left">
+                <img src="uploads/login_img1.jpg" alt="">
+                <!-- <div class="overlay">
+                    <h1>Invoice Management System</h1>
+                    <p>Manage invoices, customers and payments from one secure platform.</p>
+                    <ul>
+                        <li>Create Professional Invoices</li>
+                        <li>Manage Products</li>
+                        <li>Manage Customers</li>
+                        <li>Secure Authentication</li>
+                    </ul>
+                    <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
+                </div> -->
+            </div>
+            <div class="col-lg-7 right">
+                <div class="text-center mb-4">
+                    <div class="logo"><i class="bi bi-receipt"></i></div>
+                    <h2 class="mt-3">Reset Password</h2>
+                    <p class="text-muted">Setup a new password</p>
                 </div>
-                <div class="col-lg-8 d-flex align-items-center">
-                    <div class="card-body">
+                <form method="post" id="resetForm">
 
-                        <form method="post" id="resetForm">
-                            <h3 class="text-primary text-center mb-5">Create New Password</h3>
-                           
-                            <!-- reset token -->
-                            <input type="hidden" name="token" value="<?= $token ?>">
-                            <!-- Email input -->
-                            <div data-mdb-input-init class="form-outline mb-4">
-                                <label class="form-label" for="password">Create New Password</label>
-                                <input type="password" id="password" class="form-control" name="password" placeholder="Enter Password"/>
-                            </div>
-                            <div data-mdb-input-init class="form-outline mb-4">
-                                <label class="form-label" for="confirm_password">Confirm Password</label>
-                                <input type="password" id="confirm_password" class="form-control" name="confirm_password" placeholder="Enter Confirm Password"/>
-                            </div>
-
-                            <!-- Submit button -->
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Update Password</button>
-
-                        </form>
-
+                    <!-- reset token -->
+                    <input type="hidden" name="token" value="<?= $token ?>">
+                    <!-- Email input -->
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="password">Create New Password</label>
+                        <input type="password" id="password" class="form-control" name="password"
+                            placeholder="Enter Password" />
                     </div>
-                </div>
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" class="form-control" name="confirm_password"
+                            placeholder="Enter Confirm Password" />
+                    </div>
+
+                    <!-- Submit button -->
+                    <button class="btn btn-primary w-100" type="submit">Reset Password</button>
+                    <div class="footer">
+                        © <?= date('Y') ?> Invoice Management System<br>
+                        Developed by <strong>Baseline IT Development Pvt Ltd</strong>
+                    </div>
+                </form>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -105,9 +194,9 @@ die("This password reset link is invalid or has expired.");}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        $(document).ready(function() {
-             // Add validator for strong password
-            $.validator.addMethod("strongPassword", function(value, element) {
+        $(document).ready(function () {
+            // Add validator for strong password
+            $.validator.addMethod("strongPassword", function (value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
             });
 
@@ -132,17 +221,17 @@ die("This password reset link is invalid or has expired.");}
                         equalTo: "Password and confirm password should be same"
                     }
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     $.ajax({
                         url: "php/new_password.php",
                         type: "POST",
                         data: $(form).serialize(),
 
-                        beforeSend: function() {
+                        beforeSend: function () {
                             $("button[type=submit]").prop("disabled", true).text("Updating...");
                         },
 
-                        success: function(response) {
+                        success: function (response) {
 
                             if (response.trim() == "success") {
                                 Swal.fire({
@@ -164,7 +253,7 @@ die("This password reset link is invalid or has expired.");}
                             }
                         },
 
-                        error: function() {
+                        error: function () {
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops",
@@ -172,7 +261,7 @@ die("This password reset link is invalid or has expired.");}
                             });
                         },
 
-                        complete: function() {
+                        complete: function () {
                             $("button[type=submit]").prop("disabled", false).text("Update Password");
                         }
                     });
