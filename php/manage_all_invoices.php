@@ -61,8 +61,7 @@ if (mysqli_num_rows($sql) > 0) {
                     </a>    
                     <a href="#"
                         data-id="' . $row['id'] . '"
-                        class="btn btn-warning btn-sm me-1 send-invoice-btn"
-                        title="Send Invoice">
+                        class="btn btn-warning btn-sm me-1 send-invoice-btn" title="Send Invoice">
                         <i class="bi bi-envelope"></i>
                     </a>
                     <a href="#" class="btn btn-danger btn-sm delete-btn" title="Delete" data-id="' . $row['id'] . '">                          <i class="bi bi-trash"></i>
