@@ -291,7 +291,7 @@ $(document).on("click", ".send-invoice-btn", function (e) {
     }).then((result) => {
 
         if (!result.isConfirmed) return;
-
+console.log(id);
         $.ajax({
             url: "php/send_invoice_mail.php",
             type: "POST",
