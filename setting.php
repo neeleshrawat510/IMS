@@ -274,8 +274,6 @@ require_once "includes/auth_check.php";
 
                 },
                 submitHandler: function (form) {
-                    // Save complete international number
-                    $("#number").val(iti.getNumber());
 
                     let formData = new FormData(form);
                     $.ajax({
