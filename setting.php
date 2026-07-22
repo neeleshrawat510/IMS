@@ -179,7 +179,7 @@ require_once "includes/auth_check.php";
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/js/intlTelInput.min.js"></script>
-    <script>intlTelInput(utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")</script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/js/utils.js"></script>
     <script>
         $(document).ready(function () {
 
@@ -197,9 +197,9 @@ require_once "includes/auth_check.php";
                 preferredCountries: ["in", "us", "gb"],
                 separateDialCode: true,
                 nationalMode: true,
-                autoPlaceholder: "aggressive",
-                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/js/utils.js"
+                autoPlaceholder: "aggressive"
             });
+
             // Add validator for strong password
             $.validator.addMethod("strongPassword", function (value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
