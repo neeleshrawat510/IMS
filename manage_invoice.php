@@ -280,8 +280,6 @@ require_once "includes/auth_check.php";
 
                 let id = $(this).data("id");
 
-                console.log(id);
-
                 Swal.fire({
                     title: "Send Invoice?",
                     text: "Invoice will be emailed to the customer.",
@@ -291,7 +289,6 @@ require_once "includes/auth_check.php";
                 }).then((result) => {
 
                     if (!result.isConfirmed) return;
-                    console.log(id);
                     $.ajax({
                         url: "php/send_invoice_mail.php",
                         type: "POST",
@@ -357,7 +354,6 @@ require_once "includes/auth_check.php";
                                 id: id
                             },
                             success: function (response) {
-                                console.log("DELETE RESPONSE:", response);
 
                                 if (response.trim() === "success") {
 

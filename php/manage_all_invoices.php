@@ -58,7 +58,7 @@ if (mysqli_num_rows($sql) > 0) {
 
                     <a href="php/download_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Download">
                         <i class="bi bi-download"></i> 
-                    </a>
+                    </a>    
                     <a href="#"
                         data-id="' . $row['id'] . '"
                         class="btn btn-warning btn-sm me-1 send-invoice-btn"

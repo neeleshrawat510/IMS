@@ -237,7 +237,6 @@ require_once "includes/auth_check.php";
                             id: id
                         },
                         success: function (response) {
-                            console.log("DELETE RESPONSE:", response);
 
                             if (response.trim() === "success") {
 
