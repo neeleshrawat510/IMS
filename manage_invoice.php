@@ -275,7 +275,7 @@ require_once "includes/auth_check.php";
 
             // Send Invoice
             $(document).on("click", ".send-invoice-btn", function () {
-
+                 e.preventDefault();
                 let id = $(this).data("id");
 
                 Swal.fire({

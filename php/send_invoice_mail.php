@@ -10,8 +10,7 @@ require_once "../controller/send_email.php";
 header("Content-Type: application/json");
 
 
-$id = intval($_POST['id'] ?? 0);
-
+$id = intval($_GET['id'] ?? 0);
 
 if (!$id) {
 

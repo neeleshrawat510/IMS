@@ -41,7 +41,7 @@ if (mysqli_num_rows($sql) > 0) {
             <i class="bi bi-pencil"></i>
         </button>';
         }
-
+        
         $data[] = [
             $row['id'],
             $sr++,
@@ -59,11 +59,12 @@ if (mysqli_num_rows($sql) > 0) {
                     <a href="php/download_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Download">
                         <i class="bi bi-download"></i> 
                     </a>
-                    <a href="php/send_invoice_mail.php?id=' . $row['id'] . '"
-   class="btn btn-warning btn-sm me-1 send-invoice-btn"
-   title="Send Invoice">
-    <i class="bi bi-envelope"></i>
-</a>
+                    <a href="#"
+                        data-id="' . $row['id'] . '"
+                        class="btn btn-warning btn-sm me-1 send-invoice-btn"
+                        title="Send Invoice">
+                        <i class="bi bi-envelope"></i>
+                    </a>
                     <a href="#" class="btn btn-danger btn-sm delete-btn" title="Delete" data-id="' . $row['id'] . '">                          <i class="bi bi-trash"></i>
                     </a>'
         ];
