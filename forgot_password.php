@@ -152,8 +152,7 @@
                     </div>
                     
                     <!-- Submit button -->
-                    <button type="submit" data-mdb-button-init data-mdb-ripple-init
-                        class="btn btn-primary btn-block mb-4">Send Reset Link</button>
+                                        <button class="btn btn-primary w-100" type="submit">Send Reset Link</button>
                     <!-- footer -->
                 <div class="footer">
                         © <?= date('Y') ?> Invoice Management System<br>
