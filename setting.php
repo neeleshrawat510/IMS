@@ -24,7 +24,7 @@ require_once "includes/auth_check.php";
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <!-- css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/css/intlTelInput.css">
     <style>
         #contactsTable th,
         #contactsTable td {
@@ -178,7 +178,7 @@ require_once "includes/auth_check.php";
     <!-- DATATABLE -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/js/intlTelInput.min.js"></script>
     <script>intlTelInput(utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")</script>
     <script>
         $(document).ready(function () {
@@ -187,28 +187,19 @@ require_once "includes/auth_check.php";
             const phoneInput = document.querySelector("#number");
 
             const iti = window.intlTelInput(phoneInput, {
-
                 initialCountry: "auto",
-
                 geoIpLookup: function (callback) {
                     fetch("https://ipapi.co/json/")
-                        .then(response => response.json())
+                        .then(res => res.json())
                         .then(data => callback(data.country_code))
                         .catch(() => callback("in"));
                 },
-
                 preferredCountries: ["in", "us", "gb"],
-
                 separateDialCode: true,
-
                 nationalMode: true,
-
                 autoPlaceholder: "aggressive",
-
-                utilsScript:
-                    "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
+                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/js/utils.js"
             });
-
             // Add validator for strong password
             $.validator.addMethod("strongPassword", function (value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
@@ -216,13 +207,10 @@ require_once "includes/auth_check.php";
 
             //valid phone no
             $.validator.addMethod("phoneValid", function (value, element) {
-
-                if ($.trim(value) === "") {
-                    return false;
+                if (this.optional(element)) {
+                    return true;
                 }
-
                 return iti.isValidNumber();
-
             }, "Please enter a valid phone number.");
 
             phoneInput.addEventListener("blur", function () {
