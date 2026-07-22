@@ -22,7 +22,10 @@ require_once "includes/auth_check.php";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery  -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- css -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
+    <!-- js -->
+     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <style>
         #contactsTable th,
         #contactsTable td {
@@ -75,8 +78,7 @@ require_once "includes/auth_check.php";
                                             <span class="input-group-text">
                                                 <i class="bi bi-person"></i>
                                             </span>
-                                            <input type="text" name="name" id="name" class="form-control"
-                                                placeholder="Enter full name">
+                                            <input type="text" name="name" id="name" class="form-control" placeholder="Enter full name">
                                         </div>
                                     </div>
 
@@ -89,8 +91,7 @@ require_once "includes/auth_check.php";
                                             <span class="input-group-text">
                                                 <i class="bi bi-envelope"></i>
                                             </span>
-                                            <input type="email" name="email" id="email" class="form-control"
-                                                placeholder="example@email.com">
+                                            <input type="email" name="email" id="email" class="form-control" placeholder="example@email.com">
                                         </div>
                                     </div>
 
@@ -99,14 +100,11 @@ require_once "includes/auth_check.php";
                                         <label for="number" class="form-label fw-semibold">
                                             Phone Number
                                         </label>
-
                                         <div class="input-group">
                                             <span class="input-group-text">
                                                 <i class="bi bi-telephone"></i>
                                             </span>
-
-                                            <input type="tel" name="number" id="number" class="form-control"
-                                                placeholder="Enter phone number">
+                                            <input type="text" name="number" id="number" class="form-control" placeholder="+91 9876543210">
                                         </div>
                                     </div>
 
@@ -119,8 +117,7 @@ require_once "includes/auth_check.php";
                                             <span class="input-group-text">
                                                 <i class="bi bi-lock"></i>
                                             </span>
-                                            <input type="password" name="password" id="password" class="form-control"
-                                                placeholder="Enter secure password">
+                                            <input type="password" name="password" id="password" class="form-control" placeholder="Enter secure password">
                                         </div>
                                     </div>
 
@@ -146,8 +143,7 @@ require_once "includes/auth_check.php";
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover nowrap w-100" id="userTable"
-                                style="font-size: small;">
+                            <table class="table table-striped table-hover nowrap w-100" id="userTable" style="font-size: small;">
                                 <thead class="table-light">
                                     <tr>
                                         <th>#</th>
@@ -177,33 +173,37 @@ require_once "includes/auth_check.php";
     <script src="controller/logout.js"></script>
     <!-- DATATABLE -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
     <script>
-        const phoneInput = document.querySelector("#number");
+        $(document).ready(function() {
 
-        const iti = window.intlTelInput(phoneInput, {
-            initialCountry: "in",
-            preferredCountries: ["in", "us", "gb", "ae"],
-            separateDialCode: true,
-            nationalMode: true,
-            autoPlaceholder: "aggressive",
-            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
-        });
+        //Country list
+        <script>
+const input = document.querySelector("#number");
 
-        // Save full international number before form submit
-        phoneInput.form.addEventListener("submit", function () {
-            phoneInput.value = iti.getNumber();
-        });
-    </script>
+const iti = window.intlTelInput(input, {
+    initialCountry: "auto",
+    preferredCountries: ["in", "us", "gb"],
+    separateDialCode: true,
+    nationalMode: true,
+    geoIpLookup: function(callback) {
+        fetch("https://ipapi.co/json/")
+            .then(res => res.json())
+            .then(data => callback(data.country_code))
+            .catch(() => callback("in"));
+    }
+});
 
-    <script>
-        $(document).ready(function () {
+// Before form submit, keep only the national number
+document.querySelector("form").addEventListener("submit", function () {
+    input.value = iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL)
+                     .replace(/\D/g, "");
+});
+
+
             // Add validator for strong password
-            $.validator.addMethod("strongPassword", function (value, element) {
+            $.validator.addMethod("strongPassword", function(value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
             });
 
@@ -244,7 +244,7 @@ require_once "includes/auth_check.php";
                         strongPassword: "atleast one Uppercase, lowercase, number and special character required"
                     }
                 },
-                submitHandler: function (form) {
+                submitHandler: function(form) {
                     let formData = new FormData(form);
                     $.ajax({
                         url: "php/register_user.php",
@@ -253,7 +253,7 @@ require_once "includes/auth_check.php";
                         contentType: false,
                         processData: false,
 
-                        success: function (response) {
+                        success: function(response) {
                             if (response.trim() === "success") {
                                 Swal.fire("success", "User Added Successfully", "success")
                                     .then(() => {
@@ -263,7 +263,7 @@ require_once "includes/auth_check.php";
                                 Swal.fire("info", "User Not Added, Try again!", "info");
                             }
                         },
-                        error: function () {
+                        error: function() {
                             Swal.fire("error", "Something went wrong", "error");
                         }
 
@@ -276,14 +276,14 @@ require_once "includes/auth_check.php";
             //data table
             $("#userTable").DataTable({
                 ajax: {
-                    url: "php/view_users.php",
-                    dataSrc: ""
+                        url: "php/view_users.php",
+                        dataSrc: ""
                 },
-                columns: [
-                    { data: 0 },//sr no
-                    { data: 1 },//name
-                    { data: 2 },//email
-                    { data: 3 },//number
+                columns:  [
+                    {data: 0},//sr no
+                    {data: 1},//name
+                    {data: 2},//email
+                    {data: 3},//number
                 ]
             });
         });
