@@ -1,8 +1,4 @@
 <?php
-echo '<pre>';
-print_r($_POST);
-exit;
-
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
@@ -14,8 +10,7 @@ require_once "../controller/send_email.php";
 header("Content-Type: application/json");
 
 
-$id = intval($_GET['id'] ?? 0);
-
+$id = intval($_POST['id'] ?? 0);
 if (!$id) {
 
     echo json_encode([
