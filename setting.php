@@ -178,7 +178,7 @@ require_once "includes/auth_check.php";
     <!-- DATATABLE -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <script>
         $(document).ready(function () {
 
@@ -197,32 +197,27 @@ require_once "includes/auth_check.php";
                 separateDialCode: true,
                 nationalMode: true,
                 autoPlaceholder: "aggressive",
-    loadUtilsOnInit: () =>
-        import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")            });
+                loadUtilsOnInit: () =>
+                    import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")
+            });
+
+
             // Add validator for strong password
             $.validator.addMethod("strongPassword", function (value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
             });
 
             //valid phone no
-            $.validator.addMethod("phoneValid", function (value, element) {
-                if (this.optional(element)) {
-                    return true;
+            $.validator.addMethod("phoneValid", function (value) {
+                const country = iti.getSelectedCountryData().iso2;
+
+                if (country === "in") {
+                    return /^[6-9]\d{9}$/.test(value);
                 }
+
                 return iti.isValidNumber();
             }, "Please enter a valid phone number.");
 
-            phoneInput.addEventListener("blur", function () {
-
-                console.log("Country:", iti.getSelectedCountryData());
-
-                console.log("Number:", iti.getNumber());
-
-                console.log("Valid:", iti.isValidNumber());
-
-                console.log("Error:", iti.getValidationError());
-
-            });
 
             //validate form
             $("#userForm").validate({
