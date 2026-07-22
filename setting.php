@@ -33,15 +33,31 @@ require_once "includes/auth_check.php";
         }
 
         /* Fix width of phone input */
-        .input-group .iti {
-            display: flex;
-            flex: 1 1 auto;
-            width: 1%;
-        }
+        /* Phone input wrapper */
+.input-group .iti {
+    flex: 1 1 auto;
+    width: 1%;
+}
 
-        .input-group .iti input.form-control {
-            width: 100% !important;
-        }
+/* Prevent shrinking */
+.input-group .iti input {
+    width: 100% !important;
+}
+
+/* Validation error */
+label.error {
+    display: block !important;
+    width: 100%;
+    margin-top: 5px;
+    color: #dc3545;
+    font-size: 0.875rem;
+}
+
+/* Place phone error below the field */
+.iti + label.error {
+    display: block !important;
+    width: 100%;
+}
 
         input.error {
             border: 1px solid red;
@@ -269,7 +285,7 @@ require_once "includes/auth_check.php";
                 errorPlacement: function (error, element) {
 
                     if (element.attr("id") === "number") {
-                        error.insertAfter(element.closest(".iti"));
+                        error.appendTo(element.closest(".col-md-6"));
                     }
                     else if (element.parent(".input-group").length) {
                         error.insertAfter(element.parent());
