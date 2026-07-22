@@ -66,9 +66,6 @@ function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $invoicePublicToken, $p
 
 <p>{$payUrl}</p>
 
-<br>
-
-<p>Thank you.</p>
             <br>
 
             <p>Thank you.</p>
