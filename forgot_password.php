@@ -2,81 +2,139 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Forgot Password</title>
-
-    <!-- Bootstrap 5 -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invoice Management System | Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Identity Services -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
-        .rounded-t-5 {
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
+        body {
+            margin: 0;
+            font-family: Segoe UI, sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 25px
         }
 
-        label.error {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
+        .card {
+            max-width: 1150px;
+            width: 100%;
+            border: none;
+            border-radius: 22px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .25)
         }
 
-
-        @media (min-width: 992px) {
-            .rounded-tr-lg-0 {
-                border-top-right-radius: 0;
-            }
-
-            .rounded-bl-lg-5 {
-                border-bottom-left-radius: 0.5rem;
-            }
+        .left {
+            position: relative;
+            min-height: 700px
         }
 
-        .success-msg{
-            color: green;
+        .left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
+        }
+
+        .overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(20, 40, 90, .55);
+            color: #fff;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end
+        }
+
+        .right {
+            padding: 55px
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 30px;
+            margin: auto
+        }
+
+        .form-control {
+            height: 52px
+        }
+
+        .btn-primary {
+            height: 52px;
+            border-radius: 10px
+        }
+
+        .footer {
+            font-size: 13px;
+            color: #666;
+            text-align: center;
+            margin-top: 25px
         }
     </style>
 </head>
 
 <body>
-
-    <!-- Login Card -->
-    <section class="vh-100">
-        <div class="card h-100 border-0 rounded-0">
-            <div class="row g-0 h-100">
-                <div class="col-lg-4 d-none d-lg-block">
-                    <img src="uploads/login_img1.jpg" class="img-fluid w-100 h-100" alt="Login"
-                        style="object-fit: cover;">
+    <div class="card">
+        <div class="row g-0">
+            <div class="col-lg-5 d-none d-lg-block left">
+                <img src="uploads/login_img1.jpg" alt="">
+                <!-- <div class="overlay">
+                    <h1>Invoice Management System</h1>
+                    <p>Manage invoices, customers and payments from one secure platform.</p>
+                    <ul>
+                        <li>Create Professional Invoices</li>
+                        <li>Manage Products</li>
+                        <li>Manage Customers</li>
+                        <li>Secure Authentication</li>
+                    </ul>
+                    <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
+                </div> -->
+            </div>
+            <div class="col-lg-7 right">
+                <div class="text-center mb-4">
+                    <div class="logo"><i class="bi bi-receipt"></i></div>
+                    <h2 class="mt-3">Welcome Back</h2>
+                    <p class="text-muted">Sign in to continue</p>
                 </div>
-                <div class="col-lg-8 d-flex align-items-center">
-                    <div class="card-body">
-           
-                        <form method="post" id="forgotForm">
-                            <h3 class="text-primary text-center mb-5">FORGOT PASSWORD</h3>
-                            <!-- Email input -->
-                            <div data-mdb-input-init class="form-outline mb-4">
-                                <label class="form-label" for="email">Email address</label>
-                                <input type="email" id="email" class="form-control" name="email" placeholder="Enter your Email" />
-                            </div>
-                            <div id="emailMessage" class="mt-2"></div>
+                <form id="login">
+                    <div class="mb-3">
+                        <label class="form-label">Email address</label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your Email">
+                    </div>
+                    <div id="emailMessage" class="mt-2"></div>
 
-                            <!--  LOGIN if you have password-->
+                    <!--  LOGIN if you have password-->
                             <div class="row mb-4">
                                 <div class="col">
                                     <a href="index.php">Login Here</a>
                                 </div>
                             </div>
 
-                            <!-- Submit button -->
-                            <button type="submit" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Send Reset Link</button>
-
-                        </form>
-
+                    
+                    <button class="btn btn-primary w-100" type="submit">Send Reset Link</button>
+               
+                    <div class="footer">
+                        © <?= date('Y') ?> Invoice Management System<br>
+                        Developed by <strong>Baseline IT Development Pvt Ltd</strong>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
-    </section>
-    <!-- Section: Design Block -->
+    </div>
 
 
     <!-- jQuery -->
