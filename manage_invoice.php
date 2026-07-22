@@ -61,14 +61,17 @@ require_once "includes/auth_check.php";
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover nowrap w-100" id="invoiceTable" style="font-size: small;">
+                                <table class="table table-striped table-hover nowrap w-100" id="invoiceTable"
+                                    style="font-size: small;">
                                     <thead class="table-light">
                                         <tr>
                                             <th><input type="checkbox" id="selectAll">
-                                                <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected" title="Delete Selected">
+                                                <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected"
+                                                    title="Delete Selected">
                                                     <i class="bi bi-trash"></i>
                                                 </button>
-                                                <button class="btn btn-sm text-primary p-0 ms-2" id="downloadSelected" title="Download Selected">
+                                                <button class="btn btn-sm text-primary p-0 ms-2" id="downloadSelected"
+                                                    title="Download Selected">
                                                     <i class="bi bi-download"></i>
                                                 </button>
                                             </th>
@@ -101,7 +104,7 @@ require_once "includes/auth_check.php";
 
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             //dataTable
             let table = $('#invoiceTable').DataTable({
                 ajax: {
@@ -109,38 +112,38 @@ require_once "includes/auth_check.php";
                     dataSrc: ""
                 },
                 columns: [{
-                        data: 0, // id column FOR CHECKBOX
-                        orderable: false,
-                        render: function(data) {
-                            return `<input type="checkbox" class="row-check" data-id="${data}">`;
-                        }
-                    },
-                    {
-                        data: 1
-                    }, //serial no
-                    {
-                        data: 2
-                    }, //Invoice Number
-                    {
-                        data: 3
-                    }, //"Name"
-                    {
-                        data: 4
-                    }, //Invoice date
-                    {
-                        data: 5
-                    }, //Total Amount(grand total)
-                    {
-                        data: 6
-                    }, //status
-                    {
-                        data: 7
-                    } //action
+                    data: 0, // id column FOR CHECKBOX
+                    orderable: false,
+                    render: function (data) {
+                        return `<input type="checkbox" class="row-check" data-id="${data}">`;
+                    }
+                },
+                {
+                    data: 1
+                }, //serial no
+                {
+                    data: 2
+                }, //Invoice Number
+                {
+                    data: 3
+                }, //"Name"
+                {
+                    data: 4
+                }, //Invoice date
+                {
+                    data: 5
+                }, //Total Amount(grand total)
+                {
+                    data: 6
+                }, //status
+                {
+                    data: 7
+                } //action
                 ]
             });
 
             //select all rows
-            $(document).on('click', '#selectAll', function() {
+            $(document).on('click', '#selectAll', function () {
 
                 let rows = table.rows({
                     search: 'applied'
@@ -150,7 +153,7 @@ require_once "includes/auth_check.php";
             });
 
             //individual select
-            $(document).on('change', '.row-check', function() {
+            $(document).on('change', '.row-check', function () {
 
                 let rows = table.rows({
                     search: 'applied'
@@ -163,11 +166,11 @@ require_once "includes/auth_check.php";
             });
 
             //delete multiple 
-            $('#deleteSelected').on('click', function() {
+            $('#deleteSelected').on('click', function () {
 
                 let ids = [];
 
-                table.rows().every(function() {
+                table.rows().every(function () {
 
                     let row = this.node();
                     let checkbox = $(row).find('.row-check');
@@ -199,7 +202,7 @@ require_once "includes/auth_check.php";
                             data: {
                                 ids: ids
                             },
-                            success: function(response) {
+                            success: function (response) {
 
                                 if (response.trim() === "success") {
 
@@ -217,11 +220,11 @@ require_once "includes/auth_check.php";
             });
 
             //download multiple
-            $('#downloadSelected').on('click', function() {
+            $('#downloadSelected').on('click', function () {
 
                 let ids = [];
 
-                table.rows().every(function() {
+                table.rows().every(function () {
 
                     let row = this.node();
                     let checkbox = $(row).find('.row-check');
@@ -245,7 +248,7 @@ require_once "includes/auth_check.php";
                 }).then((result) => {
 
                     if (result.isConfirmed) {
-                    
+
                         let form = $('<form>', {
                             action: 'php/download_multiple_invoices.php',
                             method: 'POST'
@@ -271,75 +274,75 @@ require_once "includes/auth_check.php";
             });
 
             // Send Invoice
-$(document).on("click", ".send-invoice-btn", function () {
+            $(document).on("click", ".send-invoice-btn", function () {
 
-    let id = $(this).data("id");
+                let id = $(this).data("id");
 
-    Swal.fire({
-        title: "Send Invoice?",
-        text: "Invoice will be emailed to the customer.",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Send"
-    }).then((result) => {
+                Swal.fire({
+                    title: "Send Invoice?",
+                    text: "Invoice will be emailed to the customer.",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Send"
+                }).then((result) => {
 
-        if (!result.isConfirmed)
-            return;
+                    if (!result.isConfirmed)
+                        return;
 
-        $.ajax({
+                    $.ajax({
 
-            url: "php/send_invoice.php",
+                        url: "php/send_invoice_mail.php",
 
-            type: "POST",
+                        type: "POST",
 
-            dataType: "json",
+                        dataType: "json",
 
-            data: {
-                id: id
-            },
+                        data: {
+                            id: id
+                        },
 
-            success: function (res) {
+                        success: function (res) {
 
-                if (res.status) {
+                            if (res.status) {
 
-                    Swal.fire(
-                        "Success",
-                        res.message,
-                        "success"
-                    );
+                                Swal.fire(
+                                    "Success",
+                                    res.message,
+                                    "success"
+                                );
 
-                    table.ajax.reload(null,false);
+                                table.ajax.reload(null, false);
 
-                } else {
+                            } else {
 
-                    Swal.fire(
-                        "Error",
-                        res.message,
-                        "error"
-                    );
+                                Swal.fire(
+                                    "Error",
+                                    res.message,
+                                    "error"
+                                );
 
-                }
+                            }
 
-            },
+                        },
 
-            error: function () {
+                        error: function () {
 
-                Swal.fire(
-                    "Error",
-                    "Something went wrong.",
-                    "error"
-                );
+                            Swal.fire(
+                                "Error",
+                                "Something went wrong.",
+                                "error"
+                            );
 
-            }
+                        }
 
-        });
+                    });
 
-    });
+                });
 
-});
+            });
 
             //delete invoices
-            $(document).on('click', '.delete-btn', function(e) {
+            $(document).on('click', '.delete-btn', function (e) {
                 e.preventDefault();
 
                 let id = $(this).data('id');
@@ -362,7 +365,7 @@ $(document).on("click", ".send-invoice-btn", function () {
                             data: {
                                 id: id
                             },
-                            success: function(response) {
+                            success: function (response) {
                                 console.log("DELETE RESPONSE:", response);
 
                                 if (response.trim() === "success") {
@@ -382,7 +385,7 @@ $(document).on("click", ".send-invoice-btn", function () {
                                     Swal.fire("Error", "Delete failed!", "error");
                                 }
                             },
-                            error: function() {
+                            error: function () {
                                 Swal.fire("Error", "Something went wrong!", "error");
                             }
                         });
@@ -392,13 +395,13 @@ $(document).on("click", ".send-invoice-btn", function () {
             });
 
             //restore invoices
-            $("#restoreInvoiceBtn").on("click", function() {
+            $("#restoreInvoiceBtn").on("click", function () {
 
                 $.ajax({
                     url: "php/restore_invoices.php",
                     type: "POST",
 
-                    success: function(response) {
+                    success: function (response) {
                         if (response.trim() === "success") {
                             Swal.fire("Restored!", "All Invoices restored successfully", "success")
                                 .then(() => {
@@ -411,7 +414,7 @@ $(document).on("click", ".send-invoice-btn", function () {
                             Swal.fire("Failed", "Something went wrong", "error");
                         }
                     },
-                    error: function() {
+                    error: function () {
                         Swal.fire({
                             icon: "error",
                             title: "Error",
