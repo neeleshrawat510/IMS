@@ -32,6 +32,17 @@ require_once "includes/auth_check.php";
             vertical-align: middle !important;
         }
 
+        /* Fix width of phone input */
+        .input-group .iti {
+            display: flex;
+            flex: 1 1 auto;
+            width: 1%;
+        }
+
+        .input-group .iti input.form-control {
+            width: 100% !important;
+        }
+
         input.error {
             border: 1px solid red;
         }
@@ -106,7 +117,7 @@ require_once "includes/auth_check.php";
                                                 <i class="bi bi-telephone"></i>
                                             </span>
                                             <input type="tel" name="number" id="number" class="form-control"
-                                                placeholder="+91 9876543210">
+                                                placeholder="9876543210">
                                         </div>
                                     </div>
 
