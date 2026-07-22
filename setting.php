@@ -214,6 +214,13 @@ require_once "includes/auth_check.php";
                         strongPassword: "atleast one Uppercase, lowercase, number and special character required"
                     }
                 },
+                errorPlacement: function (error, element) {
+                    if (element.parent(".input-group").length) {
+                        error.insertAfter(element.parent());   // Place error after the entire input-group
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
                 submitHandler: function(form) {
                     let formData = new FormData(form);
                     $.ajax({
