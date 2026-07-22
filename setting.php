@@ -30,13 +30,6 @@ require_once "includes/auth_check.php";
             vertical-align: middle !important;
         }
 
-        input.error {
-            border: 1px solid red;
-        }
-
-        label.error {
-            color: red;
-        }
     </style>
 </head>
 
