@@ -197,8 +197,8 @@ require_once "includes/auth_check.php";
                 separateDialCode: true,
                 nationalMode: true,
                 autoPlaceholder: "aggressive",
-                utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/js/utils.js"
-            });
+    loadUtilsOnInit: () =>
+        import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")            });
             // Add validator for strong password
             $.validator.addMethod("strongPassword", function (value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
