@@ -179,7 +179,7 @@ require_once "includes/auth_check.php";
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
+    <script>intlTelInput(utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")</script>
     <script>
         $(document).ready(function () {
 
@@ -216,8 +216,28 @@ require_once "includes/auth_check.php";
 
             //valid phone no
             $.validator.addMethod("phoneValid", function (value, element) {
+
+                if ($.trim(value) === "") {
+                    return false;
+                }
+
                 return iti.isValidNumber();
+
             }, "Please enter a valid phone number.");
+
+            phoneInput.addEventListener("blur", function () {
+
+                console.log("Country:", iti.getSelectedCountryData());
+
+                console.log("Number:", iti.getNumber());
+
+                console.log("Valid:", iti.isValidNumber());
+
+                console.log("Error:", iti.getValidationError());
+
+            });
+
+            //validate form
             $("#userForm").validate({
                 rules: {
                     name: {
@@ -254,11 +274,17 @@ require_once "includes/auth_check.php";
                     }
                 },
                 errorPlacement: function (error, element) {
-                    if (element.parent(".input-group").length) {
-                        error.insertAfter(element.parent());   // Place error after the entire input-group
-                    } else {
+
+                    if (element.attr("id") === "number") {
+                        error.insertAfter(element.closest(".iti"));
+                    }
+                    else if (element.parent(".input-group").length) {
+                        error.insertAfter(element.parent());
+                    }
+                    else {
                         error.insertAfter(element);
                     }
+
                 },
                 submitHandler: function (form) {
                     // Save complete international number
