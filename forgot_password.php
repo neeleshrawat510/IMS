@@ -107,30 +107,33 @@
             <div class="col-lg-7 right">
                 <div class="text-center mb-4">
                     <div class="logo"><i class="bi bi-receipt"></i></div>
-                    <h2 class="mt-3">Welcome Back</h2>
-                    <p class="text-muted">Sign in to continue</p>
+                    <h2 class="mt-3">Forgot password</h2>
+                    <p class="text-muted">Enter your registered mail to reset</p>
                 </div>
-                <form id="login">
-                    <div class="mb-3">
-                        <label class="form-label">Email address</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your Email">
+                <form method="post" id="forgotForm">
+                    <h3 class="text-primary text-center mb-5">FORGOT PASSWORD</h3>
+                    <!-- Email input -->
+                    <div data-mdb-input-init class="form-outline mb-4">
+                        <label class="form-label" for="email">Email address</label>
+                        <input type="email" id="email" class="form-control" name="email"
+                            placeholder="Enter your Email" />
                     </div>
                     <div id="emailMessage" class="mt-2"></div>
 
                     <!--  LOGIN if you have password-->
-                            <div class="row mb-4">
-                                <div class="col">
-                                    <a href="index.php">Login Here</a>
-                                </div>
-                            </div>
-
-                    
-                    <button class="btn btn-primary w-100" type="submit">Send Reset Link</button>
-               
+                    <div class="row mb-4">
+                        <div class="col">
+                            <a href="index.php">Login Here</a>
+                        </div>
+                    </div>
                     <div class="footer">
                         © <?= date('Y') ?> Invoice Management System<br>
                         Developed by <strong>Baseline IT Development Pvt Ltd</strong>
                     </div>
+                    <!-- Submit button -->
+                    <button type="submit" data-mdb-button-init data-mdb-ripple-init
+                        class="btn btn-primary btn-block mb-4">Send Reset Link</button>
+
                 </form>
             </div>
         </div>
@@ -146,7 +149,7 @@
     <!-- Sweet alert cdn -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             $("#forgotForm").validate({
                 rules: {
                     email: {
@@ -161,7 +164,7 @@
                     }
                 },
 
-                submitHandler: function(form) {
+                submitHandler: function (form) {
                     let formData = new FormData(form);
                     $.ajax({
                         url: "controller/reset_password.php",
@@ -169,10 +172,10 @@
                         data: formData,
                         processData: false,
                         contentType: false,
-                        beforeSend: function() {
+                        beforeSend: function () {
                             $("button[type=submit]").prop("disabled", true).text("Sending...");
                         },
-                        success: function(response) {
+                        success: function (response) {
                             if (response.trim() == 'success') {
 
                                 $("#emailMessage")
@@ -198,7 +201,7 @@
 
                             }
                         },
-                        error: function(response) {
+                        error: function (response) {
                             Swal.fire({
                                 icon: "error",
                                 title: "Oops...",
@@ -206,7 +209,7 @@
                             });
 
                         },
-                        complete: function() {
+                        complete: function () {
                             $("button[type=submit]").prop("disabled", false).text("Send Reset Link");
                         }
                     });
