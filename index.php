@@ -84,6 +84,31 @@
             text-align: center;
             margin-top: 25px
         }
+              .rounded-t-5 {
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+
+        label.error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+
+        @media (min-width: 992px) {
+            .rounded-tr-lg-0 {
+                border-top-right-radius: 0;
+            }
+
+            .rounded-bl-lg-5 {
+                border-bottom-left-radius: 0.5rem;
+            }
+        }
+
+        .success-msg{
+            color: green;
+        }
     </style>
 </head>
 

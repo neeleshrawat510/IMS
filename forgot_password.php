@@ -84,6 +84,31 @@
             text-align: center;
             margin-top: 25px
         }
+              .rounded-t-5 {
+            border-top-left-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+
+        label.error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+
+        @media (min-width: 992px) {
+            .rounded-tr-lg-0 {
+                border-top-right-radius: 0;
+            }
+
+            .rounded-bl-lg-5 {
+                border-bottom-left-radius: 0.5rem;
+            }
+        }
+
+        .success-msg{
+            color: green;
+        }
     </style>
 </head>
 
@@ -111,7 +136,6 @@
                     <p class="text-muted">Enter your registered mail to reset</p>
                 </div>
                 <form method="post" id="forgotForm">
-                    <h3 class="text-primary text-center mb-5">FORGOT PASSWORD</h3>
                     <!-- Email input -->
                     <div data-mdb-input-init class="form-outline mb-4">
                         <label class="form-label" for="email">Email address</label>
@@ -126,14 +150,15 @@
                             <a href="index.php">Login Here</a>
                         </div>
                     </div>
-                    <div class="footer">
-                        © <?= date('Y') ?> Invoice Management System<br>
-                        Developed by <strong>Baseline IT Development Pvt Ltd</strong>
-                    </div>
+                    
                     <!-- Submit button -->
                     <button type="submit" data-mdb-button-init data-mdb-ripple-init
                         class="btn btn-primary btn-block mb-4">Send Reset Link</button>
-
+                    <!-- footer -->
+                <div class="footer">
+                        © <?= date('Y') ?> Invoice Management System<br>
+                        Developed by <strong>Baseline IT Development Pvt Ltd</strong>
+                    </div>
                 </form>
             </div>
         </div>
