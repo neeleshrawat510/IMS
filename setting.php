@@ -21,8 +21,11 @@ require_once "includes/auth_check.php";
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- jQuery  -->
+   
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <style>
+   <!-- css -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
+   <style>
         #contactsTable th,
         #contactsTable td {
             text-align: center !important;
@@ -100,7 +103,7 @@ require_once "includes/auth_check.php";
                                             <span class="input-group-text">
                                                 <i class="bi bi-telephone"></i>
                                             </span>
-                                            <input type="text" name="number" id="number" class="form-control" placeholder="+91 9876543210">
+                                            <input type="tel" name="number" id="number" class="form-control" placeholder="+91 9876543210">
                                         </div>
                                     </div>
 
@@ -170,13 +173,46 @@ require_once "includes/auth_check.php";
     <!-- DATATABLE -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"></script>
     <script>
         $(document).ready(function() {
+
+        //country code
+        const phoneInput = document.querySelector("#number");
+
+const iti = window.intlTelInput(phoneInput, {
+
+    initialCountry: "auto",
+
+    geoIpLookup: function(callback) {
+        fetch("https://ipapi.co/json/")
+            .then(response => response.json())
+            .then(data => callback(data.country_code))
+            .catch(() => callback("in"));
+    },
+
+    preferredCountries: ["in", "us", "gb"],
+
+    separateDialCode: true,
+
+    nationalMode: true,
+
+    autoPlaceholder: "aggressive",
+
+    utilsScript:
+        "https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js"
+});
+
             // Add validator for strong password
             $.validator.addMethod("strongPassword", function(value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
             });
 
+            //valid phone no
+            $.validator.addMethod("phoneValid", function(value, element) {
+    return iti.isValidNumber();
+}, "Please enter a valid phone number.");
             $("#userForm").validate({
                 rules: {
                     name: {
@@ -188,8 +224,7 @@ require_once "includes/auth_check.php";
                     },
                     number: {
                         required: true,
-                        minlength: 10,
-                        maxlength: 10
+                        phoneValid: true
                     },
                     password: {
                         required: true,
@@ -206,22 +241,17 @@ require_once "includes/auth_check.php";
                     },
                     number: {
                         required: "Number is required",
-                        minlength: "10 digits required",
-                        maxlength: "10 digits required"
+                        phoneValid: "Please enter valid number"
                     },
                     password: {
                         required: "Password is required",
                         strongPassword: "atleast one Uppercase, lowercase, number and special character required"
                     }
                 },
-                errorPlacement: function (error, element) {
-                    if (element.parent(".input-group").length) {
-                        error.insertAfter(element.parent());   // Place error after the entire input-group
-                    } else {
-                        error.insertAfter(element);
-                    }
-                },
                 submitHandler: function(form) {
+                        // Save complete international number
+    $("#number").val(iti.getNumber());
+
                     let formData = new FormData(form);
                     $.ajax({
                         url: "php/register_user.php",
