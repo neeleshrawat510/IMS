@@ -274,35 +274,64 @@ require_once "includes/auth_check.php";
             });
 
             // Send Invoice
-$(document).on("click", ".send-invoice-btn", function (e) {
+            $(document).on("click", ".send-invoice-btn", function (e) {
 
-    e.preventDefault();   // <-- This is required
+                e.preventDefault();   // <-- This is required
 
-    let id = $(this).data("id");
+                let id = $(this).data("id");
 
-    console.log(id);
+                console.log(id);
 
-    Swal.fire({
-        title: "Send Invoice?",
-        text: "Invoice will be emailed to the customer.",
-        icon: "question",
-        showCancelButton: true,
-        confirmButtonText: "Send"
-    }).then((result) => {
+                Swal.fire({
+                    title: "Send Invoice?",
+                    text: "Invoice will be emailed to the customer.",
+                    icon: "question",
+                    showCancelButton: true,
+                    confirmButtonText: "Send"
+                }).then((result) => {
 
-        if (!result.isConfirmed) return;
-console.log(id);
-        $.ajax({
-            url: "php/send_invoice_mail.php",
-            type: "POST",
-            dataType: "json",
-            data: { id: id },
-            success: function (res) {
-                // ...
-            }
-        });
-    });
-});
+                    if (!result.isConfirmed) return;
+                    console.log(id);
+                    $.ajax({
+                        url: "php/send_invoice_mail.php",
+                        type: "POST",
+                        dataType: "json",
+                        data: { id: id },
+                        success: function (res) {
+
+                            if (res.status) {
+
+                                Swal.fire(
+                                    "Success",
+                                    res.message,
+                                    "success"
+                                );
+
+                                table.ajax.reload(null, false);
+
+                            } else {
+
+                                Swal.fire(
+                                    "Error",
+                                    res.message,
+                                    "error"
+                                );
+
+                            }
+
+                        },
+                        error: function () {
+
+                            Swal.fire(
+                                "Error",
+                                "Something went wrong.",
+                                "error"
+                            );
+
+                        }
+                    });
+                });
+            });
             //delete invoices
             $(document).on('click', '.delete-btn', function (e) {
                 e.preventDefault();
