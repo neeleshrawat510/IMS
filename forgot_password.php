@@ -195,7 +195,10 @@
             color: #ff7676;
             font-size: 13px;
         }
-
+        
+        .success-msg{
+            color: green;
+        }
 
         @media(max-width:768px) {
 
@@ -218,9 +221,8 @@
 <body>
 
 
-    <div class="login-box">
 
-        <!-- LOGIN CARD -->
+        <!-- FORGOT PASSWORD CARD -->
         <div class="login-card">
             <div class="text-center mb-3">
 
@@ -276,7 +278,6 @@
         </div>
 
 
-    </div>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
