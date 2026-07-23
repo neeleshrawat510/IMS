@@ -4,11 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invoice Management System | Login</title>
+    <title>Invoice Management System | Forgot Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Google Identity Services -->
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
     <style>
         body {
             margin: 0;
@@ -195,8 +194,8 @@
             color: #ff7676;
             font-size: 13px;
         }
-        
-        .success-msg{
+
+        .success-msg {
             color: green;
         }
 
@@ -217,65 +216,65 @@
         }
     </style>
 
-
+</head>
 <body>
 
 
 
-        <!-- FORGOT PASSWORD CARD -->
-        <div class="login-card">
-            <div class="text-center mb-3">
+    <!-- FORGOT PASSWORD CARD -->
+    <div class="login-card">
+        <div class="text-center mb-3">
 
-                <div class="logo">
-                    <i class="bi bi-receipt"></i>
-                </div>
+            <div class="logo">
+                <i class="bi bi-receipt"></i>
+            </div>
 
-                <h2 class="mt-3">
-                    FORGOT PASSWORD
-                </h2>
+            <h2 class="mt-3">
+                FORGOT PASSWORD
+            </h2>
 
 
-                <p>
-                    Enter your registered Email to get reset password link
-                </p>
+            <p>
+                Enter your registered Email to get reset password link
+            </p>
+
+        </div>
+
+
+
+        <form id="forgotForm">
+
+
+            <div class="mb-3">
+
+                <input type="email" id="email" class="form-control" name="email" placeholder="Enter your Email" />
+            </div>
+            <div id="emailMessage" class="mt-2"></div>
+
+            <button class="btn btn-primary w-100" type="submit">
+
+                Send Reset Link
+
+            </button>
+
+            <div class="footer">
+
+                © <?= date('Y') ?> Invoice Management System
+                <br>
+
+                Developed by
+                <strong>
+                    Baseline IT Development Pvt Ltd
+                </strong>
 
             </div>
 
 
 
-            <form id="login">
+        </form>
 
 
-                <div class="mb-3">
-
-                    <input type="email" id="email" class="form-control" name="email" placeholder="Enter your Email" />
-                </div>
-                <div id="emailMessage" class="mt-2"></div>
-
-                <button class="btn btn-primary w-100" type="submit">
-
-                    Send Reset Link
-
-                </button>
-
-                <div class="footer">
-
-                    © <?= date('Y') ?> Invoice Management System
-                    <br>
-
-                    Developed by
-                    <strong>
-                        Baseline IT Development Pvt Ltd
-                    </strong>
-
-                </div>
-
-
-
-            </form>
-
-
-        </div>
+    </div>
 
 
 
