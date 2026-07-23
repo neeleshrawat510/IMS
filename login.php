@@ -11,96 +11,239 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
-            width: 100%;
-            height: 100%;
             margin: 0;
-            overflow: hidden;
+            min-height: 100vh;
             font-family: "Segoe UI", sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding: 25px;
+
+            overflow: hidden;
+
+            background:
+                radial-gradient(circle at top left, rgba(37, 99, 235, .35), transparent 28%),
+                radial-gradient(circle at bottom right, rgba(79, 70, 229, .35), transparent 30%),
+                linear-gradient(135deg, #eef4ff, #f7f9fc);
         }
 
-        body {
-            background: #fff;
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 0, 0, .04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 0, 0, .04) 1px, transparent 1px);
+
+            background-size: 45px 45px;
+
+            z-index: -2;
+        }
+
+        body::after {
+
+            content: "";
+
+            position: fixed;
+
+            width: 500px;
+            height: 500px;
+
+            background: #2563eb22;
+
+            filter: blur(90px);
+
+            border-radius: 50%;
+
+            top: -180px;
+            right: -150px;
+
+            z-index: -1;
+
         }
 
         .card {
-            width: 100vw;
-            height: 100vh;
-            border: none;
-            border-radius: 0;
-            overflow: hidden;
-            box-shadow: none;
-        }
 
-        .row {
-            height: 100%;
+            width: 100%;
+            max-width: 1100px;
+
+            min-height: 640px;
+
+            border: none;
+
+            border-radius: 22px;
+
+            background: #fff;
+
+            box-shadow:
+                0 30px 60px rgba(15, 23, 42, .12),
+                0 10px 25px rgba(15, 23, 42, .08);
+
         }
 
         .left {
             position: relative;
-            height: 100vh;
+            min-height: 700px
         }
 
-        .left img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .left {
+
+            min-height: 640px;
+
+            position: relative;
+
         }
 
         .overlay {
+
             position: absolute;
+
             inset: 0;
-            background: rgba(20, 40, 90, .55);
-            color: #fff;
-            padding: 50px;
+
+            background:
+                linear-gradient(rgba(16, 24, 40, .45),
+                    rgba(16, 24, 40, .75));
+
             display: flex;
+
             flex-direction: column;
-            justify-content: flex-end
+
+            justify-content: flex-end;
+
+            padding: 45px;
+
+            color: white;
+
         }
 
         .right {
-            height: 100vh;
+
+            padding: 40px 60px;
+
             display: flex;
+
             align-items: center;
-            justify-content: center;
-            padding: 60px;
-        }
 
-        #login {
-            width: 100%;
-            max-width: 470px;
-        }
-
-        .g_id_signin {
-            justify-content: center;
         }
 
         .logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: #2563eb;
-            color: #fff;
+
+            width: 74px;
+            height: 74px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(135deg, #2563eb, #4f46e5);
+
+            color: white;
+
             display: flex;
-            align-items: center;
+
             justify-content: center;
-            font-size: 30px;
-            margin: auto
+
+            align-items: center;
+
+            font-size: 34px;
+
+            margin: auto;
+
+            box-shadow:
+                0 15px 30px rgba(37, 99, 235, .25);
+
         }
 
         .form-control {
-            height: 52px
+
+            height: 48px;
+
+            border-radius: 12px;
+
+            border: 1px solid #dbe3ef;
+
+            background: #f8fafc;
+
+        }
+
+        .form-control:focus {
+
+            border-color: #2563eb;
+
+            background: white;
+
+            box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .12);
+
+        }
+
+        .input-group-text {
+
+            background: #f8fafc;
+
+            border: 1px solid #dbe3ef;
+
+            border-left: none;
+
+            border-radius: 0 12px 12px 0;
+
         }
 
         .btn-primary {
-            height: 52px;
-            border-radius: 10px
+
+            height: 50px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            font-weight: 600;
+
+            background:
+                linear-gradient(135deg, #2563eb, #4f46e5);
+
+            transition: .3s;
+
+        }
+
+        .btn-primary:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 12px 25px rgba(37, 99, 235, .25);
+
+        }
+
+        h2 {
+
+            font-weight: 700;
+
+            color: #111827;
+
+        }
+
+        .text-muted {
+
+            color: #6b7280 !important;
+
         }
 
         .footer {
-            font-size: 13px;
-            color: #666;
+
+            margin-top: 22px;
+
             text-align: center;
-            margin-top: 25px
+
+            color: #94a3b8;
+
+            font-size: 13px;
+
+        }
+
+        .footer strong {
+
+            color: #2563eb;
+
         }
 
         .rounded-t-5 {
@@ -115,21 +258,13 @@
         }
 
 
-        @media (max-width:991px) {
-
-            body {
-                overflow: auto;
+        @media (min-width: 992px) {
+            .rounded-tr-lg-0 {
+                border-top-right-radius: 0;
             }
 
-            .card {
-                height: auto;
-                min-height: 100vh;
-            }
-
-            .right {
-                height: auto;
-                min-height: 100vh;
-                padding: 35px;
+            .rounded-bl-lg-5 {
+                border-bottom-left-radius: 0.5rem;
             }
         }
 
@@ -142,19 +277,43 @@
 <body>
     <div class="card">
         <div class="row g-0">
-            <div class="col-lg-5 d-none d-lg-block left">
-                <img src="uploads/login_img1.jpg" alt="">
-                <div class="overlay">
-                    <h1>Invoice Management System</h1>
-                    <p>Manage invoices, customers and payments from one secure platform.</p>
-                    <ul>
-                        <li>Create Professional Invoices</li>
-                        <li>Manage Products</li>
-                        <li>Manage Customers</li>
-                        <li>Secure Authentication</li>
-                    </ul>
-                    <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
+            <div class="overlay">
+
+                <h2 class="fw-bold mb-3">
+                    Invoice Management System
+                </h2>
+
+                <p class="mb-4">
+                    Simplify billing, manage customers, monitor payments, and generate professional invoices from one
+                    secure platform.
+                </p>
+
+                <div class="mb-2">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    Professional Invoice Creation
                 </div>
+
+                <div class="mb-2">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    Customer & Product Management
+                </div>
+
+                <div class="mb-2">
+                    <i class="bi bi-check-circle-fill text-success"></i>
+                    Payment Tracking
+                </div>
+
+                <div class="mt-4 small">
+                    <div class="text-white-50">
+                        Developed by
+                    </div>
+
+                    <strong class="fs-6">
+                        Baseline IT Development Pvt Ltd
+                    </strong>
+
+                </div>
+
             </div>
             <div class="col-lg-7 right">
                 <div class="text-center mb-4">
@@ -225,7 +384,7 @@
                 }
             });
 
-            //Load saved data
+            //load saved data
             if (localStorage.getItem("rememberMe") === "true") {
                 $("#email").val(localStorage.getItem("email"));
                 $("#password").val(localStorage.getItem("password"));
