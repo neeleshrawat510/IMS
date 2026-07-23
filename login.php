@@ -20,7 +20,9 @@
             justify-content: center;
             font-family: "Segoe UI", sans-serif;
             background: linear-gradient(120deg, #1e293b, #334f8c);
-            overflow: hidden;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
         }
 
 
