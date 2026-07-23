@@ -37,15 +37,15 @@
         body:before {
             width: 150px;
             height: 150px;
-            top: 30px;
-            left: 230px;
+            top: -30px;
+            left: -30px;
         }
 
         body:after {
             width: 220px;
             height: 220px;
             right: -60px;
-            bottom: -50px;
+            bottom: 20px;
         }
 
 
@@ -245,7 +245,7 @@
         <div class="login-card">
 
 
-            <div class="text-center mb-4">
+            <div class="text-center mb-3">
 
                 <div class="logo">
                     <i class="bi bi-receipt"></i>
@@ -298,7 +298,7 @@
 
 
 
-                <div class="d-flex justify-content-between mb-4">
+                <div class="d-flex justify-content-between mb-3">
 
 
                     <div class="form-check">
