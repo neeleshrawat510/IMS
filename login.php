@@ -9,6 +9,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Google Identity Services -->
     <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+
     <style>
         body {
             margin: 0;
@@ -210,13 +212,14 @@
             }
 
         }
-
     </style>
 
-</head>
 
 <body>
+
+
     <div class="login-box">
+
 
         <!-- LEFT CONTENT -->
         <div class="left-section">
