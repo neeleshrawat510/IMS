@@ -1,6 +1,6 @@
 <?php
 
-function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $invoicePublicToken, $pdfPath)
+function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $invoicePublicToken, $pdfOutput)
 {
     $apiKey = getenv('BREVO_API_KEY');
 
@@ -9,15 +9,11 @@ function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $invoicePublicToken, $p
         return false;
     }
 
-    if (!file_exists($pdfPath)) {
-        error_log("Invoice PDF not found: " . $pdfPath);
-        return false;
-    }
 
     $attachment = [
         [
-            "name" => basename($pdfPath),
-            "content" => base64_encode(file_get_contents($pdfPath))
+            "name" => "Invoice_" . $invoiceNo . ".pdf",
+            "content" => base64_encode($pdfOutput)
         ]
     ];
 

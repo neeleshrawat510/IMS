@@ -2,13 +2,9 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
-
-
 require_once("../vendor/autoload.php");
+require_once "../controller/invoice_pdf.php";
 require_once "../controller/send_email.php";
-
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 //Indian Timezone
 date_default_timezone_set('Asia/Kolkata');
@@ -95,198 +91,17 @@ if ($isDraft) {
 }
 
 
-// SAVING PDF
 
-$html = '
-<style>
-    body { font-family: Arial, sans-serif; font-size: 12px; color: #333; }
-    .header { text-align: center; margin-bottom: 20px; }
-    .header h1 { margin: 0; }
-    .invoice-box { width: 100%; }
-
-    .info-table td { padding: 4px 0; }
-
-    table { border-collapse: collapse; width: 100%; }
-
-    .items th {
-        background: #f2f2f2;
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-
-    .items td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: center;
-    }
-
-    .right {
-        text-align: right;
-    }
-
-    .totals {
-        margin-top: 20px;
-        width: 40%;
-        float: right;
-    }
-
-    .totals th, .totals td {
-        border: 1px solid #ddd;
-        padding: 8px;
-    }
-
-    .section {
-        margin-bottom: 15px;
-    }
-</style>
-
-<div class="header">
-    <h1>INVOICE</h1>
-    <hr>
-</div>
-
-<table width="100%" class="info-table">
-    <tr>
-        <td><b>Invoice No:</b> ' . $invoice_no . '</td>
-        <td class="right"><b>Date:</b> ' . $invoice_date . '</td>
-    </tr>
-    <tr>
-        <td><b>Due Date:</b> ' . $due_date . '</td>
-        <td></td>
-    </tr>
-</table>
-
-<br>
-
-<!-- CUSTOMER / COMPANY INFO SECTION -->
-<table width="100%" class="section">
-    <tr>
-        <td width="50%">
-            <b>From:</b><br>
-            Baselline It Dev<br>
-            Mohali<br>
-        </td>
-
-        <td width="50%">
-            <b>Bill To:</b><br>
-            ' . $contact_name . ' <br>
-            ' . $contact_company . ' <br>
-            ' . $contact_gst . ' <br>
-            ' . $contact_number . ' | ' . $contact_email . '<br>
-        </td>
-    </tr>
-</table>
-
-<br>
-
-<!-- ITEMS TABLE -->
-<table class="items">
-    <tr>
-        <th>Product</th>
-        <th>Description</th>
-        <th>Qty</th>
-        <th>Price</th>
-        <th>Tax</th>
-        <th>Total</th>
-    </tr>
-';
-
-
-$productCodes = [];
-
-$result = mysqli_query($conn, "
-    SELECT id, product_code
-    FROM products
-");
-
-while ($row = mysqli_fetch_assoc($result)) {
-    $productCodes[$row['id']] = $row['product_code'];
-}
-
-
-for ($i = 0; $i < $count; $i++) {
-    $pid = $product_id[$i];
-
-    $html .= '
-    <tr>
-        <td>' . $productCodes[$pid] . '</td>
-        <td>' . $description[$i] . '</td>
-        <td>' . $qty[$i] . '</td>
-        <td>' . $price[$i] . '</td>
-        <td>' . $tax[$i] . '</td>
-        <td>' . $amount[$i] . '</td>
-    </tr>';
-}
-
-$html .= '
-</table>
-
-<br>
-
-<!-- TOTALS -->
-<table class="totals" align="right">
-    <tr>
-        <th>Subtotal</th>
-        <td class="right">' . $subtotal . '</td>
-    </tr>
-    <tr>
-        <th>Tax</th>
-        <td class="right">' . $tax_total . '</td>
-    </tr>
-    <tr>
-        <th>Grand Total</th>
-        <td class="right"><b>' . $grand_total . '</b></td>
-    </tr>
-</table>
-
-<div style="clear:both;"></div>
-';
-
-//generate pdf using DOMPDF
-$options = new Options();
-$options->set('isHtml5ParserEnabled', true);
-$options->set('isRemoteEnabled', true);
-
-$dompdf = new Dompdf($options);
-$dompdf->loadHtml($html);
-
-// Paper size
-$dompdf->setPaper('A4', 'portrait');
-
-$dompdf->render();
-
-
-//save pdf
-
-$pdfOutput = $dompdf->output();
-
-$fileName = "invoices/invoice_" . $invoice_id . ".pdf";
-$fullPath = "../" . $fileName;
-
-file_put_contents($fullPath, $pdfOutput);
-
-//check if pdf is available
-
-if(file_put_contents($fullPath, $pdfOutput)){
-
-    mysqli_query($conn,
-        "UPDATE invoices
-         SET pdf_path='$fileName'
-         WHERE id='$invoice_id'");
-
-}
-
-
-//Send Invoive over mail
+$pdfOutput = generateInvoicePDF($conn, $invoice_id);
 
 $emailSent = sendInvoiceEmail(
     $contact_email,
     $contact_name,
     $invoice_no,
     $invoicePublicToken,
-    $fullPath
+    $pdfOutput
 );
+
 
 if ($emailSent) {
 
@@ -308,7 +123,6 @@ if ($emailSent) {
 
 echo json_encode([
     "status" => "success",
-    "pdf" => $fileName,
     "email_status" => $emailSent
 ]);
 
