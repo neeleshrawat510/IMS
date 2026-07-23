@@ -11,211 +11,365 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
-    margin: 0;
-    min-height: 100vh;
-    font-family: "Segoe UI", sans-serif;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 25px;
-
-    overflow: hidden;
-
-    background:
-        radial-gradient(circle at top left, rgba(37,99,235,.35), transparent 28%),
-        radial-gradient(circle at bottom right, rgba(79,70,229,.35), transparent 30%),
-        linear-gradient(135deg,#eef4ff,#f7f9fc);
-}
-
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background-image:
-        linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
-
-    background-size:45px 45px;
-
-    z-index:-2;
-}
-
-body::after{
-
-    content:"";
-
-    position:fixed;
-
-    width:500px;
-    height:500px;
-
-    background:#2563eb22;
-
-    filter:blur(90px);
-
-    border-radius:50%;
-
-    top:-180px;
-    right:-150px;
-
-    z-index:-1;
-
-}
-
-        .card {
-            max-width: 1150px;
-            width: 100%;
-            border: none;
-            border-radius: 22px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, .25)
-        }
-
-        .left {
-            position: relative;
-            min-height: 700px
-        }
-
-        .left img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover
-        }
-
-        .overlay {
-            position: absolute;
-            inset: 0;
-            background: rgba(20, 40, 90, .55);
-            color: #fff;
-            padding: 50px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end
-        }
-
-        .right {
-            padding: 55px
-        }
-
-        .logo {
-            width: 70px;
-            height: 70px;
-            border-radius: 50%;
-            background: #2563eb;
-            color: #fff;
+            margin: 0;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 30px;
-            margin: auto
+            font-family: "Segoe UI", sans-serif;
+            background: linear-gradient(120deg, #1e293b, #334f8c);
+            overflow: hidden;
         }
+
+
+        /* Background circles */
+        body:before,
+        body:after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9c00ff, #c300ff);
+            z-index: 0;
+        }
+
+        body:before {
+            width: 150px;
+            height: 150px;
+            top: 30px;
+            left: 230px;
+        }
+
+        body:after {
+            width: 220px;
+            height: 220px;
+            right: -60px;
+            bottom: -50px;
+        }
+
+
+        /* Main container */
+        .login-box {
+            width: 1000px;
+            max-width: 95%;
+            min-height: 550px;
+            display: flex;
+            position: relative;
+            z-index: 1;
+        }
+
+
+        /* Left section */
+        .left-section {
+            flex: 1;
+            color: white;
+            padding: 80px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+
+        .left-section h1 {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+
+        .left-section h1 span {
+            color: #79a8ff;
+        }
+
+
+        .left-section p {
+            margin-top: 25px;
+            color: #d0dcff;
+            width: 330px;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+
+        /* Login card */
+        .login-card {
+            width: 380px;
+            background: #343434;
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .35);
+            align-self: center;
+        }
+
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin: auto;
+            font-size: 28px;
+        }
+
+
+        .login-card h2 {
+            color: white;
+        }
+
+
+        .login-card p {
+            color: #aaa;
+        }
+
 
         .form-control {
-            height: 52px
+            height: 45px;
+            background: transparent;
+            border: 1px solid #aaa;
+            color: white;
         }
+
+
+        .form-control::placeholder {
+            color: #bbb;
+        }
+
+
+        .form-control:focus {
+            background: transparent;
+            color: white;
+            border-color: #4f86ff;
+            box-shadow: none;
+        }
+
+
+        .input-group-text {
+            background: transparent;
+            border: 1px solid #aaa;
+            color: white;
+            cursor: pointer;
+        }
+
+
+        .form-check-label,
+        .login-card a {
+            color: #ddd;
+            font-size: 14px;
+        }
+
 
         .btn-primary {
-            height: 52px;
-            border-radius: 10px
+            height: 45px;
+            background: #3975db;
+            border: none;
+            border-radius: 4px;
         }
+
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+
+        .divider {
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+        }
+
 
         .footer {
+            color: #aaa;
             font-size: 13px;
-            color: #666;
             text-align: center;
-            margin-top: 25px
+            margin-top: 20px;
         }
 
-        .rounded-t-5 {
-            border-top-left-radius: 0.5rem;
-            border-top-right-radius: 0.5rem;
-        }
 
         label.error {
-            color: red;
-            font-size: 14px;
-            margin-top: 5px;
+            color: #ff7676;
+            font-size: 13px;
         }
 
 
-        @media (min-width: 992px) {
-            .rounded-tr-lg-0 {
-                border-top-right-radius: 0;
+        @media(max-width:768px) {
+
+            .login-box {
+                display: block;
             }
 
-            .rounded-bl-lg-5 {
-                border-bottom-left-radius: 0.5rem;
+            .left-section {
+                display: none;
             }
+
+            .login-card {
+                margin: auto;
+            }
+
         }
 
-        .success-msg {
-            color: green;
-        }
     </style>
+
 </head>
 
 <body>
-    <div class="card">
-        <div class="row g-0">
-            <div class="col-lg-5 d-none d-lg-block left">
-                <img src="uploads/login_img1.jpg" alt="">
-                <!-- <div class="overlay">
-                    <h1>Invoice Management System</h1>
-                    <p>Manage invoices, customers and payments from one secure platform.</p>
-                    <ul>
-                        <li>Create Professional Invoices</li>
-                        <li>Manage Products</li>
-                        <li>Manage Customers</li>
-                        <li>Secure Authentication</li>
-                    </ul>
-                    <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
-                </div> -->
-            </div>
-            <div class="col-lg-7 right">
-                <div class="text-center mb-4">
-                    <div class="logo"><i class="bi bi-receipt"></i></div>
-                    <h2 class="mt-3">Welcome Back</h2>
-                    <p class="text-muted">Sign in to continue</p>
-                </div>
-                <form id="login">
-                    <div class="mb-3">
-                        <label class="form-label">Email address</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="Enter your Email">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <div class="input-group">
-                            <input type="password" id="password" name="password" class="form-control"
-                                placeholder="Enter your Password">
-                            <span class="input-group-text" id="togglePassword"><i class="bi bi-eye"></i></span>
-                        </div>
-                    </div>
-                    <div class="d-flex justify-content-between mb-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="rememberMe">
-                            <label class="form-check-label" for="rememberMe">Remember me</label>
-                        </div>
-                        <a href="forgot_password.php">Forgot password?</a>
-                    </div>
-                    <button class="btn btn-primary w-100" type="submit">Sign In</button>
-                    <div class="text-center my-3 text-muted">or</div>
-                    <!-- Google Sign-In -->
-                    <div id="g_id_onload"
-                        data-client_id="92348507939-74ujcuui4ce2g0pt2ipk287voa8io6sg.apps.googleusercontent.com"
-                        data-callback="handleGoogleLogin">
-                    </div>
-                    <div class="g_id_signin d-flex justify-content-center" data-type="standard" data-width="300"></div>
-                    <div class="footer">
-                        © <?= date('Y') ?> Invoice Management System<br>
-                        Developed by <strong>Baseline IT Development Pvt Ltd</strong>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    <div class="login-box">
 
+        <!-- LEFT CONTENT -->
+        <div class="left-section">
+
+            <h1>
+                The best offer<br>
+                <span>for your business</span>
+            </h1>
+
+
+            <p>
+                Manage invoices, customers and payments
+                from one secure platform. Create professional
+                invoices and grow your business faster.
+            </p>
+
+
+        </div>
+
+
+
+        <!-- LOGIN CARD -->
+        <div class="login-card">
+
+
+            <div class="text-center mb-4">
+
+                <div class="logo">
+                    <i class="bi bi-receipt"></i>
+                </div>
+
+
+                <h2 class="mt-3">
+                    Welcome Back
+                </h2>
+
+
+                <p>
+                    Sign in to continue
+                </p>
+
+            </div>
+
+
+
+            <form id="login">
+
+
+                <div class="mb-3">
+
+                    <input type="email" id="email" name="email" class="form-control" placeholder="Email address">
+
+                </div>
+
+
+
+                <div class="mb-3">
+
+                    <div class="input-group">
+
+                        <input type="password" id="password" name="password" class="form-control"
+                            placeholder="Password">
+
+
+                        <span class="input-group-text" id="togglePassword">
+
+                            <i class="bi bi-eye"></i>
+
+                        </span>
+
+
+                    </div>
+
+                </div>
+
+
+
+
+                <div class="d-flex justify-content-between mb-4">
+
+
+                    <div class="form-check">
+
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+
+
+                        <label class="form-check-label">
+                            Remember me
+                        </label>
+
+                    </div>
+
+
+
+                    <a href="forgot_password.php">
+                        Forgot password?
+                    </a>
+
+
+                </div>
+
+
+
+                <button class="btn btn-primary w-100" type="submit">
+
+                    SIGN IN
+
+                </button>
+
+
+
+                <div class="divider">
+                    or
+                </div>
+
+
+
+
+                <!-- Google Login KEEP SAME -->
+
+                <div id="g_id_onload"
+                    data-client_id="92348507939-74ujcuui4ce2g0pt2ipk287voa8io6sg.apps.googleusercontent.com"
+                    data-callback="handleGoogleLogin">
+                </div>
+
+
+                <div class="g_id_signin d-flex justify-content-center" data-type="standard" data-width="300">
+                </div>
+
+
+
+
+                <div class="footer">
+
+                    © <?= date('Y') ?> Invoice Management System
+                    <br>
+
+                    Developed by
+                    <strong>
+                        Baseline IT Development Pvt Ltd
+                    </strong>
+
+                </div>
+
+
+
+            </form>
+
+
+        </div>
+
+
+    </div>
 
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
