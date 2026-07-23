@@ -11,34 +11,39 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
+            width: 100%;
+            height: 100%;
             margin: 0;
-            font-family: Segoe UI, sans-serif;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 25px
+            overflow: hidden;
+            font-family: "Segoe UI", sans-serif;
+        }
+
+        body {
+            background: #fff;
         }
 
         .card {
-            max-width: 1150px;
-            width: 100%;
+            width: 100vw;
+            height: 100vh;
             border: none;
-            border-radius: 22px;
+            border-radius: 0;
             overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, .25)
+            box-shadow: none;
+        }
+
+        .row {
+            height: 100%;
         }
 
         .left {
             position: relative;
-            min-height: 700px
+            height: 100vh;
         }
 
         .left img {
             width: 100%;
             height: 100%;
-            object-fit: cover
+            object-fit: cover;
         }
 
         .overlay {
@@ -53,7 +58,20 @@
         }
 
         .right {
-            padding: 55px
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px;
+        }
+
+        #login {
+            width: 100%;
+            max-width: 470px;
+        }
+
+        .g_id_signin {
+            justify-content: center;
         }
 
         .logo {
@@ -97,13 +115,21 @@
         }
 
 
-        @media (min-width: 992px) {
-            .rounded-tr-lg-0 {
-                border-top-right-radius: 0;
+        @media (max-width:991px) {
+
+            body {
+                overflow: auto;
             }
 
-            .rounded-bl-lg-5 {
-                border-bottom-left-radius: 0.5rem;
+            .card {
+                height: auto;
+                min-height: 100vh;
+            }
+
+            .right {
+                height: auto;
+                min-height: 100vh;
+                padding: 35px;
             }
         }
 
@@ -118,7 +144,7 @@
         <div class="row g-0">
             <div class="col-lg-5 d-none d-lg-block left">
                 <img src="uploads/login_img1.jpg" alt="">
-                <!-- <div class="overlay">
+                <div class="overlay">
                     <h1>Invoice Management System</h1>
                     <p>Manage invoices, customers and payments from one secure platform.</p>
                     <ul>
@@ -128,7 +154,7 @@
                         <li>Secure Authentication</li>
                     </ul>
                     <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
-                </div> -->
+                </div>
             </div>
             <div class="col-lg-7 right">
                 <div class="text-center mb-4">
