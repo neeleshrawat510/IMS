@@ -138,7 +138,7 @@
             <div class="login-link">
                 <p class="mt-3">
                     Already have an account?
-                    <a href="index.php">Login</a>
+                    <a href="login.php">Login</a>
                 </p>
             </div>
         </form>

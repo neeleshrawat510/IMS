@@ -241,7 +241,7 @@ if (mysqli_num_rows($query) == 0) {
                                     timer: 1500,
                                     showConfirmButton: false
                                 }).then(() => {
-                                    window.location.href = "index.php";
+                                    window.location.href = "login.php";
                                 });
 
                             } else {

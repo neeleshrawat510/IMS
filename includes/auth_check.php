@@ -12,7 +12,7 @@ if (!$token) {
 
     session_destroy();
 
-    header("Location: ../index.php");
+    header("Location: ../login.php");
     exit();
 }
 
@@ -29,7 +29,7 @@ if (!$payload) {
 
     session_destroy();
 
-    header("Location: index.php");
+    header("Location: login.php");
     exit();
 }
 

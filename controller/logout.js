@@ -5,7 +5,7 @@ $(document).ready(function(){
             type: "POST",
             success: function(){
                              //redirect to login page after logout
-                            window.location.href= "index.php";
+                            window.location.href= "login.php";
             },
             error: function(){
                 alert("logout failed");

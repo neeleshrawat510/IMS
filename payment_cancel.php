@@ -108,7 +108,7 @@
                 If you experienced a technical issue during payment, please try again or contact support.
             </div>
 
-            <!-- <a href="index.php" class="btn btn-outline-primary px-4">
+            <!-- <a href="login.php" class="btn btn-outline-primary px-4">
                 <i class="bi bi-house-door me-2"></i>
                 Back to Home
             </a> -->

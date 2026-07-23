@@ -64,7 +64,7 @@ h
 includes/footer.php
 includes/header.php
 includes/sidebar.php
-index.php
+login.php
 manage_archived_contacts.php
 manage_archived_products.php
 manage_contact.php

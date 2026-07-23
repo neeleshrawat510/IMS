@@ -182,7 +182,7 @@ $invoice = mysqli_fetch_assoc($result);
                 Your transaction has been securely processed and your invoice has been updated.
             </div>
 
-            <!-- <a href="index.php" class="btn btn-primary px-4">
+            <!-- <a href="login.php" class="btn btn-primary px-4">
                 <i class="bi bi-house-door me-2"></i>
                 Back to Home
             </a> -->
