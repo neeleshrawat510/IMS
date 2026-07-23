@@ -285,5 +285,5 @@ $html .= '
 <div style="clear:both"></div>
 
 ';
-
+}
 return $html;
