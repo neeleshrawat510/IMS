@@ -225,17 +225,14 @@
         <div class="left-section">
 
             <h1>
-                The best offer<br>
-                <span>for your business</span>
+                Smart Invoicing<br>
+                <span>Made Simple</span>
             </h1>
 
-
             <p>
-                Manage invoices, customers and payments
-                from one secure platform. Create professional
-                invoices and grow your business faster.
+                A secure and reliable solution to create professional invoices,
+                manage clients, track payments, and improve your business workflow.
             </p>
-
 
         </div>
 
