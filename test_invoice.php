@@ -6,4 +6,4 @@ error_reporting(E_ALL);
 include "config/connection.php";
 require_once "controller/invoice_pdf.php";
 
-echo generateInvoicePDF($conn, 1);
+echo generateInvoicePDF($conn, 30);
