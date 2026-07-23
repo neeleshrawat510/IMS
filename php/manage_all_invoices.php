@@ -49,6 +49,7 @@ if (mysqli_num_rows($sql) > 0) {
             $row['name'],
             $row['invoice_date'],
             $row['grand_total'],
+            $row['status'],
             $row['payment_status'],
             '<a href="php/view_invoice.php?id=' . $row['id'] . '" target="_blank" class="btn btn-success btn-sm me-1" title="View">
                         <i class="bi bi-eye"></i> 

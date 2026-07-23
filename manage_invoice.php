@@ -80,7 +80,8 @@ require_once "includes/auth_check.php";
                                             <th>Name</th>
                                             <th>Invoice Date</th>
                                             <th>Total Amount</th>
-                                            <th>Status</th>
+                                            <th>Invoice Status</th>
+                                            <th>Payment Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -136,6 +137,9 @@ require_once "includes/auth_check.php";
                 {
                     data: 6
                 }, //status
+                {
+                    data: 6
+                }, //payment_status
                 {
                     data: 7
                 } //action
