@@ -11,76 +11,66 @@
     <script src="https://accounts.google.com/gsi/client" async defer></script>
     <style>
         body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    min-height: 100vh;
+    font-family: "Segoe UI", sans-serif;
 
-            display: flex;
-            justify-content: center;
-            align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-            padding: 25px;
+    padding: 25px;
 
-            overflow: hidden;
+    overflow: hidden;
 
-            background:
-                radial-gradient(circle at top left, rgba(37, 99, 235, .35), transparent 28%),
-                radial-gradient(circle at bottom right, rgba(79, 70, 229, .35), transparent 30%),
-                linear-gradient(135deg, #eef4ff, #f7f9fc);
-        }
+    background:
+        radial-gradient(circle at top left, rgba(37,99,235,.35), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(79,70,229,.35), transparent 30%),
+        linear-gradient(135deg,#eef4ff,#f7f9fc);
+}
 
-        body::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(0, 0, 0, .04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 0, 0, .04) 1px, transparent 1px);
+body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+        linear-gradient(rgba(0,0,0,.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,0,0,.04) 1px, transparent 1px);
 
-            background-size: 45px 45px;
+    background-size:45px 45px;
 
-            z-index: -2;
-        }
+    z-index:-2;
+}
 
-        body::after {
+body::after{
 
-            content: "";
+    content:"";
 
-            position: fixed;
+    position:fixed;
 
-            width: 500px;
-            height: 500px;
+    width:500px;
+    height:500px;
 
-            background: #2563eb22;
+    background:#2563eb22;
 
-            filter: blur(90px);
+    filter:blur(90px);
 
-            border-radius: 50%;
+    border-radius:50%;
 
-            top: -180px;
-            right: -150px;
+    top:-180px;
+    right:-150px;
 
-            z-index: -1;
+    z-index:-1;
 
-        }
+}
 
         .card {
-
+            max-width: 1150px;
             width: 100%;
-            max-width: 1100px;
-
-            min-height: 640px;
-
             border: none;
-
             border-radius: 22px;
-
-            background: #fff;
-
-            box-shadow:
-                0 30px 60px rgba(15, 23, 42, .12),
-                0 10px 25px rgba(15, 23, 42, .08);
-
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .25)
         }
 
         .left {
@@ -88,162 +78,54 @@
             min-height: 700px
         }
 
-        .left {
-
-            min-height: 640px;
-
-            position: relative;
-
+        .left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover
         }
 
         .overlay {
-
             position: absolute;
-
             inset: 0;
-
-            background:
-                linear-gradient(rgba(16, 24, 40, .45),
-                    rgba(16, 24, 40, .75));
-
+            background: rgba(20, 40, 90, .55);
+            color: #fff;
+            padding: 50px;
             display: flex;
-
             flex-direction: column;
-
-            justify-content: flex-end;
-
-            padding: 45px;
-
-            color: white;
-
+            justify-content: flex-end
         }
 
         .right {
-
-            padding: 40px 60px;
-
-            display: flex;
-
-            align-items: center;
-
+            padding: 55px
         }
 
         .logo {
-
-            width: 74px;
-            height: 74px;
-
-            border-radius: 20px;
-
-            background:
-                linear-gradient(135deg, #2563eb, #4f46e5);
-
-            color: white;
-
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
             display: flex;
-
-            justify-content: center;
-
             align-items: center;
-
-            font-size: 34px;
-
-            margin: auto;
-
-            box-shadow:
-                0 15px 30px rgba(37, 99, 235, .25);
-
+            justify-content: center;
+            font-size: 30px;
+            margin: auto
         }
 
         .form-control {
-
-            height: 48px;
-
-            border-radius: 12px;
-
-            border: 1px solid #dbe3ef;
-
-            background: #f8fafc;
-
-        }
-
-        .form-control:focus {
-
-            border-color: #2563eb;
-
-            background: white;
-
-            box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .12);
-
-        }
-
-        .input-group-text {
-
-            background: #f8fafc;
-
-            border: 1px solid #dbe3ef;
-
-            border-left: none;
-
-            border-radius: 0 12px 12px 0;
-
+            height: 52px
         }
 
         .btn-primary {
-
-            height: 50px;
-
-            border: none;
-
-            border-radius: 12px;
-
-            font-weight: 600;
-
-            background:
-                linear-gradient(135deg, #2563eb, #4f46e5);
-
-            transition: .3s;
-
-        }
-
-        .btn-primary:hover {
-
-            transform: translateY(-2px);
-
-            box-shadow: 0 12px 25px rgba(37, 99, 235, .25);
-
-        }
-
-        h2 {
-
-            font-weight: 700;
-
-            color: #111827;
-
-        }
-
-        .text-muted {
-
-            color: #6b7280 !important;
-
+            height: 52px;
+            border-radius: 10px
         }
 
         .footer {
-
-            margin-top: 22px;
-
-            text-align: center;
-
-            color: #94a3b8;
-
             font-size: 13px;
-
-        }
-
-        .footer strong {
-
-            color: #2563eb;
-
+            color: #666;
+            text-align: center;
+            margin-top: 25px
         }
 
         .rounded-t-5 {
@@ -277,43 +159,19 @@
 <body>
     <div class="card">
         <div class="row g-0">
-            <div class="overlay">
-
-                <h2 class="fw-bold mb-3">
-                    Invoice Management System
-                </h2>
-
-                <p class="mb-4">
-                    Simplify billing, manage customers, monitor payments, and generate professional invoices from one
-                    secure platform.
-                </p>
-
-                <div class="mb-2">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    Professional Invoice Creation
-                </div>
-
-                <div class="mb-2">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    Customer & Product Management
-                </div>
-
-                <div class="mb-2">
-                    <i class="bi bi-check-circle-fill text-success"></i>
-                    Payment Tracking
-                </div>
-
-                <div class="mt-4 small">
-                    <div class="text-white-50">
-                        Developed by
-                    </div>
-
-                    <strong class="fs-6">
-                        Baseline IT Development Pvt Ltd
-                    </strong>
-
-                </div>
-
+            <div class="col-lg-5 d-none d-lg-block left">
+                <img src="uploads/login_img1.jpg" alt="">
+                <!-- <div class="overlay">
+                    <h1>Invoice Management System</h1>
+                    <p>Manage invoices, customers and payments from one secure platform.</p>
+                    <ul>
+                        <li>Create Professional Invoices</li>
+                        <li>Manage Products</li>
+                        <li>Manage Customers</li>
+                        <li>Secure Authentication</li>
+                    </ul>
+                    <p><strong>Developed by</strong><br>Baseline IT Development Pvt Ltd</p>
+                </div> -->
             </div>
             <div class="col-lg-7 right">
                 <div class="text-center mb-4">
