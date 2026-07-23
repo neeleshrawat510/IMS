@@ -138,10 +138,10 @@ require_once "includes/auth_check.php";
                     data: 6
                 }, //status
                 {
-                    data: 6
+                    data: 7
                 }, //payment_status
                 {
-                    data: 7
+                    data: 8
                 } //action
                 ]
             });
