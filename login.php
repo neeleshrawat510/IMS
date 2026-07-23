@@ -225,7 +225,7 @@
                 }
             });
 
-            //load saved data
+            //Load saved data
             if (localStorage.getItem("rememberMe") === "true") {
                 $("#email").val(localStorage.getItem("email"));
                 $("#password").val(localStorage.getItem("password"));
