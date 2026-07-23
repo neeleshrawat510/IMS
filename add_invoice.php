@@ -704,7 +704,7 @@ $invoice_date = date("Y-m-d");
                     <!-- Actions -->
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary" id="draftBtn">Save Draft</button>
-                        <button type="submit" class="btn-save" id="saveBtn">Save Invoice</button>
+                        <button type="submit" class="btn-save" id="saveBtn">Send Invoice</button>
                     </div>
 
                 </div>
