@@ -91,9 +91,7 @@ try {
 
     // Create Checkout Session
     $session = Session::create([
-        echo "<pre>";
-var_dump($session->payment_intent);
-exit;
+        
         'mode' => 'payment',
 
         'success_url' => getenv('APP_URL') . '/payment_success.php?session_id={CHECKOUT_SESSION_ID}',
@@ -126,6 +124,10 @@ exit;
 } catch (Exception $e) {
     die($e->getMessage());
 }
+
+echo "<pre>";
+var_dump($session->payment_intent);
+exit;
 // Save Payment Record
 $insertPaymentSql = "INSERT INTO payments
 (

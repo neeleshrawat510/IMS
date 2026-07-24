@@ -4,7 +4,8 @@ require_once 'vendor/autoload.php';
 include 'config/connection.php';
 
 use Stripe\Webhook;
-
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 // Read Stripe request body
 $payload = @file_get_contents('php://input');
@@ -13,6 +14,8 @@ $payload = @file_get_contents('php://input');
 // Get Stripe signature
 $sigHeader = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
 
+//stripe secret key
+Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
 // Webhook secret from Railway variables
 $endpointSecret = getenv('STRIPE_WEBHOOK_SECRET');
@@ -46,65 +49,101 @@ if ($event->type === 'checkout.session.completed') {
 
     // Get invoice details from metadata
     $invoiceId = $session->metadata->invoice_id;
-
     $checkoutSessionId = $session->id;
 
-    $paymentIntentId = $session->payment_intent;
+    $paymentIntent = PaymentIntent::retrieve($session->payment_intent);
 
+    $paymentIntentId = $paymentIntent->id;
 
-    // Store complete Stripe response
+    $transactionId = $paymentIntent->latest_charge ?? null;
+
+    $paymentMethod = $paymentIntent->payment_method_types[0] ?? 'card';
+
+    // Store  Stripe response
     $gatewayResponse = mysqli_real_escape_string(
         $conn,
-        json_encode($session)
+        json_encode([
+            'session' => $session,
+            'payment_intent' => $paymentIntent
+        ])
     );
 
 
     //Update payments table
 
-
     $updatePaymentSql = "
-        UPDATE payments
+UPDATE payments
 SET
     gateway_payment_id = '$paymentIntentId',
-    transaction_id = '$paymentIntentId',
+    transaction_id = " . ($transactionId ? "'$transactionId'" : "NULL") . ",
     status = 'paid',
-    payment_method = 'card',
+    payment_method = '$paymentMethod',
     gateway_response = '$gatewayResponse',
-    paid_at = NOW()
+    failure_reason = NULL,
+    paid_at = NOW(),
+    updated_at = NOW()
 WHERE checkout_session_id = '$checkoutSessionId'
-AND status != 'paid'";
+";
 
-
-    $paymentResult = mysqli_query($conn, $updatePaymentSql);
-
-
-    if (!$paymentResult) {
-
-        http_response_code(500);
-        exit(mysqli_error($conn));
-    }
-
+    mysqli_query($conn, $updatePaymentSql);
 
 
     //Update invoice payment status
 
+    mysqli_query($conn, "
+UPDATE invoices
+SET
+    payment_status='Paid'
+WHERE id='$invoiceId'
+");
 
-    $updateInvoiceSql = "
-        UPDATE invoices
-        SET
-            payment_status = 'paid'
-        WHERE id = '$invoiceId'
+}
+
+//failed payment
+
+if ($event->type == 'payment_intent.payment_failed') {
+
+    $paymentIntent = $event->data->object;
+
+    $paymentIntentId = $paymentIntent->id;
+
+    $transactionId = $paymentIntent->latest_charge ?? null;
+
+    $failureReason = '';
+
+    if (!empty($paymentIntent->last_payment_error)) {
+
+        $failureReason = mysqli_real_escape_string(
+            $conn,
+            $paymentIntent->last_payment_error->message
+        );
+    }
+
+    $gatewayResponse = mysqli_real_escape_string(
+        $conn,
+        json_encode($paymentIntent)
+    );
+
+    $sql = "
+    UPDATE payments
+    SET
+        gateway_payment_id='$paymentIntentId',
+        transaction_id=" . ($transactionId ? "'$transactionId'" : "NULL") . ",
+        status='failed',
+        gateway_response='$gatewayResponse',
+        failure_reason='$failureReason',
+        updated_at=NOW()
+    WHERE gateway_payment_id='$paymentIntentId'
+       OR checkout_session_id IN (
+            SELECT id FROM (
+                SELECT checkout_session_id AS id
+                FROM payments
+                WHERE gateway_payment_id='$paymentIntentId'
+            ) x
+       )
     ";
 
-
-    $invoiceResult = mysqli_query($conn, $updateInvoiceSql);
-
-
-    if (!$invoiceResult) {
-
-        http_response_code(500);
-        exit(mysqli_error($conn));
-    }
+    mysqli_query($conn, $sql);
 }
 
 
