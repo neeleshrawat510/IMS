@@ -114,6 +114,7 @@ try {
             ]
         ],
 
+        
         'client_reference_id' => $invoice['id'],
 
         'metadata' => [

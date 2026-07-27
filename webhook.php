@@ -166,6 +166,7 @@ if ($event->type === 'checkout.session.expired') {
 
 }
 
+
 // Always return success to Stripe
 http_response_code(200);
 
