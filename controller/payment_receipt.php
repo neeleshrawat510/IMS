@@ -53,9 +53,6 @@ function generateReceiptPDF($conn, $invoiceId)
 
     $payment = mysqli_fetch_assoc($paymentQuery);
 
-    // ================= RECEIPT NUMBER =================
-
-    $receiptNo = "RCPT-" . str_pad($payment["id"], 5, "0", STR_PAD_LEFT);
 
     // ================= HTML =================
 
@@ -121,10 +118,6 @@ function generateReceiptPDF($conn, $invoiceId)
 
         <table>
 
-            <tr>
-                <td class="label">Receipt No.</td>
-                <td>'.$receiptNo.'</td>
-            </tr>
 
             <tr>
                 <td class="label">Invoice No.</td>
@@ -144,11 +137,6 @@ function generateReceiptPDF($conn, $invoiceId)
             <tr>
                 <td class="label">Amount Paid</td>
                 <td>'.$payment["currency"].' '.number_format($payment["amount"],2).'</td>
-            </tr>
-
-            <tr>
-                <td class="label">Payment Gateway</td>
-                <td>'.ucfirst($payment["gateway"]).'</td>
             </tr>
 
             <tr>
