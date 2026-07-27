@@ -5,6 +5,12 @@ include 'config/connection.php';
 require_once 'controller/send_receipt_email.php';
 require_once 'controller/receipt_pdf.php';
 
+file_put_contents(
+    "webhook.log",
+    date('Y-m-d H:i:s') . " Webhook Hit\n",
+    FILE_APPEND
+);
+
 use Stripe\Webhook;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
