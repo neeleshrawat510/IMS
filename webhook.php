@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 require_once 'vendor/autoload.php';
 include 'config/connection.php';
@@ -119,13 +123,13 @@ WHERE invoices.id = '$invoiceId'
 $result = mysqli_query($conn, $sql);
 
 $customer = mysqli_fetch_assoc($result);
-    
+
 $receiptPdf = generateReceiptPDF($conn, $invoiceId);
 
 if ($receiptPdf === false) {
     error_log("Receipt generation failed");
 }
-sendPaymentEmail(
+$emailSent = sendPaymentEmail(
     $customer['email'],
     $customer['name'],
     $customer['invoice_no'],
@@ -198,7 +202,7 @@ $result = mysqli_query($conn, $sql);
 $customer = mysqli_fetch_assoc($result);
 $payUrl = getenv('APP_URL') . "/pay.php?token=" . $customer['invoice_public_token'];
 
-sendPaymentEmail(
+$emailSent = sendPaymentEmail(
     $customer['email'],
     $customer['name'],
     $customer['invoice_no'],
