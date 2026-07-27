@@ -136,7 +136,7 @@ function generateReceiptPDF($conn, $invoiceId)
 
             <tr>
                 <td class="label">Amount Paid</td>
-                <td>'.$payment["currency"].' '.number_format($payment["amount"],2).'</td>
+                <td>'.strtoupper($payment["currency"]).' '.number_format($payment["amount"],2).'</td>
             </tr>
 
             <tr>

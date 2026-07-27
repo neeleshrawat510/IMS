@@ -3,6 +3,7 @@
 require_once 'vendor/autoload.php';
 include 'config/connection.php';
 require_once 'controller/send_receipt_email.php';
+require_once 'controller/receipt_pdf.php';
 
 use Stripe\Webhook;
 use Stripe\Stripe;
@@ -118,8 +119,12 @@ sendPaymentEmail(
     $customer['name'],
     $customer['invoice_no'],
     'paid',
-    $payUrl
+    $transactionId,
+    null,
+    null,
+    $receiptPdf
 );
+$receiptPdf = generateReceiptPDF($conn, $invoiceId);
 }
 
 //failed payment

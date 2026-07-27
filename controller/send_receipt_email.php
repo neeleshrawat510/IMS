@@ -7,7 +7,8 @@ function sendPaymentEmail(
     $status,
     $transactionId = null,
     $failureReason = null,
-    $payUrl = null
+    $payUrl = null,
+    $pdfOutput
 ) {
 
     $apiKey = getenv('BREVO_API_KEY');
@@ -17,6 +18,13 @@ function sendPaymentEmail(
         return false;
     }
 
+    $attachment = [
+        [
+            "name" => "Receipt_" . $invoiceNo . ".pdf",
+            "content" => base64_encode($pdfOutput)
+        ]
+    ];
+    
     if ($status === "paid") {
 
         $subject = "Payment Received - Invoice #{$invoiceNo}";
@@ -114,8 +122,13 @@ function sendPaymentEmail(
 
         "subject" => $subject,
 
-        "htmlContent" => $htmlContent
+        "htmlContent" => $htmlContent,
     ];
+
+    if ($pdfOutput !== null) {
+    $data["attachment"] = $attachment;
+}
+
 
     $ch = curl_init("https://api.brevo.com/v3/smtp/email");
 
