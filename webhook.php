@@ -119,7 +119,12 @@ WHERE invoices.id = '$invoiceId'
 $result = mysqli_query($conn, $sql);
 
 $customer = mysqli_fetch_assoc($result);
+    
+$receiptPdf = generateReceiptPDF($conn, $invoiceId);
 
+if ($receiptPdf === false) {
+    error_log("Receipt generation failed");
+}
 sendPaymentEmail(
     $customer['email'],
     $customer['name'],
@@ -130,7 +135,6 @@ sendPaymentEmail(
     null,
     $receiptPdf
 );
-$receiptPdf = generateReceiptPDF($conn, $invoiceId);
 }
 
 //failed payment
@@ -198,10 +202,15 @@ sendPaymentEmail(
     $customer['email'],
     $customer['name'],
     $customer['invoice_no'],
-    'paid',
-    $payUrl,
+    'failed',
     $transactionId,
     $failureReason,
+    $payUrl
+);
+
+error_log(
+    "Payment Email: " .
+    ($emailSent ? "SUCCESS" : "FAILED")
 );
     }
 
