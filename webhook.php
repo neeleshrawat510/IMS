@@ -7,7 +7,7 @@ error_reporting(E_ALL);
 require_once 'vendor/autoload.php';
 include 'config/connection.php';
 require_once 'controller/send_receipt_email.php';
-require_once 'controller/receipt_pdf.php';
+require_once 'controller/payment_receipt.php';
 
 file_put_contents(
     "webhook.log",
