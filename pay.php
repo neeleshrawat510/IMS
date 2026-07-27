@@ -114,7 +114,7 @@ try {
             ]
         ],
 
-        
+
         'client_reference_id' => $invoice['id'],
 
         'metadata' => [
@@ -133,9 +133,6 @@ try {
     die($e->getMessage());
 }
 
-echo "<pre>";
-var_dump($session->payment_intent);
-exit;
 // Save Payment Record
 $insertPaymentSql = "INSERT INTO payments
 (
