@@ -119,7 +119,14 @@ try {
         'metadata' => [
             'invoice_id' => $invoice['id'],
             'invoice_no' => $invoice['invoice_no']
+        ],
+
+        'payment_intent_data' => [
+        'metadata' => [
+            'invoice_id' => $invoice['id'],
+            'invoice_no' => $invoice['invoice_no']
         ]
+    ]
     ]);
 } catch (Exception $e) {
     die($e->getMessage());

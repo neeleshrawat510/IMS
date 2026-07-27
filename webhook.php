@@ -104,7 +104,9 @@ WHERE id='$invoiceId'
 if ($event->type == 'payment_intent.payment_failed') {
 
     $paymentIntent = $event->data->object;
-
+    
+    $invoiceId = $paymentIntent->metadata->invoice_id;
+    
     $paymentIntentId = $paymentIntent->id;
 
     $transactionId = $paymentIntent->latest_charge ?? null;
@@ -133,7 +135,7 @@ if ($event->type == 'payment_intent.payment_failed') {
         gateway_response='$gatewayResponse',
         failure_reason='$failureReason',
         updated_at=NOW()
-    WHERE gateway_payment_id='$paymentIntentId'
+    WHERE invoice_id='$invoiceId'
        OR checkout_session_id IN (
             SELECT id FROM (
                 SELECT checkout_session_id AS id
@@ -146,6 +148,23 @@ if ($event->type == 'payment_intent.payment_failed') {
     mysqli_query($conn, $sql);
 }
 
+
+// Expired session
+if ($event->type === 'checkout.session.expired') {
+
+    $session = $event->data->object;
+
+    $checkoutSessionId = $session->id;
+
+    mysqli_query($conn,"
+        UPDATE payments
+        SET
+            status='failed',
+            updated_at=NOW()
+        WHERE checkout_session_id='$checkoutSessionId'
+    ");
+
+}
 
 // Always return success to Stripe
 http_response_code(200);
