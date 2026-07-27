@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 include 'config/connection.php';
+require_once 'controller/send_receipt_email.php';
 
 use Stripe\Webhook;
 use Stripe\Stripe;
@@ -97,6 +98,28 @@ SET
 WHERE id='$invoiceId'
 ");
 
+$sql = "
+SELECT
+    invoices.invoice_no,
+    contacts.name,
+    contacts.email
+FROM invoices
+JOIN contacts
+ON contacts.id = invoices.contact_id
+WHERE invoices.id = '$invoiceId'
+";
+
+$result = mysqli_query($conn, $sql);
+
+$customer = mysqli_fetch_assoc($result);
+
+sendPaymentEmail(
+    $customer['email'],
+    $customer['name'],
+    $customer['invoice_no'],
+    'paid',
+    $payUrl
+);
 }
 
 //failed payment
@@ -104,9 +127,9 @@ WHERE id='$invoiceId'
 if ($event->type == 'payment_intent.payment_failed') {
 
     $paymentIntent = $event->data->object;
-    
+
     $invoiceId = $paymentIntent->metadata->invoice_id;
-    
+
     $paymentIntentId = $paymentIntent->id;
 
     $transactionId = $paymentIntent->latest_charge ?? null;
@@ -127,10 +150,10 @@ if ($event->type == 'payment_intent.payment_failed') {
     );
 
     $sql = "
-    UUPDATE payments
+    UPDATE payments
 SET
     gateway_payment_id='$paymentIntentId',
-    transaction_id=...,
+    transaction_id=" . ($transactionId ? "'$transactionId'" : "NULL") . ",
     status='failed',
     gateway_response='$gatewayResponse',
     failure_reason='$failureReason',
@@ -142,7 +165,34 @@ LIMIT 1
     ";
 
     mysqli_query($conn, $sql);
-}
+
+$sql = "
+SELECT
+        invoices.invoice_no,
+    invoices.invoice_public_token,
+    contacts.name,
+    contacts.email
+FROM invoices
+JOIN contacts
+ON contacts.id = invoices.contact_id
+WHERE invoices.id = '$invoiceId'
+";
+
+$result = mysqli_query($conn, $sql);
+
+$customer = mysqli_fetch_assoc($result);
+$payUrl = getenv('APP_URL') . "/pay.php?token=" . $customer['invoice_public_token'];
+
+sendPaymentEmail(
+    $customer['email'],
+    $customer['name'],
+    $customer['invoice_no'],
+    'paid',
+    $payUrl,
+    $transactionId,
+    $failureReason,
+);
+    }
 
 
 // Expired session
@@ -152,13 +202,14 @@ if ($event->type === 'checkout.session.expired') {
 
     $checkoutSessionId = $session->id;
 
-    mysqli_query($conn,"
+    mysqli_query($conn, "
         UPDATE payments
         SET
             status='failed',
             updated_at=NOW()
         WHERE checkout_session_id='$checkoutSessionId' AND status='pending'
     ");
+
 
 }
 
