@@ -8,7 +8,7 @@ function sendPaymentEmail(
     $transactionId = null,
     $failureReason = null,
     $payUrl = null,
-    $pdfOutput
+    $pdfOutput = null
 ) {
 
     $apiKey = getenv('BREVO_API_KEY');
