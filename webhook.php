@@ -127,22 +127,18 @@ if ($event->type == 'payment_intent.payment_failed') {
     );
 
     $sql = "
-    UPDATE payments
-    SET
-        gateway_payment_id='$paymentIntentId',
-        transaction_id=" . ($transactionId ? "'$transactionId'" : "NULL") . ",
-        status='failed',
-        gateway_response='$gatewayResponse',
-        failure_reason='$failureReason',
-        updated_at=NOW()
-    WHERE invoice_id='$invoiceId'
-       OR checkout_session_id IN (
-            SELECT id FROM (
-                SELECT checkout_session_id AS id
-                FROM payments
-                WHERE gateway_payment_id='$paymentIntentId'
-            ) x
-       )
+    UUPDATE payments
+SET
+    gateway_payment_id='$paymentIntentId',
+    transaction_id=...,
+    status='failed',
+    gateway_response='$gatewayResponse',
+    failure_reason='$failureReason',
+    updated_at=NOW()
+WHERE invoice_id='$invoiceId'
+AND status='pending'
+ORDER BY id DESC
+LIMIT 1
     ";
 
     mysqli_query($conn, $sql);
@@ -161,7 +157,7 @@ if ($event->type === 'checkout.session.expired') {
         SET
             status='failed',
             updated_at=NOW()
-        WHERE checkout_session_id='$checkoutSessionId'
+        WHERE checkout_session_id='$checkoutSessionId' AND status='pending'
     ");
 
 }
