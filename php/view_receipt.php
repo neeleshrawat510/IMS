@@ -12,8 +12,7 @@ if (!isset($_GET['id'])) {
 $invoiceId = (int)$_GET['id'];
 
 $pdf = generateReceiptPDF($conn, $invoiceId);
-var_dump($pdf);
-exit;
+
 if ($pdf === false) {
     die("Invoice not found");
 }
