@@ -182,7 +182,7 @@ $invoice = mysqli_fetch_assoc($result);
                 Your transaction has been securely processed and your invoice has been updated.
             </div>
 
-            <a href="view_receipt.php" class="btn btn-primary px-4">
+            <a href="php/view_receipt.php" class="btn btn-primary px-4">
                 view payment receipt
             </a> 
 
