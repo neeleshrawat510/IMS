@@ -59,8 +59,8 @@ require_once "includes/auth_check.php";
                                             <button class="btn btn-sm text-primary p-0 ms-2" id="unarchiveSelected" title="Unarchive Selected">
                                                 <i class="bi bi-box-arrow-up"></i>
                                             </button>
-                                            <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected" title="Delete Selected">
-                                                <i class="bi bi-trash"></i>
+                                            <button class="btn btn-sm text-danger p-0 ms-2" id="deleteSelected" title="Unarchive Selected">
+                                                <i class="bi bi-box-arrow-up"></i>
                                             </button>
                                         </th>
                                         <th>#</th>
