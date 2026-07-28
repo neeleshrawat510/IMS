@@ -51,32 +51,44 @@ $id = intval($_GET['id']);
             <!-- MAIN CONTENT -->
             <main class="dashboard-content">
                 <div class="container-fluid px-3 px-lg-4 py-4">
-                    
 
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Payment History</h5>
+                        </div>
 
-                    <!-- PAYMENT TABLE -->
-                    <table class="table table-striped table-hover nowrap w-100" id="paymentHistory" style="font-size: small;">
-                        <h5>Payment History</h5>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Invoice No</th>
-                                <th>Payment Gateway</th>
-                                <th>Payment Method</th>
-                                <th>Transaction Id</th>
-                                <th>Currency</th>
-                                <th>Amount</th>
-                                <th>Status</th>
-                                <th>Failure Reason</th>
-                                <th>Paid At</th>
-                            </tr>
-                        </thead>
+                        <div class="card-body">
+                            <div class="table-responsive"></div>
 
-                        <tbody></tbody>
-                    </table>
+                            <!-- PAYMENT TABLE -->
+                            <table class="table table-striped table-hover nowrap w-100" id="paymentHistory"
+                                style="font-size: small;">
+                                <h5>Payment History</h5>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Invoice No</th>
+                                        <th>Payment Gateway</th>
+                                        <th>Payment Method</th>
+                                        <th>Transaction Id</th>
+                                        <th>Currency</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Failure Reason</th>
+                                        <th>Paid At</th>
+                                        <th>Action</th>
+
+                                    </tr>
+                                </thead>
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </main>
         </div>
+        </main>
+    </div>
     </div>
 
     <script src="assets/js/main.js"></script>
@@ -84,39 +96,39 @@ $id = intval($_GET['id']);
     <!-- LOGOUT Redirect -->
     <script src="controller/logout.js"></script>
 
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
-    let invoice_id = $("#invoice_id").val();
-
-
-    $('#paymentHistory').DataTable({
-        ajax: {
-            url: "php/get_payment_history.php",
-            data: {
-                id: invoice_id
-            },
-            dataSrc: ""
-        },
-        columns: [
-            { data: 0 }, //serial no
-            { data: 1 },    //invoice no
-            { data: 2 },    //gateway
-            { data: 3 },    //payment method
-            { data: 4 },    //transaction id
-            { data: 5 }     //currency
-            { data: 6 }     //amount
-            { data: 7 }     //status
-            { data: 8 }     //failure reason
-            { data: 9 }     //paid at
-            { data: 10 }     //action
+            let invoice_id = <?= $id ?>;
 
 
-        ]
-    });
+            $('#paymentHistory').DataTable({
+                ajax: {
+                    url: "php/get_payment_history.php",
+                    data: {
+                        id: invoice_id
+                    },
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: 0 }, //serial no
+                    { data: 1 },    //invoice no
+                    { data: 2 },    //gateway
+                    { data: 3 },    //payment method
+                    { data: 4 },    //transaction id
+                    { data: 5 },     //currency
+                    { data: 6 },     //amount
+                    { data: 7 },     //status
+                    { data: 8 },     //failure reason
+                    { data: 9 },     //paid at
+                    { data: 10 }     //action
 
-});
-</script>
-    </body>
+
+                ]
+            });
+
+        });
+    </script>
+</body>
 
 </html>
