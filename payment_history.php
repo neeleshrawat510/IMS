@@ -56,6 +56,9 @@ $id = intval($_GET['id']);
                         <div class="card-header bg-white">
                             <h5 class="mb-0">Payment History</h5>
                         </div>
+                        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </button>
 
                         <div class="card-body">
                             <div class="table-responsive">
