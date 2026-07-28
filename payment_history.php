@@ -63,7 +63,6 @@ $id = intval($_GET['id']);
                                 <!-- PAYMENT TABLE -->
                                 <table class="table table-striped table-hover nowrap w-100" id="paymentHistory"
                                     style="font-size: small;">
-                                    <h5>Payment History</h5>
                                     <thead>
                                         <tr>
                                             <th>#</th>
