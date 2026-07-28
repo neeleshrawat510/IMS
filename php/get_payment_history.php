@@ -21,6 +21,21 @@ $data = [];
 $sr = 1;
 while($row = mysqli_fetch_assoc($sql)){
 
+//disable editing if payment status is paid
+        $paymentReceipt = '';
+
+        if ($row['status'] != 'paid') {
+            $paymentReceipt = '
+        <a href="view_receipt.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="view Receipt">
+            <i class="bi bi-eye"></i>
+        </a>';
+        } else {
+            $paymentReceipt = '
+        <button class="btn btn-secondary btn-sm" title="receipt available after payment" disabled>
+            <i class="bi bi-eye"></i>
+        </button>';
+        }
+
     $data[] = [
     $sr++,
     $row['invoice_no'],
@@ -32,7 +47,7 @@ while($row = mysqli_fetch_assoc($sql)){
     strtoupper($row['status']),
     $row['failure_reason'],
     $row['paid_at'],
-    '<a href="php/view_receipt.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm">View Receipt</a>'
+    $paymentReceipt
 ];
 }
 
