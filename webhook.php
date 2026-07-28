@@ -144,11 +144,7 @@ $emailSent = sendPaymentEmail(
 //failed payment
 
 if ($event->type == 'payment_intent.payment_failed') {
-    file_put_contents(
-    __DIR__ . "/webhook.log",
-    "Webhook Hit\n",
-    FILE_APPEND
-);
+    error_log("payment_intent.payment_failed received");
 
     $paymentIntent = $event->data->object;
 
