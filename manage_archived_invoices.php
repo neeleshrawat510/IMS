@@ -194,18 +194,18 @@ require_once "includes/auth_check.php";
                 }
 
                 Swal.fire({
-                    title: "Delete selected Invoices?",
-                    text: "This action cannot be undone!",
+                    title: "Are you sure?",
+                    text: "Do you want to archive invoices!",                    
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
-                    confirmButtonText: "Yes, delete"
+                    confirmButtonText: "Yes, unarchive"
                 }).then((result) => {
 
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: "php/delete_multiple_invoices.php",
+                            url: "php/unarchive_multiple_invoices.php",
                             type: "POST",
                             data: {
                                 ids: ids
@@ -214,12 +214,12 @@ require_once "includes/auth_check.php";
 
                                 if (response.trim() === "success") {
 
-                                    Swal.fire("Deleted!", "Invoice deleted successfully", "success");
+                                    Swal.fire("Deleted!", "Invoice unarchived successfully", "success");
 
                                     table.ajax.reload();
 
                                 } else {
-                                    Swal.fire("Error", "Delete failed", "error");
+                                    Swal.fire("Error", "Unarchive failed", "error");
                                 }
                             }
                         });
@@ -345,18 +345,18 @@ require_once "includes/auth_check.php";
 
                 Swal.fire({
                     title: "Are you sure?",
-                    text: "This Invoice will be permanently deleted!",
+                    text: "Do you want to unarchive invoice!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
                     cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Yes, delete it!"
+                    confirmButtonText: "Yes, unarchive it!"
                 }).then((result) => {
 
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: 'delete_invoice.php',
+                            url: 'php/unarchive_invoice.php',
                             type: 'POST',
                             data: {
                                 id: id
@@ -366,8 +366,8 @@ require_once "includes/auth_check.php";
                                 if (response.trim() === "success") {
 
                                     Swal.fire({
-                                        title: "Deleted!",
-                                        text: "Invoice has been deleted.",
+                                        title: "Unarchived!",
+                                        text: "Invoice has been unarchived.",
                                         icon: "success",
                                         timer: 1500,
                                         showConfirmButton: false
@@ -377,7 +377,7 @@ require_once "includes/auth_check.php";
                                     $('#invoiceTable').DataTable().ajax.reload();
 
                                 } else {
-                                    Swal.fire("Error", "Delete failed!", "error");
+                                    Swal.fire("Error", "Unarchive failed!", "error");
                                 }
                             },
                             error: function () {
