@@ -58,31 +58,32 @@ $id = intval($_GET['id']);
                         </div>
 
                         <div class="card-body">
-                            <div class="table-responsive"></div>
+                            <div class="table-responsive">
 
-                            <!-- PAYMENT TABLE -->
-                            <table class="table table-striped table-hover nowrap w-100" id="paymentHistory"
-                                style="font-size: small;">
-                                <h5>Payment History</h5>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Invoice No</th>
-                                        <th>Payment Gateway</th>
-                                        <th>Payment Method</th>
-                                        <th>Transaction Id</th>
-                                        <th>Currency</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Failure Reason</th>
-                                        <th>Paid At</th>
-                                        <th>Action</th>
+                                <!-- PAYMENT TABLE -->
+                                <table class="table table-striped table-hover nowrap w-100" id="paymentHistory"
+                                    style="font-size: small;">
+                                    <h5>Payment History</h5>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Invoice No</th>
+                                            <th>Payment Gateway</th>
+                                            <th>Payment Method</th>
+                                            <th>Transaction Id</th>
+                                            <th>Currency</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Failure Reason</th>
+                                            <th>Paid At</th>
+                                            <th>Action</th>
 
-                                    </tr>
-                                </thead>
+                                        </tr>
+                                    </thead>
 
-                                <tbody></tbody>
-                            </table>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
