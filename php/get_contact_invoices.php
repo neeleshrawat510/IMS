@@ -22,7 +22,7 @@ while($row = mysqli_fetch_assoc($sql)){
         $row['invoice_no'],
         $row['invoice_date'],
         $row['grand_total'],
-        $row['status'],
+        $row['payment_status'],
         '<a href="php/view_invoice.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm">View</a>'
     ];
 }

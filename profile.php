@@ -109,7 +109,7 @@ $id = intval($_GET['id']);
                                 <th>Invoice No</th>
                                 <th>Date</th>
                                 <th>Amount</th>
-                                <th>Status</th>
+                                <th>Payment Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -164,7 +164,7 @@ $id = intval($_GET['id']);
             { data: 1 },    //invoice no
             { data: 2 },    //date
             { data: 3 },    //grand total
-            { data: 4 },    //status
+            { data: 4 },    //payment_status
             { data: 5 }     //view
         ]
     });
