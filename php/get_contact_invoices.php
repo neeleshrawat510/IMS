@@ -19,7 +19,7 @@ while($row = mysqli_fetch_assoc($sql)){
 
     $data[] = [
         $row['id'], // Invoice ID
-        $sr++,
+        null,
         $row['invoice_no'],
         $row['invoice_date'],
         $row['grand_total'],

@@ -168,6 +168,8 @@ $id = intval($_GET['id']);
             });
             let table = $('#invoiceTable').DataTable({
 
+                order: [[0, 'desc']],   // Sort by hidden Invoice ID DESC
+
                 ajax: {
                     url: "php/get_contact_invoices.php",
                     data: {
@@ -176,8 +178,15 @@ $id = intval($_GET['id']);
                     dataSrc: ""
                 },
                 columns: [
-                    { data: 0, visible: false }, // Hidden Invoice ID
-                    { data: 1 }, //serial no
+                    { data: 0, visible: false }, // Invoice ID (hidden)
+
+                    {
+                        data: null,
+                        orderable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.row + 1;
+                        }
+                    }, //serial no
                     { data: 2 },    //invoice no
                     { data: 3 },    //date
                     { data: 4 },    //grand total
