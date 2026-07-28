@@ -44,7 +44,7 @@ require_once "includes/auth_check.php";
                     <!-- PRODUCT TABLE -->
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <span class="fw-bold">Archived Products</span>
+                            <span class="fw-bold">Manage Products</span>
 
                             <button class="btn btn-primary btn-sm" id="archivedProducts">
                                 Archived Products
