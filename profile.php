@@ -56,6 +56,9 @@ $id = intval($_GET['id']);
                         <div class="card-header">
                             Client Information
                         </div>
+                        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                            <i class="bi bi-arrow-left"></i> Back
+                        </button>
 
                         <div class="card-body">
                             <div class="row">
@@ -163,40 +166,40 @@ $id = intval($_GET['id']);
             });
             let table = $('#invoiceTable').DataTable({
 
-                    ajax: {
-                        url: "php/get_contact_invoices.php",
-                        data: {
-                            id: contact_id
-                        },
-                        dataSrc: ""
+                ajax: {
+                    url: "php/get_contact_invoices.php",
+                    data: {
+                        id: contact_id
                     },
-                    columns: [
-                        { data: 0, visible: false }, // Hidden Invoice ID
-                        { data: 1 }, //serial no
-                        { data: 2 },    //invoice no
-                        { data: 3 },    //date
-                        { data: 4 },    //grand total
-                        { data: 5 },    //payment_status
-                        { data: 6 }     //view
-                    ],
-                    createdRow: function (row, data) {
-                        $(row).attr('data-id', data[0]); // store invoice id
-                        $(row).css('cursor', 'pointer');
-                    }
-                });
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: 0, visible: false }, // Hidden Invoice ID
+                    { data: 1 }, //serial no
+                    { data: 2 },    //invoice no
+                    { data: 3 },    //date
+                    { data: 4 },    //grand total
+                    { data: 5 },    //payment_status
+                    { data: 6 }     //view
+                ],
+                createdRow: function (row, data) {
+                    $(row).attr('data-id', data[0]); // store invoice id
+                    $(row).css('cursor', 'pointer');
+                }
+            });
 
-                //redirect when click on row anywhere
-                $('#invoiceTable tbody').on('click', 'tr', function (e) {
+            //redirect when click on row anywhere
+            $('#invoiceTable tbody').on('click', 'tr', function (e) {
 
-                    // Don't redirect when view button clicked
-                    if ($(e.target).closest('a, button').length) {
-                        return;
-                    }
+                // Don't redirect when view button clicked
+                if ($(e.target).closest('a, button').length) {
+                    return;
+                }
 
-                    let data = table.row(this).data();
+                let data = table.row(this).data();
 
-                    window.location.href = 'payment_history.php?id=' + data[0];
-                });
+                window.location.href = 'payment_history.php?id=' + data[0];
+            });
         });
     </script>
 </body>
