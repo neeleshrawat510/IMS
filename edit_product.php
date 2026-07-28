@@ -80,7 +80,7 @@ require_once "includes/auth_check.php";
                                     <i class="bi bi-ui-checks-grid" aria-hidden="true"></i>
                                     <span>Product</span>
                                 </h2>
-                                <p class="text-muted mb-0">Add new product</p>
+                                <p class="text-muted mb-0">Edit product</p>
                             </div>
                             <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
                                 <i class="bi bi-arrow-left"></i> Back

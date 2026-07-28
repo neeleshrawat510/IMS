@@ -53,12 +53,13 @@ $id = intval($_GET['id']);
                 <div class="container-fluid px-3 px-lg-4 py-4">
 
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white">
-                            <h5 class="mb-0">Payment History</h5>
-                        </div>
-                        <button type="button" class="btn btn-outline-secondary" onclick="history.back()">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Payment history</span>
+
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="history.back()">
                                 <i class="bi bi-arrow-left"></i> Back
                             </button>
+                        </div>
 
                         <div class="card-body">
                             <div class="table-responsive">
