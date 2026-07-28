@@ -101,21 +101,29 @@ $id = intval($_GET['id']);
 
 
                     <!-- INVOICE TABLE -->
-                    <table class="table table-striped table-hover nowrap w-100" id="invoiceTable" style="font-size: small;">
-                        <h5>Invoice Generated for this Client</h5>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Invoice No</th>
-                                <th>Date</th>
-                                <th>Amount</th>
-                                <th>Payment Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
 
-                        <tbody></tbody>
-                    </table>
+
+
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover nowrap w-100" id="invoiceTable"
+                                style="font-size: small;">
+                                <h5>Invoice Generated for this Client</h5>
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Invoice No</th>
+                                        <th>Date</th>
+                                        <th>Amount</th>
+                                        <th>Payment Status</th>
+                                        <th>Invoice</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </main>
         </div>
@@ -126,51 +134,65 @@ $id = intval($_GET['id']);
     <!-- LOGOUT Redirect -->
     <script src="controller/logout.js"></script>
 
-<script>
-    $(document).ready(function () {
+    <script>
+        $(document).ready(function () {
 
-    let contact_id = $("#contact_id").val();
+            let contact_id = $("#contact_id").val();
 
-    $.ajax({
-        url: "php/get_contact_profile.php",
-        type: "GET",
-        data: {
-            id: contact_id
-        },
-        dataType: "json",
-        success: function(response) {
+            $.ajax({
+                url: "php/get_contact_profile.php",
+                type: "GET",
+                data: {
+                    id: contact_id
+                },
+                dataType: "json",
+                success: function (response) {
 
-            $("#name").text(response.name);
-            $("#number").text(response.number);
-            $("#email").text(response.email);
-            $("#company").text(response.company);
-            $("#gst").text(response.gst);
-            $("#address").text(response.address);
-            $("#created_at").text(response.created_at.split(' ')[0]);
+                    $("#name").text(response.name);
+                    $("#number").text(response.number);
+                    $("#email").text(response.email);
+                    $("#company").text(response.company);
+                    $("#gst").text(response.gst);
+                    $("#address").text(response.address);
+                    $("#created_at").text(response.created_at.split(' ')[0]);
 
-        }
-    });
+                }
+            });
 
-    $('#invoiceTable').DataTable({
-        ajax: {
-            url: "php/get_contact_invoices.php",
-            data: {
-                id: contact_id
-            },
-            dataSrc: ""
-        },
-        columns: [
-            { data: 0 }, //serial no
-            { data: 1 },    //invoice no
-            { data: 2 },    //date
-            { data: 3 },    //grand total
-            { data: 4 },    //payment_status
-            { data: 5 }     //view
-        ]
-    });
+            $('#invoiceTable').DataTable({
+                ajax: {
+                    url: "php/get_contact_invoices.php",
+                    data: {
+                        id: contact_id
+                    },
+                    dataSrc: ""
+                },
+                columns: [
+                    { data: 0, visible: false }, // Hidden Invoice ID
+                    { data: 1 }, //serial no
+                    { data: 2 },    //invoice no
+                    { data: 3 },    //date
+                    { data: 4 },    //grand total
+                    { data: 5 },    //payment_status
+                    { data: 6 }     //view
+                ]
+            });
 
-});
-</script>
-    </body>
+            //redirect when click on row anywhere
+            $('#invoiceTable tbody').on('click', 'tr', function (e) {
+
+                // Don't redirect when view button clicked
+                if ($(e.target).closest('a, button').length) {
+                    return;
+                }
+
+                let data = table.row(this).data();
+
+                window.location.href = 'payment_history.php?id=' + id;
+            });
+
+        });
+    </script>
+</body>
 
 </html>

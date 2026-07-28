@@ -18,6 +18,7 @@ $sr = 1;
 while($row = mysqli_fetch_assoc($sql)){
 
     $data[] = [
+        $row['id'], // Invoice ID
         $sr++,
         $row['invoice_no'],
         $row['invoice_date'],
