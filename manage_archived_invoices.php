@@ -10,7 +10,7 @@ require_once "includes/auth_check.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Invoice management System">
-    <title>Manage Invoices | Invoice Management System</title>
+    <title>Manage Archived Invoices | Invoice Management System</title>
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -54,9 +54,9 @@ require_once "includes/auth_check.php";
                     <!-- INVOICE TABLE -->
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white d-flex justify-content-between align-items-center">
-                            <span class="fw-bold">Manage Invoices</span>
-                            <button class="btn btn-primary btn-sm" id="archivedInvoices">
-                                Archived Invoices
+                            <span class="fw-bold">Manage Archived Invoices</span>
+                            <button class="btn btn-primary btn-sm" id="unarchivedInvoices">
+                                Unarchive Invoices
                             </button>
                         </div>
                         <div class="card-body">
@@ -109,7 +109,7 @@ require_once "includes/auth_check.php";
             //dataTable
             let table = $('#invoiceTable').DataTable({
                 ajax: {
-                    url: "php/manage_all_invoices.php",
+                    url: "php/manage_all_archived_invoices.php",
                     dataSrc: ""
                 },
                 columns: [{
@@ -194,18 +194,18 @@ require_once "includes/auth_check.php";
                 }
 
                 Swal.fire({
-                    title: "Archive selected Invoices?",
-                    text: "You can restore them later!",
+                    title: "Delete selected Invoices?",
+                    text: "This action cannot be undone!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
-                    confirmButtonText: "Yes, archive"
+                    confirmButtonText: "Yes, delete"
                 }).then((result) => {
 
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: "php/archive_multiple_invoices.php",
+                            url: "php/delete_multiple_invoices.php",
                             type: "POST",
                             data: {
                                 ids: ids
@@ -214,12 +214,12 @@ require_once "includes/auth_check.php";
 
                                 if (response.trim() === "success") {
 
-                                    Swal.fire("Deleted!", "Invoice archived successfully", "success");
+                                    Swal.fire("Deleted!", "Invoice deleted successfully", "success");
 
                                     table.ajax.reload();
 
                                 } else {
-                                    Swal.fire("Error", "Archive failed", "error");
+                                    Swal.fire("Error", "Delete failed", "error");
                                 }
                             }
                         });
@@ -337,26 +337,26 @@ require_once "includes/auth_check.php";
                     });
                 });
             });
-            
-            //archive invoices
+            //delete invoices
             $(document).on('click', '.delete-btn', function (e) {
                 e.preventDefault();
 
                 let id = $(this).data('id');
 
                 Swal.fire({
-                    title: "Archive Invoice?",
-                    text: "You can restore it later!",
+                    title: "Are you sure?",
+                    text: "This Invoice will be permanently deleted!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
-                    confirmButtonText: "Yes, archive"
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, delete it!"
                 }).then((result) => {
 
                     if (result.isConfirmed) {
 
                         $.ajax({
-                            url: 'php/archive_invoice.php',
+                            url: 'delete_invoice.php',
                             type: 'POST',
                             data: {
                                 id: id
@@ -366,8 +366,8 @@ require_once "includes/auth_check.php";
                                 if (response.trim() === "success") {
 
                                     Swal.fire({
-                                        title: "Archived!",
-                                        text: "Invoice has been archived.",
+                                        title: "Deleted!",
+                                        text: "Invoice has been deleted.",
                                         icon: "success",
                                         timer: 1500,
                                         showConfirmButton: false
@@ -377,7 +377,7 @@ require_once "includes/auth_check.php";
                                     $('#invoiceTable').DataTable().ajax.reload();
 
                                 } else {
-                                    Swal.fire("Error", "Archive failed!", "error");
+                                    Swal.fire("Error", "Delete failed!", "error");
                                 }
                             },
                             error: function () {
@@ -389,11 +389,10 @@ require_once "includes/auth_check.php";
                 });
             });
 
-            //archived invoices
-            $("#archivedInvoices").click(function () {
-                window.location.href = "manage_archived_invoices.php";
+            //unarchived invoices
+            $("#unarchivedProducts").click(function() {
+                window.location.href = "manage_invoice.php";
             });
-
 
             //redirect when click on row anywhere
             $('#invoiceTable tbody').on('click', 'tr', function (e) {
