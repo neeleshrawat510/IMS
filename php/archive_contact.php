@@ -6,9 +6,9 @@ include("../config/connection.php");
 
 $contactId = $_POST['id'];
 
-$delete = mysqli_query($conn, "UPDATE `contacts` SET `remove` = '1' WHERE `id` = '$contactId'");
+$archive = mysqli_query($conn, "UPDATE `contacts` SET `remove` = '1' WHERE `id` = '$contactId'");
 
-if($delete){
+if($archive){
     echo "success";
 }else{
     echo "failed";
