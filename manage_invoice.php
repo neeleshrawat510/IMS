@@ -143,7 +143,11 @@ require_once "includes/auth_check.php";
                 {
                     data: 8
                 } //action
-                ]
+                ],
+                createdRow: function (row, data) {
+                    $(row).attr('data-id', data[0]); // store invoice id
+                    $(row).css('cursor', 'pointer');
+                }
             });
 
             //select all rows
@@ -414,6 +418,20 @@ require_once "includes/auth_check.php";
                     }
                 });
 
+            });
+
+
+            //redirect when click on row anywhere
+            $('#invoiceTable tbody').on('click', 'tr', function (e) {
+
+                // Don't redirect when edit/archive button clicked
+                if ($(e.target).closest('a, button, input[type="checkbox"]').length) {
+                    return;
+                }
+
+                let id = $(this).attr('data-id');
+
+                window.location.href = 'payment_history.php?id=' + id;
             });
 
         });
