@@ -102,26 +102,28 @@ $id = intval($_GET['id']);
 
                     <!-- INVOICE TABLE -->
 
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">Issued Invoices</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover nowrap w-100" id="invoiceTable"
+                                    style="font-size: small;">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Invoice No</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Payment Status</th>
+                                            <th>Invoice</th>
+                                        </tr>
+                                    </thead>
 
-
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover nowrap w-100" id="invoiceTable"
-                                style="font-size: small;">
-                                <h5>Invoice Generated for this Client</h5>
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Invoice No</th>
-                                        <th>Date</th>
-                                        <th>Amount</th>
-                                        <th>Payment Status</th>
-                                        <th>Invoice</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody></tbody>
-                            </table>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -175,7 +177,11 @@ $id = intval($_GET['id']);
                     { data: 4 },    //grand total
                     { data: 5 },    //payment_status
                     { data: 6 }     //view
-                ]
+                ],
+                createdRow: function (row, data) {
+                    $(row).attr('data-id', data[0]); // store invoice id
+                    $(row).css('cursor', 'pointer');
+                }
             });
 
             //redirect when click on row anywhere
