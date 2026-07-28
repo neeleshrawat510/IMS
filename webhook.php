@@ -1,19 +1,10 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 
 require_once 'vendor/autoload.php';
 include 'config/connection.php';
 require_once 'controller/send_receipt_email.php';
 require_once 'controller/payment_receipt.php';
 
-file_put_contents(
-    "webhook.log",
-    date('Y-m-d H:i:s') . " Webhook Hit\n",
-    FILE_APPEND
-);
 
 use Stripe\Webhook;
 use Stripe\Stripe;
@@ -144,7 +135,6 @@ $emailSent = sendPaymentEmail(
 //failed payment
 
 if ($event->type == 'payment_intent.payment_failed') {
-    error_log("payment_intent.payment_failed received");
 
     $paymentIntent = $event->data->object;
 
