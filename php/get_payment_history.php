@@ -13,42 +13,45 @@ SELECT
 FROM payments
 INNER JOIN invoices
     ON invoices.id = payments.invoice_id
-WHERE payments.invoice_id = '$id'
+WHERE payments.invoice_id = $id
 ORDER BY payments.id DESC
 ");
 
 $data = [];
 $sr = 1;
-while($row = mysqli_fetch_assoc($sql)){
+while ($row = mysqli_fetch_assoc($sql)) {
 
-//disable editing if payment status is paid
-        $paymentReceipt = '';
+    //disable editing if payment status is paid
+    $paymentReceipt = '';
 
-        if ($row['status'] != 'paid') {
-            $paymentReceipt = '
-        <a href="view_receipt.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="view Receipt">
-            <i class="bi bi-eye"></i>
+    // Show receipt only after successful payment
+    $paymentReceipt = '';
+
+    if ($row['status'] == 'paid') {
+        $paymentReceipt = '
+        <a href="php/view_receipt.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="View Receipt">
+            View Receipt
         </a>';
-        } else {
-            $paymentReceipt = '
-        <button class="btn btn-secondary btn-sm" title="receipt available after payment" disabled>
-            <i class="bi bi-eye"></i>
+    } else {
+        $paymentReceipt = '
+        <button class="btn btn-secondary btn-sm" title="Receipt available after successful payment" disabled>
+            View Receipt
         </button>';
-        }
+    }
 
     $data[] = [
-    $sr++,
-    $row['invoice_no'],
-    $row['gateway'],
-    $row['payment_method'],
-    $row['transaction_id'],
-    $row['currency'],
-    $row['amount'],
-    strtoupper($row['status']),
-    $row['failure_reason'],
-    $row['paid_at'],
-    $paymentReceipt
-];
+        $sr++,
+        $row['invoice_no'],
+        $row['gateway'],
+        $row['payment_method'],
+        $row['transaction_id'],
+        $row['currency'],
+        $row['amount'],
+        strtoupper($row['status']),
+        $row['failure_reason'],
+        $row['paid_at'],
+        $paymentReceipt
+    ];
 }
 
 
