@@ -32,7 +32,7 @@ while($row = mysqli_fetch_assoc($sql)){
     strtoupper($row['status']),
     $row['failure_reason'],
     $row['paid_at'],
-    '<a href="../controller/payment_receipt.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm">View Receipt</a>'
+    '<a href="php/view_receipt.php?id='.$row['id'].'" target="_blank" class="btn btn-primary btn-sm">View Receipt</a>'
 ];
 }
 
