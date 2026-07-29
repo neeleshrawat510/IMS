@@ -106,7 +106,7 @@ php/unarchive_product.php
 php/view_invoice.php
 php/view_users.php
 profile.php
-setting.php
+users.php
 update_overdue_invoices.php
 update_password.php
 uploads/login_img.jpg
