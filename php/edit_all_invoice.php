@@ -47,9 +47,17 @@ $invoice = mysqli_fetch_assoc($invoiceQuery);
 
 $currentStatus = $invoice['status'];
 $invoicePublicToken = $invoice['invoice_public_token'];
-    var_dump($invoicePublicToken);
-exit;
-
+echo json_encode([
+    "debug" => [
+        "contact_email" => $contact_email,
+        "contact_name" => $contact_name,
+        "invoice_no" => $invoice_no,
+        "invoicePublicToken" => $invoicePublicToken,
+        "pdfLength" => strlen($pdfOutput),
+        "app_url" => getenv("APP_URL"),
+        "brevo_key_exists" => !empty(getenv("BREVO_API_KEY"))
+    ]
+]);
 // If Draft, change to Sent. Otherwise keep existing status.
 $newStatus = ($currentStatus == 'Draft') ? 'Sent' : $currentStatus;
 
