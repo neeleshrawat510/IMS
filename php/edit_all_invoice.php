@@ -11,10 +11,6 @@ require_once("../vendor/autoload.php");
 require_once "../controller/invoice_pdf.php";
 require_once "../controller/send_email.php";
 
-use Dompdf\Dompdf;
-use Dompdf\Options;
-
-
 
 // POST DATA
 
@@ -51,6 +47,8 @@ $invoice = mysqli_fetch_assoc($invoiceQuery);
 
 $currentStatus = $invoice['status'];
 $invoicePublicToken = $invoice['invoice_public_token'];
+    var_dump($invoicePublicToken);
+exit;
 
 // If Draft, change to Sent. Otherwise keep existing status.
 $newStatus = ($currentStatus == 'Draft') ? 'Sent' : $currentStatus;
@@ -120,6 +118,17 @@ $contact_email = $contact['email'];
 
 
 $pdfOutput = generateInvoicePDF($conn, $invoice_id);
+
+
+echo "<pre>";
+var_dump([
+    'contact_email' => $contact_email,
+    'contact_name' => $contact_name,
+    'invoice_no' => $invoice_no,
+    'invoicePublicToken' => $invoicePublicToken,
+    'pdfLength' => strlen($pdfOutput)
+]);
+exit;
 
 $emailSent = sendInvoiceEmail(
     $contact_email,
