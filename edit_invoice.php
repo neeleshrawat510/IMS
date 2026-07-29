@@ -624,7 +624,7 @@ include("config/connection.php");
                                 </td>
                                 <td>
                                     <input type="number" class="table-input price text-end" name="price[]" value="0"
-                                        step="0.01">
+                                        readonly>
                                 </td>
                                 <td>
                                     <input type="number" class="table-input tax text-end" name="tax[]" value="0.00"
@@ -1030,7 +1030,7 @@ include("config/connection.php");
                                     <input type="number" class="table-input qty text-end" name="qty[]" value="1" min="1">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input price text-end" name="price[]" value="0" step="0.01">
+                                    <input type="number" class="table-input price text-end" name="price[]" value="0" readonly>
                                 </td>
                                 <td>
                                     <input type="number" class="table-input tax text-end" name="tax[]" value="0.00" readonly>

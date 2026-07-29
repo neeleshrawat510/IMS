@@ -642,7 +642,7 @@ $invoice_date = date("Y-m-d");
                                 </td>
                                 <td>
                                     <input type="number" class="table-input price text-end" name="price[]" value="0"
-                                        step="0.01">
+                                        readonly>
                                 </td>
                                 <td>
                                     <input type="number" class="table-input tax text-end" name="tax[]" value="0.00"
@@ -922,7 +922,7 @@ $invoice_date = date("Y-m-d");
                                     <input type="number" class="table-input qty text-end" name="qty[]" value="1" min="1">
                                 </td>
                                 <td>
-                                    <input type="number" class="table-input price text-end" name="price[]" value="0" step="0.01">
+                                    <input type="number" class="table-input price text-end" name="price[]" value="0" readonly>
                                 </td>
                                 <td>
                                     <input type="number" class="table-input tax text-end" name="tax[]" value="0.00" readonly>
