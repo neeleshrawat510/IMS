@@ -32,7 +32,7 @@ if (mysqli_num_rows($sql) > 0) {
                 $row['invoice_date'],
                 $row['grand_total'],
                 $row['status'],
-                    '<a href="edit_draft_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Edit">
+                    '<a href="edit_invoice.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="Edit">
                         <i class="bi bi-pencil"></i> 
                     </a>
             
