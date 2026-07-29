@@ -32,6 +32,15 @@ require_once "includes/auth_check.php";
             border-radius: 4px;
         }
 
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
         button {
             background-color: #007bff;
             color: white;
@@ -111,14 +120,13 @@ require_once "includes/auth_check.php";
 
                             <div class="col-md-6">
                                 <label class="form-label" for="address">Address</label>
-                                <textarea name="address" class="" id="address" rows="4" cols="42"></textarea>
+                                <textarea name="address" class="" id="address" rows="4"></textarea>
                             </div>
-
-                            <div class="d-flex justify-content-end mt-4">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="bi bi-send" aria-hidden="true"></i>Add Contact</button>
-                            </div>
-
+                        </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-send" aria-hidden="true"></i>Add Contact</button>
+                        </div>
                     </form>
 
                 </div>
@@ -142,10 +150,10 @@ require_once "includes/auth_check.php";
     <script src="controller/logout.js"></script>
 
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
 
             // Custom method for GST validation
-            $.validator.addMethod("gstin", function(value, element) {
+            $.validator.addMethod("gstin", function (value, element) {
                 value = value.toUpperCase().trim();
                 var gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
                 return this.optional(element) || gstRegex.test(value);
@@ -213,7 +221,7 @@ require_once "includes/auth_check.php";
                         required: "Address is required"
                     }
                 },
-                submitHandler: function(form) {
+                submitHandler: function (form) {
 
                     let formData = new FormData(form);
                     $.ajax({
@@ -223,7 +231,7 @@ require_once "includes/auth_check.php";
                         contentType: false,
                         processData: false,
 
-                        success: function(response) {
+                        success: function (response) {
                             if (response.trim() == 'success') {
                                 Swal.fire({
                                     title: "Successful",
@@ -242,7 +250,7 @@ require_once "includes/auth_check.php";
                             }
                             $("#contactForm")[0].reset();
                         },
-                        error: function() {
+                        error: function () {
                             Swal.fire({
                                 title: "error",
                                 text: "Something went wrong!",

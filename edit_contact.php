@@ -33,6 +33,15 @@ require_once "includes/auth_check.php";
             border-radius: 4px;
         }
 
+        input,
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #aaa;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
         button {
             background-color: #007bff;
             color: white;
@@ -119,13 +128,13 @@ require_once "includes/auth_check.php";
 
                             <div class="col-md-6">
                                 <label class="form-label" for="address">Address</label>
-                                <textarea name="address" class="" id="address" rows="4" cols="42"></textarea>
+                                <textarea name="address" class="" id="address" rows="4"></textarea>
                             </div>
-
-                            <div class="d-flex justify-content-end mt-4">
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="bi bi-send" aria-hidden="true"></i> Edit Contact</button>
-                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-4">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-send" aria-hidden="true"></i> Edit Contact</button>
+                        </div>
 
                     </form>
 
