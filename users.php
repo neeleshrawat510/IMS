@@ -254,11 +254,19 @@ require_once "includes/auth_check.php";
                     },
                     email: {
                         required: true,
-                        email: true
+                        email: true,
+                        remote: {
+                            url: "controller/check_user_email.php",
+                            type: "POST"
+                        }
                     },
                     number: {
                         required: true,
-                        phoneValid: true
+                        phoneValid: true,
+                        remote: {
+                            url: "controller/check_user_number.php",
+                            type: "POST"
+                        }
                     },
                     password: {
                         required: true,
@@ -271,11 +279,13 @@ require_once "includes/auth_check.php";
                     },
                     email: {
                         required: "Email is required",
-                        email: "required format abc@gmail.com"
+                        email: "required format abc@gmail.com",
+                        remote: "Email already exist, Try another!"
                     },
                     number: {
                         required: "Number is required",
-                        phoneValid: "Please enter valid number"
+                        phoneValid: "Please enter valid number",
+                        remote: "Number already exist, Try another!"
                     },
                     password: {
                         required: "Password is required",
