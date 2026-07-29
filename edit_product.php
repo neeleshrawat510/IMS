@@ -88,21 +88,21 @@ require_once "includes/auth_check.php";
                         </div>
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label" for="product_code">Product Code</label>
+                                <label class="form-label" for="productCode">Product Code</label>
                                 <input type="text" class="" name="product_code" id="productCode" />
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label" for="product_name">Product Name</label>
+                                <label class="form-label" for="productName">Product Name</label>
                                 <input type="text" class="" name="product_name" id="productName" />
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label" for="cost_price">Cost Price</label>
+                                <label class="form-label" for="costPrice">Cost Price</label>
                                 <input type="text" class="" name="cost_price" id="costPrice" />
                             </div>
 
                             <div class="col-md-6">
-                                <label class="form-label" for="selling_price">Selling Price</label>
+                                <label class="form-label" for="sellingPrice">Selling Price</label>
                                 <input type="text" class="" name="selling_price" id="sellingPrice" />
                             </div>
 
@@ -170,7 +170,7 @@ require_once "includes/auth_check.php";
                     $("#productName").val(data.product_name);
                     $("#costPrice").val(data.cost_price);
                     $("#sellingPrice").val(data.selling_price);
-                    $("#tax").val(data.tax);
+                    $("#tax").val(parseFloat(data.tax));
                 }
 
             });
