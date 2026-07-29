@@ -10,13 +10,12 @@ require_once "includes/auth_check.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Invoice management System">
-    <title>Manage Contacts | Invoice Management System</title>
+    <title>Edit User | Invoice Management System</title>
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
     <link rel="stylesheet" href="assets/css/style.css">
 
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.8/css/dataTables.dataTables.min.css">
 
     <!-- Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -88,13 +87,15 @@ require_once "includes/auth_check.php";
                     <!-- PROFILE PAGE -->
                     <div class="card mb-4">
                         <div class="card-header">
-                            Add user
+                            Edit user
                         </div>
                         <form class="card shadow-sm border-0 p-4 rounded-4 bg-white" id="userForm">
                             <div class="card-body">
 
                                 <div class="row g-3">
 
+                                    <!-- hidden id -->
+                                    <input type="hidden" name="id" id="editUserId">
                                     <!-- Name -->
                                     <div class="col-md-6">
                                         <label for="name" class="form-label fw-semibold">
@@ -137,25 +138,12 @@ require_once "includes/auth_check.php";
                                         </div>
                                     </div>
 
-                                    <!-- Password -->
-                                    <div class="col-md-6">
-                                        <label for="password" class="form-label fw-semibold">
-                                            Password
-                                        </label>
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="bi bi-lock"></i>
-                                            </span>
-                                            <input type="password" name="password" id="password" class="form-control"
-                                                placeholder="Enter secure password">
-                                        </div>
-                                    </div>
 
                                     <!-- Submit Button -->
                                     <div class="col-12 mt-3">
                                         <button class="btn btn-primary rounded-3" type="submit">
-                                            <i class="bi bi-person-plus-fill me-1"></i>
-                                            Add User
+                                            <i class="bi bi-pencil-square me-1"></i>
+                                            Edit User
                                         </button>
                                     </div>
 
@@ -163,31 +151,6 @@ require_once "includes/auth_check.php";
                             </div>
                         </form>
                     </div>
-                    <section class="panel mt-3">
-                        <div class="panel-header">
-                            <div>
-                                <h2 class="h5 mb-1 section-title"><i class="bi bi-people" aria-hidden="true"></i>
-                                    <span>Users</span>
-                                </h2>
-
-                            </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover nowrap w-100" id="userTable"
-                                style="font-size: small;">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Number </th>
-                                        <th>Action </th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                    </section>
                 </div>
             </main>
         </div>
@@ -203,9 +166,8 @@ require_once "includes/auth_check.php";
 
     <!-- LOGOUT Redirect -->
     <script src="controller/logout.js"></script>
-    <!-- DATATABLE -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
-    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+    <!-- country code -->
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <script>
         $(document).ready(function () {
@@ -230,11 +192,6 @@ require_once "includes/auth_check.php";
             });
 
 
-            // Add validator for strong password
-            $.validator.addMethod("strongPassword", function (value, element) {
-                return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
-            });
-
             //valid phone no
             $.validator.addMethod("phoneValid", function (value) {
                 const country = iti.getSelectedCountryData().iso2;
@@ -247,6 +204,24 @@ require_once "includes/auth_check.php";
             }, "Please enter a valid phone number.");
 
 
+            let editUserId = new URLSearchParams(window.location.search).get('id');
+
+            //get form data
+            $.ajax({
+                url: "controller/fetch_user.php",
+                type: "GET",
+                dataType: "json",
+                data: {
+                    id: editUserId
+                },
+                success: function (data) {
+                    $("#editUserId").val(data.id);
+                    $("#name").val(data.name);
+                    $("#number").val(data.number);
+                    $("#email").val(data.email);
+                }
+            });
+
             //validate form
             $("#userForm").validate({
                 rules: {
@@ -258,7 +233,12 @@ require_once "includes/auth_check.php";
                         email: true,
                         remote: {
                             url: "controller/check_user_email.php",
-                            type: "POST"
+                            type: "POST",
+                            data: {
+                                id: function () {
+                                    return $("#editUserId").val();
+                                }
+                            }
                         }
                     },
                     number: {
@@ -266,13 +246,15 @@ require_once "includes/auth_check.php";
                         phoneValid: true,
                         remote: {
                             url: "controller/check_user_number.php",
-                            type: "POST"
+                            type: "POST",   
+                            data: {
+                                id: function () {
+                                    return $("#editUserId").val();
+                                }
+                            }
                         }
-                    },
-                    password: {
-                        required: true,
-                        strongPassword: true
                     }
+
                 },
                 messages: {
                     name: {
@@ -287,11 +269,8 @@ require_once "includes/auth_check.php";
                         required: "Number is required",
                         phoneValid: "Please enter valid number",
                         remote: "Number already exist, Try another!"
-                    },
-                    password: {
-                        required: "Password is required",
-                        strongPassword: "atleast one Uppercase, lowercase, number and special character required"
                     }
+
                 },
                 errorPlacement: function (error, element) {
 
@@ -310,7 +289,7 @@ require_once "includes/auth_check.php";
 
                     let formData = new FormData(form);
                     $.ajax({
-                        url: "php/register_user.php",
+                        url: "php/edit_user.php",
                         type: "POST",
                         data: formData,
                         dataType: "json",
@@ -326,7 +305,7 @@ require_once "includes/auth_check.php";
                                     Swal.fire({
                                         icon: "success",
                                         title: "Success",
-                                        text: "User added successfully and login credentials have been emailed."
+                                        text: "User edited successfully and login credentials have been emailed."
                                     }).then(() => {
                                         location.reload();
                                     });
@@ -336,7 +315,7 @@ require_once "includes/auth_check.php";
                                     Swal.fire({
                                         icon: "warning",
                                         title: "User Added",
-                                        text: "User added successfully, but the email could not be sent."
+                                        text: "User edited successfully, but the email could not be sent."
                                     }).then(() => {
                                         location.reload();
                                     });
@@ -363,76 +342,7 @@ require_once "includes/auth_check.php";
             });
 
 
-
-            //data table
-            $("#userTable").DataTable({
-                ajax: {
-                    url: "php/view_users.php",
-                    dataSrc: ""
-                },
-                columns: [
-                    { data: 0 },//sr no
-                    { data: 1 },//name
-                    { data: 2 },//email
-                    { data: 3 },//number
-                    { data: 4 }//action
-
-                ]
-            });
         });
-
-        // delete user
-                    $(document).on('click', '.delete-btn', function (e) {
-                e.preventDefault();
-
-                let id = $(this).data('id');
-
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "This user will be Permanently Deleted!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Yes, Delete it!"
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-
-                        $.ajax({
-                            url: 'delete_user.php',
-                            type: 'POST',
-                            data: {
-                                id: id
-                            },
-                            success: function (response) {
-
-                                if (response.trim() === "success") {
-
-                                    Swal.fire({
-                                        title: "Deleted!",
-                                        text: "User has been deleted.",
-                                        icon: "success",
-                                        timer: 1500,
-                                        showConfirmButton: false
-                                    });
-
-                                    // reload DataTable
-                                    $('#contactsTable').DataTable().ajax.reload();
-
-                                } else {
-                                    Swal.fire("Error", "Delete failed!", "error");
-                                }
-                            },
-                            error: function () {
-                                Swal.fire("Error", "Something went wrong!", "error");
-                            }
-                        });
-
-                    }
-                });
-            });
-
     </script>
 </body>
 

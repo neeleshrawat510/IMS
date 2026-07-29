@@ -315,7 +315,7 @@ require_once "includes/auth_check.php";
                 });
             });
 
-            //Delete
+            //Delete Single
             $(document).on('click', '.delete-btn', function (e) {
                 e.preventDefault();
 
