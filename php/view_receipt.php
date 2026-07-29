@@ -1,6 +1,5 @@
 <?php
 
-require_once "../includes/api_auth.php";
 include("../config/connection.php");
 require_once "../controller/payment_receipt.php";
 
