@@ -35,7 +35,7 @@ function sendUserCredentials($toEmail, $userName, $plainPassword)
 
             <p>
                 <strong>Email:</strong> {$toEmail}<br>
-                <strong>Temporary Password:</strong> {$plainPassword}
+                <strong>Password:</strong> {$plainPassword}
             </p>
 
             <p>
