@@ -34,30 +34,30 @@ require_once "includes/auth_check.php";
 
         /* Fix width of phone input */
         /* Phone input wrapper */
-.input-group .iti {
-    flex: 1 1 auto;
-    width: 1%;
-}
+        .input-group .iti {
+            flex: 1 1 auto;
+            width: 1%;
+        }
 
-/* Prevent shrinking */
-.input-group .iti input {
-    width: 100% !important;
-}
+        /* Prevent shrinking */
+        .input-group .iti input {
+            width: 100% !important;
+        }
 
-/* Validation error */
-label.error {
-    display: block !important;
-    width: 100%;
-    margin-top: 5px;
-    color: #dc3545;
-    font-size: 0.875rem;
-}
+        /* Validation error */
+        label.error {
+            display: block !important;
+            width: 100%;
+            margin-top: 5px;
+            color: #dc3545;
+            font-size: 0.875rem;
+        }
 
-/* Place phone error below the field */
-.iti + label.error {
-    display: block !important;
-    width: 100%;
-}
+        /* Place phone error below the field */
+        .iti+label.error {
+            display: block !important;
+            width: 100%;
+        }
 
         input.error {
             border: 1px solid red;
@@ -302,18 +302,46 @@ label.error {
                         url: "php/register_user.php",
                         type: "POST",
                         data: formData,
+                        dataType: "json",
                         contentType: false,
                         processData: false,
 
                         success: function (response) {
-                            if (response.trim() === "success") {
-                                Swal.fire("success", "User Added Successfully", "success")
-                                    .then(() => {
+
+                            if (response.status === "success") {
+
+                                if (response.email_status) {
+
+                                    Swal.fire({
+                                        icon: "success",
+                                        title: "Success",
+                                        text: "User added successfully and login credentials have been emailed."
+                                    }).then(() => {
                                         location.reload();
                                     });
+
+                                } else {
+
+                                    Swal.fire({
+                                        icon: "warning",
+                                        title: "User Added",
+                                        text: "User added successfully, but the email could not be sent."
+                                    }).then(() => {
+                                        location.reload();
+                                    });
+
+                                }
+
                             } else {
-                                Swal.fire("info", "User Not Added, Try again!", "info");
+
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: response.message || "User could not be added."
+                                });
+
                             }
+
                         },
                         error: function () {
                             Swal.fire("error", "Something went wrong", "error");

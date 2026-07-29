@@ -2,6 +2,8 @@
 require_once "../includes/api_auth.php";
 //setting up connection with DB
 include("../config/connection.php");
+require_once("../vendor/autoload.php");
+require_once "../controller/registration_email.php";
 
 
 
@@ -9,13 +11,29 @@ include("../config/connection.php");
 $name = trim(mysqli_real_escape_string($conn, $_POST['name']) ?? '');
 $number = trim(mysqli_real_escape_string($conn, $_POST['number']) ?? '');
 $email = trim(mysqli_real_escape_string($conn, $_POST['email']) ?? '');
-$password = md5($_POST['password']) ?? '';
+$plainPassword = trim($_POST['password'] ?? '');
+$hashedPassword = md5($plainPassword);
 
-$insert = mysqli_query($conn, "INSERT INTO `users` (`name`, `number`, `email`, `password`) VALUES ('$name','$number','$email','$password')");
+$insertUser = mysqli_query($conn, "INSERT INTO `users` (`name`, `number`, `email`, `password`) VALUES ('$name','$number','$email','$hashedPassword')");
 
-if($insert){
-    echo "success";
-}else{
-    echo "failed";
+if (!$insertUser) {
+    echo json_encode([
+        "status" => "error",
+        "message" => mysqli_error($conn)
+    ]);
+    exit;
 }
+
+$emailSent = sendUserCredentials(
+    $email,
+    $name,
+    $plainPassword
+);
+
+echo json_encode([
+    "status" => "success",
+    "email_status" => $emailSent
+]);
+exit;
+
 ?>
