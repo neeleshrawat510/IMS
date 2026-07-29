@@ -116,7 +116,7 @@ $contact_email = $contact['email'];
 
 
 $pdfOutput = generateInvoicePDF($conn, $invoice_id);
-$result = sendInvoiceEmail(
+$emailSent = sendInvoiceEmail(
     $contact_email,
     $contact_name,
     $invoice_no,
@@ -124,9 +124,8 @@ $result = sendInvoiceEmail(
     $pdfOutput
 );
 
-var_dump($result);
+var_dump($emailSent);
 exit;
-
 
 if ($emailSent) {
 

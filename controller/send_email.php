@@ -100,9 +100,9 @@ function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $invoicePublicToken, $p
 
     $result = json_decode($response, true);
 
-if ($httpCode >= 200 && $httpCode < 300) {
-    return true;
-}
-
-die("HTTP: {$httpCode}<br><pre>{$response}</pre>");
+return [
+    'success' => ($httpCode >= 200 && $httpCode < 300),
+    'httpCode' => $httpCode,
+    'response' => json_decode($response, true),
+];
 }
