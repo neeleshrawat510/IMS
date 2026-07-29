@@ -13,7 +13,7 @@
   </div>
 
   <nav class="sidebar-nav">
-    <a class="nav-link" href="dashboard.php">
+    <a class="nav-link" href="dashboard.php" title="Dashbaord">
       <span class="nav-icon"><i class="bi bi-speedometer2" aria-hidden="true"></i></span>
       <span class="nav-text">Dashboard</span>
     </a>
@@ -22,22 +22,22 @@
     <?php if ($_SESSION['role'] == "Admin") { ?>
 
       <!-- CONTACTS / CLIENTS -->
-      <a class="nav-link" href="add_contact.php">
+      <a class="nav-link" href="add_contact.php" title="Add Contact">
         <span class="nav-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
         <span class="nav-text">Add Contact</span>
       </a>
-      <a class="nav-link" href="manage_contact.php">
+      <a class="nav-link" href="manage_contact.php" title="Manage Contact">
         <span class="nav-icon"><i class="bi bi-ui-checks-grid" aria-hidden="true"></i></span>
         <span class="nav-text">Manage Contacts</span>
       </a>
 
 
       <!-- PRODUCTS -->
-      <a class="nav-link" href="add_product.php">
+      <a class="nav-link" href="add_product.php" title="Add Product">
         <span class="nav-icon"><i class="bi bi-plus-circle" aria-hidden="true"></i></span>
         <span class="nav-text">Add Product</span>
       </a>
-      <a class="nav-link" href="manage_product.php">
+      <a class="nav-link" href="manage_product.php" title="Manage Product">
         <span class="nav-icon"><i class="bi bi-pencil-square" aria-hidden="true"></i></span>
         <span class="nav-text">Manage Products</span>
       </a>
@@ -45,23 +45,23 @@
 
       <!-- INVOICE -->
 
-      <a class="nav-link" href="add_invoice.php">
+      <a class="nav-link" href="add_invoice.php" title="Add Invoice">
         <span class="nav-icon"><i class="bi bi-plus-square" aria-hidden="true"></i></span>
         <span class="nav-text">Add Invoice</span>
       </a>
       <!-- Draft invoices -->
-      <a class="nav-link" href="manage_draft_invoice.php">
+      <a class="nav-link" href="manage_draft_invoice.php" title="Draft Invoices">
         <span class="nav-icon"><i class="bi bi-file-text" aria-hidden="true"></i></span>
         <span class="nav-text">Draft Invoices</span>
       </a>
-      <a class="nav-link" href="manage_invoice.php">
+      <a class="nav-link" href="manage_invoice.php" title="Manage Invoices">
         <span class="nav-icon"><i class="bi bi-eye" aria-hidden="true"></i></span>
         <span class="nav-text">Manage Invoice</span>
       </a>
 
 
       <!-- USERS -->
-      <a class="nav-link" href="users.php">
+      <a class="nav-link" href="users.php" title="Users">
         <span class="nav-icon"><i class="bi bi-people" aria-hidden="true"></i></span>
         <span class="nav-text">Users</span>
       </a>
@@ -71,22 +71,22 @@
     <?php } else { ?>
 
        <!-- CONTACTS / CLIENTS -->
-      <a class="nav-link" href="add_contact.php">
+      <a class="nav-link" href="add_contact.php" title="Add Contact">
         <span class="nav-icon"><i class="bi bi-person-badge" aria-hidden="true"></i></span>
         <span class="nav-text">Add Contact</span>
       </a>
-      <a class="nav-link" href="manage_contact.php">
+      <a class="nav-link" href="manage_contact.php" title="Manage Contacts">
         <span class="nav-icon"><i class="bi bi-ui-checks-grid" aria-hidden="true"></i></span>
         <span class="nav-text">Manage Contacts</span>
       </a>
 
 
       <!-- PRODUCTS -->
-      <a class="nav-link" href="add_product.php">
+      <a class="nav-link" href="add_product.php" title="Add Product">
         <span class="nav-icon"><i class="bi bi-plus-circle" aria-hidden="true"></i></span>
         <span class="nav-text">Add Product</span>
       </a>
-      <a class="nav-link" href="manage_product.php">
+      <a class="nav-link" href="manage_product.php" title="Manage Products">
         <span class="nav-icon"><i class="bi bi-pencil-square" aria-hidden="true"></i></span>
         <span class="nav-text">Manage Products</span>
       </a>
@@ -94,16 +94,16 @@
 
       <!-- INVOICE -->
 
-      <a class="nav-link" href="add_invoice.php">
+      <a class="nav-link" href="add_invoice.php" title="Add Invoice">
         <span class="nav-icon"><i class="bi bi-plus-square" aria-hidden="true"></i></span>
         <span class="nav-text">Add Invoice</span>
       </a>
       <!-- Draft invoices -->
-      <a class="nav-link" href="manage_draft_invoice.php">
+      <a class="nav-link" href="manage_draft_invoice.php" title="Draft Invoices">
         <span class="nav-icon"><i class="bi bi-file-text" aria-hidden="true"></i></span>
         <span class="nav-text">Draft Invoices</span>
       </a>
-      <a class="nav-link" href="manage_invoice.php">
+      <a class="nav-link" href="manage_invoice.php" title="Manage Invoice">
         <span class="nav-icon"><i class="bi bi-eye" aria-hidden="true"></i></span>
         <span class="nav-text">Manage Invoice</span>
       </a>
