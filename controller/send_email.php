@@ -100,9 +100,11 @@ function sendInvoiceEmail($toEmail, $toName, $invoiceNo, $invoicePublicToken, $p
 
     $result = json_decode($response, true);
 
-return [
-    'success' => ($httpCode >= 200 && $httpCode < 300),
-    'httpCode' => $httpCode,
-    'response' => json_decode($response, true),
-];
+if ($httpCode >= 200 && $httpCode < 300) {
+    return true;
+}
+
+error_log("Brevo Error ({$httpCode}): " . $response);
+
+return false;
 }

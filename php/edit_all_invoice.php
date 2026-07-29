@@ -124,9 +124,6 @@ $emailSent = sendInvoiceEmail(
     $pdfOutput
 );
 
-var_dump($emailSent);
-exit;
-
 if ($emailSent) {
 
     mysqli_query($conn,
