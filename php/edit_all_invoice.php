@@ -114,32 +114,36 @@ $contact_email = $contact['email'];
 
 
 
+$emailSent = false;
 
-$pdfOutput = generateInvoicePDF($conn, $invoice_id);
-$emailSent = sendInvoiceEmail(
-    $contact_email,
-    $contact_name,
-    $invoice_no,
-    $invoicePublicToken,
-    $pdfOutput
-);
+if ($sendEmail == 1) {
 
-if ($emailSent) {
+    $pdfOutput = generateInvoicePDF($conn, $invoice_id);
 
-    mysqli_query($conn,
-        "UPDATE invoices
-         SET email_status='Sent'
-         WHERE id='$invoice_id'"
+    $emailSent = sendInvoiceEmail(
+        $contact_email,
+        $contact_name,
+        $invoice_no,
+        $invoicePublicToken,
+        $pdfOutput
     );
+}
 
-} else {
+if ($sendEmail == 1) {
 
-    mysqli_query($conn,
-        "UPDATE invoices
-         SET email_status='Failed'
-         WHERE id='$invoice_id'"
-    );
-
+    if ($emailSent) {
+        mysqli_query($conn, "
+            UPDATE invoices
+            SET email_status='Sent'
+            WHERE id='$invoice_id'
+        ");
+    } else {
+        mysqli_query($conn, "
+            UPDATE invoices
+            SET email_status='Failed'
+            WHERE id='$invoice_id'
+        ");
+    }
 }
 
 echo json_encode([
