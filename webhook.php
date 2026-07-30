@@ -167,6 +167,7 @@ SET
     status='failed',
     gateway_response='$gatewayResponse',
     failure_reason='$failureReason',
+    paid_at = NOW(),
     updated_at=NOW()
 WHERE invoice_id='$invoiceId'
 AND status='pending'
