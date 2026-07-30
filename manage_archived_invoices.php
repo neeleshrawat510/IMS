@@ -195,7 +195,7 @@ require_once "includes/auth_check.php";
 
                 Swal.fire({
                     title: "Are you sure?",
-                    text: "Do you want to archive invoices!",                    
+                    text: "Do you want to Unarchive invoices!",                    
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
