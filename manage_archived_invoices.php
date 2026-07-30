@@ -55,8 +55,8 @@ require_once "includes/auth_check.php";
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white d-flex justify-content-between align-items-center">
                             <span class="fw-bold">Manage Archived Invoices</span>
-                            <button class="btn btn-primary btn-sm" id="unarchivedInvoices">
-                                Unarchive Invoices
+                            <button class="btn btn-primary btn-sm" id="manageInvoice">
+                                Manage Invoices
                             </button>
                         </div>
                         <div class="card-body">
@@ -390,7 +390,7 @@ require_once "includes/auth_check.php";
             });
 
             //unarchived invoices
-            $("#unarchivedProducts").click(function() {
+            $("#manageInvoice").click(function() {
                 window.location.href = "manage_invoice.php";
             });
 
