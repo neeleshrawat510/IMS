@@ -219,7 +219,10 @@ require_once "includes/auth_check.php";
                     $("#name").val(data.name);
                     $("#number").val(data.number);
                     $("#email").val(data.email);
-                }
+                },
+                error: function(xhr, status, error) {
+        console.log(xhr.responseText);
+    }
             });
 
             //validate form
