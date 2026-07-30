@@ -13,7 +13,7 @@ $invoiceId = (int)$_GET['id'];
 $pdf = generateReceiptPDF($conn, $invoiceId);
 
 if ($pdf === false) {
-    die("Invoice not found");
+    die("Receipt not found");
 }
 
 header("Content-Type: application/pdf");

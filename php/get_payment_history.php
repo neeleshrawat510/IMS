@@ -29,7 +29,7 @@ while ($row = mysqli_fetch_assoc($sql)) {
 
     if ($row['status'] == 'paid') {
         $paymentReceipt = '
-        <a href="php/view_receipt.php?id=' . $row['id'] . '" class="btn btn-primary btn-sm" title="View Receipt">
+        <a href="php/view_receipt.php?id=' . $row['invoice_id'] . '" class="btn btn-primary btn-sm" title="View Receipt">
             View Receipt
         </a>';
     } else {
@@ -49,7 +49,7 @@ while ($row = mysqli_fetch_assoc($sql)) {
         $row['amount'],
         strtoupper($row['status']),
         $row['failure_reason'],
-        $row['paid_at'],
+        date("d M Y, h:i A", strtotime($row['paid_at'])),
         $paymentReceipt
     ];
 }
