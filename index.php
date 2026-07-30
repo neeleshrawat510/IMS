@@ -333,7 +333,7 @@
 
                     <h6 class="fw-bold">
 
-                        Recent Activity
+                        Manage Invoice
 
                     </h6>
 
