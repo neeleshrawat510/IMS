@@ -205,7 +205,25 @@ require_once "includes/auth_check.php";
 
 
             let editUserId = new URLSearchParams(window.location.search).get('id');
+            $.ajax({
+                url: "controller/fetch_user.php",
+                type: "GET",
+                dataType: "json",
+                data: {
+                    id: editUserId
+                },
+                success: function (data) {
+                    console.log(data);
 
+                    $("#editUserId").val(data.id);
+                    $("#name").val(data.name);
+                    $("#email").val(data.email);
+                    $("#number").val(data.number);
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText);
+                }
+            });
             //get form data
             $.ajax({
                 url: "php/edit_user.php",
