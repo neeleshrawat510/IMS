@@ -11,7 +11,7 @@ $counts = mysqli_fetch_assoc(mysqli_query($conn, "
         SUM(payment_status = 'Unpaid') AS unpaidInvoices,
         SUM(status = 'Overdue') AS overdueInvoices,
         COALESCE(SUM(grand_total),0) AS totalRevenue
-    FROM invoices
+    FROM invoices WHERE remove = '0'
 "));
 
 $metrics = [
@@ -43,7 +43,7 @@ $sql2 = mysqli_query($conn, "
         YEAR(STR_TO_DATE(invoice_date, '%Y-%m-%d')) AS yr,
         MONTH(STR_TO_DATE(invoice_date, '%Y-%m-%d')) AS mo,
         SUM(grand_total) AS total
-    FROM invoices
+    FROM invoices WHERE remove = '0'
     GROUP BY 
         month, yr, mo
     ORDER BY 
@@ -65,7 +65,7 @@ $status = [
 
     $sql3 = mysqli_query($conn, "
         SELECT status, COUNT(*) as total
-        FROM invoices
+        FROM invoices WHERE remove = '0'
         GROUP BY status
     ");
 
