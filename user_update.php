@@ -208,23 +208,44 @@ require_once "includes/auth_check.php";
 
             //get form data
             $.ajax({
-                url: "controller/fetch_user.php",
-                type: "GET",
+                url: "php/edit_user.php",
+                type: "POST",
+                data: formData,
                 dataType: "json",
-                data: {
-                    id: editUserId
-                },
-                success: function (data) {
-                    $("#editUserId").val(data.id);
-                    $("#name").val(data.name);
-                    $("#number").val(data.number);
-                    $("#email").val(data.email);
-                },
-                error: function(xhr, status, error) {
-        console.log(xhr.responseText);
-    }
-            });
+                contentType: false,
+                processData: false,
 
+                success: function (response) {
+
+                    if (response.status === "success") {
+
+                        Swal.fire({
+                            icon: "success",
+                            title: "Success",
+                            text: "User edited successfully."
+                        }).then(() => {
+                            location.reload();
+                        });
+
+                    } else {
+
+                        Swal.fire({
+                            icon: "error",
+                            title: "Error",
+                            text: response.message || "User could not be edited."
+                        });
+
+                    }
+                },
+
+                error: function () {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Error",
+                        text: "Something went wrong."
+                    });
+                }
+            });
             //validate form
             $("#userForm").validate({
                 rules: {
@@ -249,7 +270,7 @@ require_once "includes/auth_check.php";
                         phoneValid: true,
                         remote: {
                             url: "controller/check_user_number.php",
-                            type: "POST",   
+                            type: "POST",
                             data: {
                                 id: function () {
                                     return $("#editUserId").val();
@@ -313,22 +334,22 @@ require_once "includes/auth_check.php";
                                         location.reload();
                                     });
 
-                                }  else {
+                                } else {
 
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Error",
-                                    text: response.message || "User could not be edited."
-                                });
+                                    Swal.fire({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: response.message || "User could not be edited."
+                                    });
 
+                                }
+
+                            },
+                            error: function () {
+                                Swal.fire("error", "Something went wrong", "error");
                             }
 
-                        },
-                        error: function () {
-                            Swal.fire("error", "Something went wrong", "error");
-                        }
-
-                    });
+                        });
                 }
             });
 
