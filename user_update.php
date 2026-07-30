@@ -86,8 +86,12 @@ require_once "includes/auth_check.php";
                 <div class="container-fluid px-3 px-lg-4 py-4">
                     <!-- PROFILE PAGE -->
                     <div class="card mb-4">
-                        <div class="card-header">
-                            Edit user
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <span>Edit User</span>
+
+                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="history.back()">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </button>
                         </div>
                         <form class="card shadow-sm border-0 p-4 rounded-4 bg-white" id="userForm">
                             <div class="card-body">
