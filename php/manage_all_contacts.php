@@ -15,6 +15,7 @@ if (mysqli_num_rows($sql) > 0) {
 
         $data[] = [
             $row['id'],
+            $sr++,
             $row['name'],
             $row['number'],
             $row['email'],
