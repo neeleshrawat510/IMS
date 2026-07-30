@@ -214,7 +214,7 @@ require_once "includes/auth_check.php";
 
                                 if (response.trim() === "success") {
 
-                                    Swal.fire("Deleted!", "Invoice archived successfully", "success");
+                                    Swal.fire("Archived!", "Invoice archived successfully", "success");
 
                                     table.ajax.reload();
 
