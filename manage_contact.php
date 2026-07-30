@@ -107,31 +107,47 @@ require_once "includes/auth_check.php";
                     url: "php/manage_all_contacts.php",
                     dataSrc: ""
                 },
-                columns: [{
-                    data: 0, // id column FOR CHECKBOX
-                    orderable: false,
-                    render: function (data) {
-                        return `<input type="checkbox" class="row-check" data-id="${data}">`;
-                    }
-                },
-                {
-                    data: 1
-                }, //S. No
-                {
-                    data: 2
-                }, //name
-                {
-                    data: 3
-                }, //"number"
-                {
-                    data: 4
-                }, //email
-                {
-                    data: 5
-                }, //company
-                {
-                    data: 6
-                } //action
+                columns: [
+                    // Hidden Contact ID
+                    {
+                        data: 0,
+                        visible: false
+                    },
+
+                    // Checkbox
+                    {
+                        data: 0,
+                        orderable: false,
+                        render: function (data) {
+                            return `<input type="checkbox" class="row-check" data-id="${data}">`;
+                        }
+                    },
+
+                    // Serial Number
+                    {
+                        data: null,
+                        orderable: false,
+                        searchable: false,
+                        render: function (data, type, row, meta) {
+                            return meta.settings._iDisplayStart + meta.row + 1;
+                        }
+                    },
+                 
+                    {
+                        data: 1
+                    }, //name
+                    {
+                        data: 2
+                    }, //"number"
+                    {
+                        data: 3
+                    }, //email
+                    {
+                        data: 4
+                    }, //company
+                    {
+                        data: 5
+                    } //action
                 ],
 
                 createdRow: function (row, data) {
