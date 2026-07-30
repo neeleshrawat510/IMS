@@ -165,6 +165,7 @@ SET
     gateway_payment_id='$paymentIntentId',
     transaction_id=" . ($transactionId ? "'$transactionId'" : "NULL") . ",
     status='failed',
+    payment_method = '$paymentMethod',
     gateway_response='$gatewayResponse',
     failure_reason='$failureReason',
     paid_at = NOW(),
