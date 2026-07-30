@@ -17,7 +17,7 @@ $sql = mysqli_query($conn, "
     FROM invoices 
     INNER JOIN contacts 
         ON invoices.contact_id = contacts.id
-        WHERE invoices.remove = '1'
+        WHERE invoices.remove = '1' ORDER BY id DESC
 ");
 
 
