@@ -13,21 +13,29 @@ include("../config/connection.php");
 
 $user_id    = $_POST['id'];
 
-$name = trim(mysqli_real_escape_string($conn, $_POST['product_code'] ?? ''));
-$email = trim(mysqli_real_escape_string($conn, $_POST['product_name'] ?? ''));
-$number = trim(mysqli_real_escape_string($conn, $_POST['cost_price'] ?? ''));
+$name = trim(mysqli_real_escape_string($conn, $_POST['name'] ?? ''));
+$email = trim(mysqli_real_escape_string($conn, $_POST['email'] ?? ''));
+$number = trim(mysqli_real_escape_string($conn, $_POST['number'] ?? ''));
 
 
 
 $update = mysqli_query($conn, "UPDATE `users` SET 
                                         `name` = '$name',
                                         `email` = '$email',
-                                        `number` = '$number',
+                                        `number` = '$number'
                                         WHERE `id` = '$user_id'");
 
-if($update){
-    echo "success";
-}else{
-    echo "failed";
+header('Content-Type: application/json');
+
+if ($update) {
+    echo json_encode([
+        "status" => "success",
+        "email_status" => true
+    ]);
+} else {
+    echo json_encode([
+        "status" => "error",
+        "message" => mysqli_error($conn)
+    ]);
 }
 ?>
