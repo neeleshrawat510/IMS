@@ -9,7 +9,7 @@ $id = intval($_GET['id']);
 $sql = mysqli_query($conn,"
 SELECT *
 FROM contacts
-WHERE `id`='$id' AND `remove` = '0'
+WHERE `id`='$id'
 ");
 
 $row = mysqli_fetch_assoc($sql);
