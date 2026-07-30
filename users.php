@@ -328,7 +328,8 @@ require_once "includes/auth_check.php";
                                         title: "Success",
                                         text: "User added successfully and login credentials have been emailed."
                                     }).then(() => {
-                                        location.reload();
+                                        table.ajax.reload(null, false);
+                                        $("#userForm")[0].reset();
                                     });
 
                                 } else {
@@ -338,7 +339,8 @@ require_once "includes/auth_check.php";
                                         title: "User Added",
                                         text: "User added successfully, but the email could not be sent."
                                     }).then(() => {
-                                        location.reload();
+                                        table.ajax.reload(null, false);
+                                        $("#userForm")[0].reset();
                                     });
 
                                 }
@@ -365,72 +367,72 @@ require_once "includes/auth_check.php";
 
 
             //data table
-            $("#userTable").DataTable({
+            const table = $("#userTable").DataTable({
                 ajax: {
                     url: "php/view_users.php",
                     dataSrc: ""
                 },
                 columns: [
-                    { data: 0 },//sr no
-                    { data: 1 },//name
-                    { data: 2 },//email
-                    { data: 3 },//number
-                    { data: 4 }//action
-
+                    { data: 0 },
+                    { data: 1 },
+                    { data: 2 },
+                    { data: 3 },
+                    { data: 4 }
                 ]
             });
-        });
+            // delete user
+            $(document).on('click', '.delete-btn', function (e) {
+                e.preventDefault();
 
-        // delete user
-        $(document).on('click', '.delete-btn', function (e) {
-            e.preventDefault();
+                let id = $(this).data('id');
 
-            let id = $(this).data('id');
+                Swal.fire({
+                    title: "Are you sure?",
+                    text: "This user will be Permanently Deleted!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Yes, Delete it!"
+                }).then((result) => {
 
-            Swal.fire({
-                title: "Are you sure?",
-                text: "This user will be Permanently Deleted!",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#d33",
-                cancelButtonColor: "#3085d6",
-                confirmButtonText: "Yes, Delete it!"
-            }).then((result) => {
+                    if (result.isConfirmed) {
 
-                if (result.isConfirmed) {
+                        $.ajax({
+                            url: 'delete_user.php',
+                            type: 'POST',
+                            data: {
+                                id: id
+                            },
+                            success: function (response) {
 
-                    $.ajax({
-                        url: 'delete_user.php',
-                        type: 'POST',
-                        data: {
-                            id: id
-                        },
-                        success: function (response) {
+                                if (response.trim() === "success") {
 
-                            if (response.trim() === "success") {
+                                    Swal.fire({
+                                        title: "Deleted!",
+                                        text: "User has been deleted.",
+                                        icon: "success",
+                                        timer: 1500,
+                                        showConfirmButton: false
+                                    }).then(() => {
+                                        table.ajax.reload(null, false);
+                                    });
 
-                                Swal.fire({
-                                    title: "Deleted!",
-                                    text: "User has been deleted.",
-                                    icon: "success",
-                                    timer: 1500,
-                                    showConfirmButton: false
-                                }).then(() => {
-                                    location.reload();
-                                });
-
-                            } else {
-                                Swal.fire("Error", "Delete failed!", "error");
+                                } else {
+                                    Swal.fire("Error", "Delete failed!", "error");
+                                }
+                            },
+                            error: function () {
+                                Swal.fire("Error", "Something went wrong!", "error");
                             }
-                        },
-                        error: function () {
-                            Swal.fire("Error", "Something went wrong!", "error");
-                        }
-                    });
+                        });
 
-                }
+                    }
+                });
             });
+
         });
+
 
     </script>
 </body>
