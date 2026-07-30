@@ -93,6 +93,129 @@
             font-size: 15px;
         }
 
+        /* Hero Badge */
+
+        .hero-badge {
+
+            display: inline-block;
+            padding: 8px 16px;
+            margin-bottom: 25px;
+
+            background: rgba(255, 255, 255, .08);
+
+            border: 1px solid rgba(255, 255, 255, .12);
+
+            border-radius: 30px;
+
+            color: #9ec5ff;
+
+            font-size: 13px;
+
+            letter-spacing: .5px;
+
+        }
+
+        /* Heading */
+
+        .left-section h1 {
+
+            font-size: 50px;
+
+            font-weight: 700;
+
+            line-height: 1.15;
+
+            margin-bottom: 20px;
+
+        }
+
+        .left-section h1 span {
+
+            color: #79a8ff;
+
+        }
+
+        /* Description */
+
+        .hero-description {
+
+            width: 430px;
+
+            color: #d9e5ff;
+
+            font-size: 16px;
+
+            line-height: 1.8;
+
+            margin-bottom: 35px;
+
+        }
+
+        /* Feature List */
+
+        .feature-list {
+
+            margin-bottom: 40px;
+
+        }
+
+        .feature-item {
+
+            display: flex;
+
+            align-items: center;
+
+            margin-bottom: 18px;
+
+            font-size: 16px;
+
+        }
+
+        .feature-item i {
+
+            color: #79a8ff;
+
+            margin-right: 12px;
+
+            font-size: 18px;
+
+        }
+
+        /* Stats */
+
+        .stats {
+
+            display: flex;
+
+            gap: 20px;
+
+        }
+
+        .stat-box {
+
+            min-width: 120px;
+
+        }
+
+        .stat-box h3 {
+
+            color: white;
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+            margin-bottom: 5px;
+
+        }
+
+        .stat-box small {
+
+            color: #b7c7ec;
+
+            font-size: 13px;
+
+        }
 
         /* Login card */
         .login-card {
@@ -226,15 +349,63 @@
         <!-- LEFT CONTENT -->
         <div class="left-section">
 
+            <div class="hero-badge">
+                Trusted Invoice Platform
+            </div>
+
             <h1>
-                Smart Invoicing<br>
+                Invoice Management
+                <br>
                 <span>Made Simple</span>
             </h1>
 
-            <p>
-                A secure and reliable solution to create professional invoices,
-                manage clients, track payments, and improve your business workflow.
+            <p class="hero-description">
+                Create professional invoices, manage customers, collect online payments,
+                and monitor your business from one secure platform.
             </p>
+
+            <div class="feature-list">
+
+                <div class="feature-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Professional Invoicing</span>
+                </div>
+
+                <div class="feature-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Online Payment Collection</span>
+                </div>
+
+                <div class="feature-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Customer & Product Management</span>
+                </div>
+
+                <div class="feature-item">
+                    <i class="bi bi-check-circle-fill"></i>
+                    <span>Reports & Analytics</span>
+                </div>
+
+            </div>
+
+            <div class="stats">
+
+                <div class="stat-box">
+                    <h3>5000+</h3>
+                    <small>Invoices Created</small>
+                </div>
+
+                <div class="stat-box">
+                    <h3>₹2.8 Cr+</h3>
+                    <small>Payments Processed</small>
+                </div>
+
+                <div class="stat-box">
+                    <h3>99.9%</h3>
+                    <small>Secure Platform</small>
+                </div>
+
+            </div>
 
         </div>
 
