@@ -305,29 +305,17 @@ require_once "includes/auth_check.php";
                                     Swal.fire({
                                         icon: "success",
                                         title: "Success",
-                                        text: "User edited successfully and login credentials have been emailed."
+                                        text: "User edited successfully."
                                     }).then(() => {
                                         location.reload();
                                     });
 
-                                } else {
-
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "User Added",
-                                        text: "User edited successfully, but the email could not be sent."
-                                    }).then(() => {
-                                        location.reload();
-                                    });
-
-                                }
-
-                            } else {
+                                }  else {
 
                                 Swal.fire({
                                     icon: "error",
                                     title: "Error",
-                                    text: response.message || "User could not be added."
+                                    text: response.message || "User could not be edited."
                                 });
 
                             }
