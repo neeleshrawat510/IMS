@@ -5,7 +5,7 @@ include("../config/connection.php");
 include("../controller/role_check.php");
 
 requireRole("Admin");
-$allUsers = mysqli_query($conn, "SELECT * FROM `users` ORDER BY id DESC");
+$allUsers = mysqli_query($conn, "SELECT * FROM `users` WHERE role = 'user' ORDER BY id DESC");
 
 $data = [];
 $sr = 1;
