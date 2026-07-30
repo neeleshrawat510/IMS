@@ -205,6 +205,8 @@ require_once "includes/auth_check.php";
 
 
             let editUserId = new URLSearchParams(window.location.search).get('id');
+
+            //get form data
             $.ajax({
                 url: "controller/fetch_user.php",
                 type: "GET",
@@ -213,57 +215,13 @@ require_once "includes/auth_check.php";
                     id: editUserId
                 },
                 success: function (data) {
-                    console.log(data);
-
                     $("#editUserId").val(data.id);
                     $("#name").val(data.name);
-                    $("#email").val(data.email);
                     $("#number").val(data.number);
-                },
-                error: function (xhr) {
-                    console.log(xhr.responseText);
+                    $("#email").val(data.email);
                 }
             });
-            //get form data
-            $.ajax({
-                url: "php/edit_user.php",
-                type: "POST",
-                data: formData,
-                dataType: "json",
-                contentType: false,
-                processData: false,
 
-                success: function (response) {
-
-                    if (response.status === "success") {
-
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: "User edited successfully."
-                        }).then(() => {
-                            location.reload();
-                        });
-
-                    } else {
-
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: response.message || "User could not be edited."
-                        });
-
-                    }
-                },
-
-                error: function () {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "Something went wrong."
-                    });
-                }
-            });
             //validate form
             $("#userForm").validate({
                 rules: {
@@ -342,32 +300,29 @@ require_once "includes/auth_check.php";
 
                             if (response.status === "success") {
 
-                                if (response.email_status) {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "User edited successfully."
+                                }).then(() => {
+                                    location.reload();
+                                });
 
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Success",
-                                        text: "User edited successfully."
-                                    }).then(() => {
-                                        location.reload();
-                                    });
+                            } else {
 
-                                } else {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: response.message || "User could not be edited."
+                                });
 
-                                    Swal.fire({
-                                        icon: "error",
-                                        title: "Error",
-                                        text: response.message || "User could not be edited."
-                                    });
-
-                                }
-
-                            },
-                            error: function () {
-                                Swal.fire("error", "Something went wrong", "error");
                             }
 
-                        });
+                        }, error: function () {
+                            Swal.fire("error", "Something went wrong", "error");
+                        }
+
+                    });
                 }
             });
 
