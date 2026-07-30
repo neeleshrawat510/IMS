@@ -155,7 +155,7 @@ require_once "update_overdue_invoices.php";
                                         <th>Name</th>
                                         <th>Invoice Date</th>
                                         <th>Total Amount</th>
-                                        <th>Status</th>
+                                        <th>Payment Status</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -261,8 +261,8 @@ require_once "update_overdue_invoices.php";
                     data: 5
                 }, //Total Amount(grand total)
                 {
-                    data: 6
-                }, //status
+                    data: 7
+                }, //payment status
 
             ]
         });
