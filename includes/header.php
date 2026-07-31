@@ -1,6 +1,5 @@
 <head>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/js/bootstrap.bundle.min.js"></script>
-
 </head>
 <!-- HEADER NAVBAR -->
 <nav class="navbar admin-navbar navbar-expand bg-white">

@@ -23,8 +23,6 @@ require_once "includes/auth_check.php";
     <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/2.3.8/js/dataTables.min.js"></script>
 
-    <!-- Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <style>
     #contactsTable th,
