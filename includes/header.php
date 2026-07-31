@@ -1,31 +1,95 @@
-<!-- HEADER NAV BAR -->
+<!-- HEADER NAVBAR -->
 <nav class="navbar admin-navbar navbar-expand bg-white">
     <div class="container-fluid px-3 px-lg-4">
 
-        <div class="collapse navbar-collapse" id="navMenu">
-            <button class="sidebar-toggle" type="button" data-sidebar-toggle aria-controls="adminSidebar"
-                aria-expanded="true" aria-label="Toggle sidebar">
-                <span></span>
-                <span></span>
-                <span></span>
+        <!-- Sidebar Toggle -->
+        <button class="sidebar-toggle me-3" type="button" data-sidebar-toggle aria-controls="adminSidebar"
+            aria-expanded="true">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </button>
+
+        <!-- Page Title -->
+        <div>
+            <h5 class="fw-bold mb-0">
+                Invoice Management System
+            </h5>
+        </div>
+
+        <!-- Right Side -->
+        <div class="ms-auto navbar-actions">
+
+            <a href="add_invoice.php" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i>
+                Create Invoice
+            </a>
+
+            <!-- Future Notifications -->
+            <button class="btn icon-button position-relative">
+                <i class="bi bi-bell"></i>
+
+                <span class="notification-dot"></span>
             </button>
-            <!-- left section -->
-            <div class="flex-grow-1"></div>
 
-            <!-- Username -->
-            <!-- <div class="flex-grow-1 text-center">
-                <span id="userName" class="fw-bold"></span>
-            </div> -->
+            <!-- Profile -->
+            <div class="dropdown">
 
-            <!-- Right Buttons -->
-            <div class="flex-grow-1 d-flex justify-content-end">
-                <a class="btn btn-primary me-2" href="add_invoice.php">
-                    Create Invoice
-                </a>
+                <button class="btn profile-button" data-bs-toggle="dropdown">
 
-                <button class="btn btn-danger" id="logoutBtn">
-                    Logout
+                    <div class="profile-avatar" id="profileAvatar">
+                        U
+                    </div>
+
+                    <span class="d-none d-lg-inline" id="userName">
+                        User
+                    </span>
+
+                    <i class="bi bi-chevron-down"></i>
+
                 </button>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+
+                    <li class="px-3 py-2">
+                        <strong id="dropdownUserName">User</strong><br>
+                        <small class="text-muted" id="userEmail">
+                        </small>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <a href="profile.php" class="dropdown-item">
+                            <i class="bi bi-person"></i>
+                            My Profile
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="reset_password.php" class="dropdown-item">
+                            <i class="bi bi-key"></i>
+                            Reset Password
+                        </a>
+                    </li>
+
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+
+                    <li>
+                        <button class="dropdown-item text-danger" id="logoutBtn">
+                            <i class="bi bi-box-arrow-right"></i>
+                            Logout
+                        </button>
+                    </li>
+
+                </ul>
+
             </div>
 
         </div>
@@ -33,20 +97,37 @@
     </div>
 </nav>
 
-
 <script>
-    $(document).ready(function() {
+    $(function () {
+
         $.ajax({
             url: "php/dashboard_user.php",
-            type: "GET",
             dataType: "json",
 
-            success: function(data) {
-                $("#userName").html("User : " + data.name);
-            },
+            success: function (data) {
 
-            error: function() {
-                $("#userName").text("User Not Found");
+                $("#userName").text(data.name);
+                $("#dropdownUserName").text(data.name);
+                $("#userEmail").text(data.email);
+
+                // If profile photo exists
+                if (data.profile_photo && data.profile_photo.trim() !== "") {
+
+                    $("#profileImage")
+                        .attr("src", data.profile_photo)
+                        .removeClass("d-none");
+
+                    $("#profileLetter").addClass("d-none");
+
+                } else {
+
+                    $("#profileLetter")
+                        .text(data.name.charAt(0).toUpperCase())
+                        .removeClass("d-none");
+
+                    $("#profileImage").addClass("d-none");
+                }
+
             }
         });
     });
