@@ -24,18 +24,6 @@ $conn = mysqli_connect(
     (int)$dbPort
 );
 
-echo "<pre>";
-
-echo "DB_HOST: ";
-var_dump($dbHost);
-
-echo "DB_USER: ";
-var_dump($dbUser);
-
-echo "DB_NAME: ";
-var_dump($dbName);
-
-echo "DB_PORT: ";
-var_dump($dbPort);
-
-exit;
+if (!$conn) {
+    die("Database connection failed: " . mysqli_connect_error());
+}
