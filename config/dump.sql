@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2026 at 01:29 PM
+-- Generation Time: Jul 31, 2026 at 12:14 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,7 +33,6 @@ CREATE TABLE `contacts` (
   `number` varchar(20) NOT NULL,
   `email` varchar(200) NOT NULL,
   `company` varchar(100) NOT NULL,
-  `gst` varchar(20) NOT NULL,
   `address` varchar(255) NOT NULL,
   `created_by` varchar(100) DEFAULT NULL,
   `created_at` varchar(20) DEFAULT NULL,
@@ -41,16 +40,6 @@ CREATE TABLE `contacts` (
   `updated_at` varchar(20) DEFAULT NULL,
   `remove` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `contacts`
---
-
-INSERT INTO `contacts` (`id`, `name`, `number`, `email`, `company`, `gst`, `address`, `created_by`, `created_at`, `updated_by`, `updated_at`, `remove`) VALUES
-(6, 'Gagandeep', '9872441301', 'gagandeepattri8@gmail.com', 'Baseline', '22ABCDE2222A1Z3', 'test', '', '2026-06-11 05:06:13', '', '', 0),
-(12, 'Neelesh', '7485963210', 'neelesh@gmail.com', 'Base IT', '29ABCDE1234F1Z5', 'Mohali', 'Neelesh Rawat', '2026-06-19 15:00:57', '', '', 0),
-(13, 'Sagar Joshi', '7888765928', 'sagarj@gmail.com', 'IT', '29ABCDE4234F2Z5', 'Patiala', 'Neelesh Rawat', '2026-06-24 12:11:35', '', '2026-06-24 08:42:05', 0),
-(14, 'Nitin Rana', '7888565928', 'sagarj@gmail.com', 'IT', '29ABCEE4234F2Z5', 'Punjab', 'Neelesh Rawat', '2026-06-24 14:37:28', 'Neelesh Rawat', '2026-06-26 12:59:43', 0);
 
 -- --------------------------------------------------------
 
@@ -116,7 +105,7 @@ CREATE TABLE `payments` (
   `transaction_id` varchar(255) DEFAULT NULL,
   `amount` decimal(10,2) NOT NULL,
   `currency` varchar(20) NOT NULL DEFAULT 'INR',
-  `status` enum('pending','processing','paid','failed','cancelled','refunded') NOT NULL DEFAULT 'pending',
+  `status` enum('pending','processing','paid','failed','cancelled','refunded','expired') NOT NULL DEFAULT 'pending',
   `payment_method` varchar(100) DEFAULT NULL,
   `gateway_response` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`gateway_response`)),
   `failure_reason` text DEFAULT NULL,
@@ -198,16 +187,6 @@ CREATE TABLE `products` (
   `remove` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `products`
---
-
-INSERT INTO `products` (`id`, `product_code`, `product_name`, `cost_price`, `selling_price`, `tax`, `stock`, `created_by`, `created_at`, `updated_by`, `updated_at`, `remove`) VALUES
-(10, '108', 'Adapter', 15.00, 25.00, 18.00, '', '', '', 'Neelesh Rawat', '2026-06-26 12:30:03', 1),
-(20, '109', 'Monitor', 8500.00, 10000.00, 18.00, '', 'Neelesh Rawat', '', '', '', 0),
-(26, '111', 'UPS', 3000.00, 3001.00, 5.00, '', 'Neelesh Rawat', '2026-06-18 16:18:47', 'Neelesh Rawat', '2026-06-25 11:17:07', 0),
-(29, '255', 'Keyboard', 80.00, 100.00, 5.00, '', 'Neelesh Rawat', '2026-06-24 13:31:49', 'Neelesh Rawat', '2026-06-26 12:55:02', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -239,6 +218,7 @@ CREATE TABLE `users` (
   `name` varchar(100) NOT NULL,
   `number` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
+  `profile_photo` varchar(255) DEFAULT NULL,
   `reset_token` varchar(255) DEFAULT NULL,
   `token_expiry` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `password` varchar(200) DEFAULT NULL,
@@ -253,13 +233,8 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `number`, `email`, `reset_token`, `token_expiry`, `password`, `role`, `google_id`, `refresh_token`, `refresh_token_expires_at`, `is_active`) VALUES
-(1, 'Neelesh Rawat', '1231231231', 'n@gmail.com', 'NULL', '0000-00-00 00:00:00', '27ffe01ed5a14ff897a42e89d64d8339', 'User', NULL, '', NULL, 1),
-(2, 'naman', '7485965478', 'naman@gmail.com', 'NULL', '0000-00-00 00:00:00', 'd41d8cd98f00b204e9800998ecf8427e', 'User', NULL, '', NULL, 1),
-(3, 'Neeraj', '7485748596', 'neeraj@gmail.com', 'NULL', '2026-06-16 05:02:51', 'dde31f3ae4ab30ecb8b7e1b800fa6229', 'User', NULL, '', NULL, 1),
-(4, 'Aman', '9874563210', 'simranjeetsingh8561111@gmail.com', '06ce6b2ee8c90883bce615c51a9760f0', '2026-06-11 06:16:18', 'dde31f3ae4ab30ecb8b7e1b800fa6229', 'User', NULL, '', NULL, 1),
-(5, 'Neeraj', '7485964587', 'neelesh55@gmail.com', '', '2026-06-23 04:41:12', '27ffe01ed5a14ff897a42e89d64d8339', 'User', NULL, '', NULL, 1),
-(6, 'Neelesh Rawat', '', 'neeleshrawat510@gmail.com', '', '2026-07-01 08:52:33', '', 'User', NULL, '95e3fc9688a2e72d7cbf6dbbb710786f9fd23dc7d38bf65508eeeb55c257d6d2134ab3ca544deebf492af3ae7572d183cb440b8b08bee3aabba8eee66dd982d8', '2026-07-31 12:57:32.000000', 1);
+INSERT INTO `users` (`id`, `name`, `number`, `email`, `profile_photo`, `reset_token`, `token_expiry`, `password`, `role`, `google_id`, `refresh_token`, `refresh_token_expires_at`, `is_active`) VALUES
+(1, 'Gurmeet', '7485748596', 'gurmeet85611@gmail.com', NULL, NULL, NULL, '0e7517141fb53f21ee439b355b5a1d0a', 'Admin', NULL, NULL, NULL, 1);
 
 -- --------------------------------------------------------
 
@@ -358,7 +333,7 @@ ALTER TABLE `webhook_logs`
 -- AUTO_INCREMENT for table `contacts`
 --
 ALTER TABLE `contacts`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `invoices`
@@ -400,7 +375,7 @@ ALTER TABLE `payment_methods`
 -- AUTO_INCREMENT for table `products`
 --
 ALTER TABLE `products`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `refunds`
@@ -412,7 +387,7 @@ ALTER TABLE `refunds`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(15) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `webhook_logs`
