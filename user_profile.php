@@ -125,13 +125,19 @@ require_once "includes/auth_check.php";
 
                                 <div class="card-body text-center">
 
+                                    <!-- Letter Avatar -->
                                     <div id="profileAvatar" class="profile-avatar-large mx-auto mb-3">
                                         N
                                     </div>
 
+                                    <!-- Profile Image -->
                                     <img id="profileImage"
                                         class="profile-avatar-large rounded-circle mx-auto mb-3 d-none" src=""
                                         alt="Profile">
+
+                                    <!-- Hidden File Input -->
+                                    <input type="file" id="profilePhoto"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp" hidden>
 
                                     <h5 class="fw-semibold mb-1" id="profileName">
                                         User Name
@@ -143,14 +149,18 @@ require_once "includes/auth_check.php";
 
                                     <div class="d-grid gap-2">
 
-                                        <button class="btn btn-outline-primary">
-                                            <i class="fas fa-camera me-2"></i>
+                                        <button type="button" class="btn btn-outline-primary" id="btnChangePhoto">
+
+                                            <i class="bi bi-camera me-2"></i>
                                             Change Photo
+
                                         </button>
 
-                                        <button class="btn btn-outline-danger">
-                                            <i class="fas fa-trash-alt me-2"></i>
+                                        <button type="button" class="btn btn-outline-danger" id="btnRemovePhoto">
+
+                                            <i class="bi bi-trash me-2"></i>
                                             Remove Photo
+
                                         </button>
 
                                     </div>
@@ -177,6 +187,7 @@ require_once "includes/auth_check.php";
                                     <form class="row" id="editUser" enctype="multipart/form-data">
 
                                         <div class="col-md-6 mb-3">
+                                            <input type="hidden" id="editUserId" name="id">
 
                                             <label class="form-label">
                                                 Full Name
@@ -271,9 +282,79 @@ require_once "includes/auth_check.php";
     <script>
         $(document).ready(function () {
 
-            // ----------------------------
-            // Initialize Intl Tel Input
-            // ----------------------------
+            let selectedPhoto = null;
+            // Open file picker
+            $("#btnChangePhoto").click(function () {
+                $("#profilePhoto").click();
+            });
+
+            $("#profilePhoto").on("change", function () {
+
+                const file = this.files[0];
+
+                if (!file) return;
+
+                const allowedTypes = [
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp"
+                ];
+
+                if (!allowedTypes.includes(file.type)) {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid Image",
+                        text: "Only JPG, PNG and WEBP images are allowed."
+                    });
+
+                    $(this).val("");
+
+                    return;
+                }
+
+                if (file.size > 2 * 1024 * 1024) {
+
+                    Swal.fire({
+                        icon: "error",
+                        title: "File Too Large",
+                        text: "Maximum image size is 2 MB."
+                    });
+
+                    $(this).val("");
+
+                    return;
+                }
+
+                selectedPhoto = file;
+
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    $("#previewPhoto").attr("src", e.target.result);
+
+                    const modal = new bootstrap.Modal(
+                        document.getElementById("photoPreviewModal")
+                    );
+
+                    modal.show();
+
+                };
+
+                reader.readAsDataURL(file);
+
+            });
+            $("#photoPreviewModal").on("hidden.bs.modal", function () {
+
+                selectedPhoto = null;
+
+                $("#profilePhoto").val("");
+
+            });
+
+
+            //  Intl Tel Input
             const phoneInput = document.querySelector("#number");
 
             const iti = window.intlTelInput(phoneInput, {
@@ -296,14 +377,13 @@ require_once "includes/auth_check.php";
             // Fetch Logged In User
             // ----------------------------
             function loadProfile() {
-
                 $.ajax({
                     url: "php/dashboard_user.php",
                     type: "GET",
                     dataType: "json",
 
                     success: function (data) {
-
+                        $("#editUserId").val(data.id);
                         $("#name").val(data.name);
                         $("#email").val(data.email);
 
@@ -484,6 +564,54 @@ require_once "includes/auth_check.php";
 
         });
     </script>
+
+    <!-- Profile Photo Preview Modal -->
+    <div class="modal fade" id="photoPreviewModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Preview Profile Photo
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body text-center">
+
+                    <img id="previewPhoto" src="" class="img-fluid rounded-circle border shadow"
+                        style="width:220px;height:220px;object-fit:cover;">
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+
+                        Cancel
+
+                    </button>
+
+                    <button type="button" class="btn btn-primary" id="saveProfilePhoto">
+
+                        <i class="bi bi-check-circle me-1"></i>
+                        Save Photo
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </body>
 
 </html>
