@@ -10,7 +10,7 @@ require_once "includes/auth_check.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Invoice management System">
-    <title>Manage Contacts | Invoice Management System</title>
+    <title>User Profile | Invoice Management System</title>
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -34,7 +34,7 @@ require_once "includes/auth_check.php";
             box-shadow: 0 8px 25px rgba(0, 0, 0, .06);
         }
 
-        .profile-avatar {
+        .profile-avatar-large {
             width: 140px;
             height: 140px;
             border-radius: 50%;
@@ -48,6 +48,8 @@ require_once "includes/auth_check.php";
             margin-top: 10px;
             user-select: none;
         }
+
+
 
         .card-header {
             border-radius: 16px 16px 0 0 !important;
@@ -67,13 +69,13 @@ require_once "includes/auth_check.php";
             border-radius: 10px;
         }
 
-        @media(max-width:991px) {
-
-            .profile-avatar {
+        @media (max-width:991px) {
+            .profile-avatar-large {
                 width: 120px;
                 height: 120px;
                 font-size: 48px;
             }
+
 
         }
     </style>
@@ -120,7 +122,7 @@ require_once "includes/auth_check.php";
 
                                 <div class="card-body text-center">
 
-                                    <div class="profile-avatar mx-auto mb-3">
+                                    <div class="profile-avatar-large mx-auto mb-3">
                                         N
                                     </div>
 
@@ -165,7 +167,7 @@ require_once "includes/auth_check.php";
 
                                 <div class="card-body px-4">
 
-                                    <div class="row">
+                                    <form class="row" id="editUser" enctype="multipart/form-data">
 
                                         <div class="col-md-6 mb-3">
 
@@ -173,7 +175,7 @@ require_once "includes/auth_check.php";
                                                 Full Name
                                             </label>
 
-                                            <input type="text" class="form-control" id="name"
+                                            <input type="text" class="form-control" name="name" id="name"
                                                 placeholder="Enter your name">
 
                                         </div>
@@ -184,12 +186,26 @@ require_once "includes/auth_check.php";
                                                 Email Address
                                             </label>
 
-                                            <input type="email" class="form-control" id="email"
+                                            <input type="email" class="form-control" name="email" id="email"
                                                 placeholder="Enter email">
 
                                         </div>
 
-                                    </div>
+                                        <div class="col-md-6 mb-3">
+
+                                            <label class="form-label">
+                                                Contact Number
+                                            </label>
+
+                                            <input type="tel" class="form-control" name="number" id="number"
+                                                placeholder="7485965478">
+
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            Save Changes
+                                        </button>
+
+                                    </form>
 
                                 </div>
 
@@ -248,6 +264,51 @@ require_once "includes/auth_check.php";
     <script>
         $(document).ready(function () {
 
+            //FETCH data
+            $.ajax({
+                url: "php/dashboard_user.php",
+                type: "GET",
+                dataType: "json",
+
+                success: function (data) {
+
+                    // Fill form fields
+                    $("#name").val(data.name);
+                    $("#email").val(data.email);
+                    iti.setNumber(data.number);
+                    // Profile name
+                    $(".profile-name").text(data.name);
+                    $(".profile-email").text(data.email);
+
+                    // Photo exists
+                    if (data.profile_photo && data.profile_photo.trim() !== "") {
+
+                        $("#profileImage")
+                            .attr("src", data.profile_photo)
+                            .removeClass("d-none");
+
+                        $("#profileAvatar").addClass("d-none");
+
+                    }
+                    // No photo
+                    else {
+
+                        $("#profileAvatar")
+                            .text(data.name.charAt(0).toUpperCase())
+                            .removeClass("d-none");
+
+                        $("#profileImage").addClass("d-none");
+                    }
+
+
+                },
+
+                error: function (xhr, status, error) {
+                    console.error(error);
+                }
+
+            });
+
             //country code
             const phoneInput = document.querySelector("#number");
 
@@ -268,10 +329,6 @@ require_once "includes/auth_check.php";
             });
 
 
-            // Add validator for strong password
-            $.validator.addMethod("strongPassword", function (value, element) {
-                return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
-            });
 
             //valid phone no
             $.validator.addMethod("phoneValid", function (value) {
@@ -286,7 +343,7 @@ require_once "includes/auth_check.php";
 
 
             //validate form
-            $("#userForm").validate({
+            $("#editUser").validate({
                 rules: {
                     name: {
                         required: true
@@ -306,10 +363,6 @@ require_once "includes/auth_check.php";
                             url: "controller/check_user_number.php",
                             type: "POST"
                         }
-                    },
-                    password: {
-                        required: true,
-                        strongPassword: true
                     }
                 },
                 messages: {
@@ -325,10 +378,6 @@ require_once "includes/auth_check.php";
                         required: "Number is required",
                         phoneValid: "Please enter valid number",
                         remote: "Number already exist, Try another!"
-                    },
-                    password: {
-                        required: "Password is required",
-                        strongPassword: "atleast one Uppercase, lowercase, number and special character required"
                     }
                 },
                 errorPlacement: function (error, element) {
@@ -348,7 +397,7 @@ require_once "includes/auth_check.php";
 
                     let formData = new FormData(form);
                     $.ajax({
-                        url: "php/register_user.php",
+                        url: "php/edit_user.php",
                         type: "POST",
                         data: formData,
                         dataType: "json",
@@ -359,36 +408,25 @@ require_once "includes/auth_check.php";
 
                             if (response.status === "success") {
 
-                                if (response.email_status) {
 
-                                    Swal.fire({
-                                        icon: "success",
-                                        title: "Success",
-                                        text: "User added successfully and login credentials have been emailed."
-                                    }).then(() => {
-                                        table.ajax.reload(null, false);
-                                        $("#userForm")[0].reset();
-                                    });
 
-                                } else {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Success",
+                                    text: "User edited successfully"
+                                }).then(() => {
+                                    table.ajax.reload(null, false);
+                                    $("#editUser")[0].reset();
+                                });
 
-                                    Swal.fire({
-                                        icon: "warning",
-                                        title: "User Added",
-                                        text: "User added successfully, but the email could not be sent."
-                                    }).then(() => {
-                                        table.ajax.reload(null, false);
-                                        $("#userForm")[0].reset();
-                                    });
 
-                                }
 
                             } else {
 
                                 Swal.fire({
                                     icon: "error",
                                     title: "Error",
-                                    text: response.message || "User could not be added."
+                                    text: response.message || "User could not be edited."
                                 });
 
                             }
@@ -401,75 +439,6 @@ require_once "includes/auth_check.php";
                     });
                 }
             });
-
-
-
-            //data table
-            const table = $("#userTable").DataTable({
-                ajax: {
-                    url: "php/view_users.php",
-                    dataSrc: ""
-                },
-                columns: [
-                    { data: 0 },
-                    { data: 1 },
-                    { data: 2 },
-                    { data: 3 },
-                    { data: 4 }
-                ]
-            });
-            // delete user
-            $(document).on('click', '.delete-btn', function (e) {
-                e.preventDefault();
-
-                let id = $(this).data('id');
-
-                Swal.fire({
-                    title: "Are you sure?",
-                    text: "This user will be Permanently Deleted!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#d33",
-                    cancelButtonColor: "#3085d6",
-                    confirmButtonText: "Yes, Delete it!"
-                }).then((result) => {
-
-                    if (result.isConfirmed) {
-
-                        $.ajax({
-                            url: 'delete_user.php',
-                            type: 'POST',
-                            data: {
-                                id: id
-                            },
-                            success: function (response) {
-
-                                if (response.trim() === "success") {
-
-                                    Swal.fire({
-                                        title: "Deleted!",
-                                        text: "User has been deleted.",
-                                        icon: "success",
-                                        timer: 1500,
-                                        showConfirmButton: false
-                                    }).then(() => {
-                                        table.ajax.reload(null, false);
-                                    });
-
-                                } else {
-                                    Swal.fire("Error", "Delete failed!", "error");
-                                }
-                            },
-                            error: function () {
-                                Swal.fire("Error", "Something went wrong!", "error");
-                            }
-                        });
-
-                    }
-                });
-            });
-
-        });
 
 
     </script>
