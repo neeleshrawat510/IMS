@@ -106,11 +106,6 @@ require_once "includes/auth_check.php";
                                 Manage your personal information and account settings.
                             </p>
                         </div>
-
-                        <button class="btn btn-primary px-4" id="btnUpdateProfile">
-                            <i class="fas fa-save me-2"></i>
-                            Save Changes
-                        </button>
                     </div>
 
                     <div class="row g-4">
@@ -122,15 +117,19 @@ require_once "includes/auth_check.php";
 
                                 <div class="card-body text-center">
 
-                                    <div class="profile-avatar-large mx-auto mb-3">
+                                    <div id="profileAvatar" class="profile-avatar-large mx-auto mb-3">
                                         N
                                     </div>
 
-                                    <h5 class="fw-semibold mb-1">
+                                    <img id="profileImage"
+                                        class="profile-avatar-large rounded-circle mx-auto mb-3 d-none" src=""
+                                        alt="Profile">
+
+                                    <h5 class="fw-semibold mb-1" id="profileName">
                                         User Name
                                     </h5>
 
-                                    <p class="text-muted mb-4">
+                                    <p class="text-muted mb-4" id="profileEmail">
                                         user@email.com
                                     </p>
 
@@ -264,52 +263,9 @@ require_once "includes/auth_check.php";
     <script>
         $(document).ready(function () {
 
-            //FETCH data
-            $.ajax({
-                url: "php/dashboard_user.php",
-                type: "GET",
-                dataType: "json",
-
-                success: function (data) {
-
-                    // Fill form fields
-                    $("#name").val(data.name);
-                    $("#email").val(data.email);
-                    iti.setNumber(data.number);
-                    // Profile name
-                    $(".profile-name").text(data.name);
-                    $(".profile-email").text(data.email);
-
-                    // Photo exists
-                    if (data.profile_photo && data.profile_photo.trim() !== "") {
-
-                        $("#profileImage")
-                            .attr("src", data.profile_photo)
-                            .removeClass("d-none");
-
-                        $("#profileAvatar").addClass("d-none");
-
-                    }
-                    // No photo
-                    else {
-
-                        $("#profileAvatar")
-                            .text(data.name.charAt(0).toUpperCase())
-                            .removeClass("d-none");
-
-                        $("#profileImage").addClass("d-none");
-                    }
-
-
-                },
-
-                error: function (xhr, status, error) {
-                    console.error(error);
-                }
-
-            });
-
-            //country code
+            // ----------------------------
+            // Initialize Intl Tel Input
+            // ----------------------------
             const phoneInput = document.querySelector("#number");
 
             const iti = window.intlTelInput(phoneInput, {
@@ -328,10 +284,63 @@ require_once "includes/auth_check.php";
                     import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")
             });
 
+            // ----------------------------
+            // Fetch Logged In User
+            // ----------------------------
+            function loadProfile() {
 
+                $.ajax({
+                    url: "php/dashboard_user.php",
+                    type: "GET",
+                    dataType: "json",
 
-            //valid phone no
+                    success: function (data) {
+
+                        $("#name").val(data.name);
+                        $("#email").val(data.email);
+
+                        if (data.number) {
+                            iti.setNumber(data.number);
+                        }
+
+                        $("#profileName").text(data.name);
+                        $("#profileEmail").text(data.email);
+
+                        // ---------- Avatar ----------
+                        if (data.profile_photo && data.profile_photo.trim() !== "") {
+
+                            $("#profileImage")
+                                .attr("src", data.profile_photo)
+                                .removeClass("d-none");
+
+                            $("#profileAvatar").addClass("d-none");
+
+                        } else {
+
+                            $("#profileAvatar")
+                                .text(data.name.charAt(0).toUpperCase())
+                                .removeClass("d-none");
+
+                            $("#profileImage").addClass("d-none");
+                        }
+
+                    },
+
+                    error: function (xhr) {
+                        console.error(xhr.responseText);
+                    }
+
+                });
+
+            }
+
+            loadProfile();
+
+            // ----------------------------
+            // Phone Validation
+            // ----------------------------
             $.validator.addMethod("phoneValid", function (value) {
+
                 const country = iti.getSelectedCountryData().iso2;
 
                 if (country === "in") {
@@ -339,11 +348,14 @@ require_once "includes/auth_check.php";
                 }
 
                 return iti.isValidNumber();
+
             }, "Please enter a valid phone number.");
 
-
-            //validate form
+            // ----------------------------
+            // Form Validation
+            // ----------------------------
             $("#editUser").validate({
+
                 rules: {
                     name: {
                         required: true
@@ -365,38 +377,42 @@ require_once "includes/auth_check.php";
                         }
                     }
                 },
+
                 messages: {
                     name: {
                         required: "Name is required"
                     },
                     email: {
                         required: "Email is required",
-                        email: "required format abc@gmail.com",
-                        remote: "Email already exist, Try another!"
+                        email: "Enter a valid email",
+                        remote: "Email already exists."
                     },
                     number: {
                         required: "Number is required",
-                        phoneValid: "Please enter valid number",
-                        remote: "Number already exist, Try another!"
+                        phoneValid: "Please enter a valid number",
+                        remote: "Number already exists."
                     }
                 },
+
                 errorPlacement: function (error, element) {
 
                     if (element.attr("id") === "number") {
                         error.appendTo(element.closest(".col-md-6"));
-                    }
-                    else if (element.parent(".input-group").length) {
-                        error.insertAfter(element.parent());
-                    }
-                    else {
+                    } else {
                         error.insertAfter(element);
                     }
 
                 },
+
                 submitHandler: function (form) {
 
                     let formData = new FormData(form);
+
+                    // Send full international number
+                    formData.set("number", iti.getNumber());
+
                     $.ajax({
+
                         url: "php/edit_user.php",
                         type: "POST",
                         data: formData,
@@ -408,39 +424,46 @@ require_once "includes/auth_check.php";
 
                             if (response.status === "success") {
 
-
-
                                 Swal.fire({
                                     icon: "success",
                                     title: "Success",
-                                    text: "User edited successfully"
-                                }).then(() => {
-                                    table.ajax.reload(null, false);
-                                    $("#editUser")[0].reset();
+                                    text: "Profile updated successfully."
                                 });
 
-
+                                // Reload profile with latest values
+                                loadProfile();
 
                             } else {
 
                                 Swal.fire({
                                     icon: "error",
                                     title: "Error",
-                                    text: response.message || "User could not be edited."
+                                    text: response.message || "Unable to update profile."
                                 });
 
                             }
 
                         },
-                        error: function () {
-                            Swal.fire("error", "Something went wrong", "error");
+
+                        error: function (xhr) {
+
+                            console.error(xhr.responseText);
+
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: "Something went wrong."
+                            });
+
                         }
 
                     });
+
                 }
+
             });
 
-
+        });
     </script>
 </body>
 
