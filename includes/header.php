@@ -42,8 +42,14 @@
 
                 <button class="btn profile-button" data-bs-toggle="dropdown">
 
-                    <div class="profile-avatar" id="profileAvatar">
-                        U
+                    <div class="profile-avatar-wrapper">
+
+                        <img id="profileImage" class="avatar-sm rounded-circle d-none" src="" alt="Profile">
+
+                        <div id="profileAvatar" class="profile-avatar">
+                            U
+                        </div>
+
                     </div>
 
                     <span class="d-none d-lg-inline" id="userName">
@@ -120,11 +126,11 @@
                         .attr("src", data.profile_photo)
                         .removeClass("d-none");
 
-                    $("#profileLetter").addClass("d-none");
+                    $("#profileAvatar").addClass("d-none");
 
                 } else {
 
-                    $("#profileLetter")
+                    $("#profileAvatar")
                         .text(data.name.charAt(0).toUpperCase())
                         .removeClass("d-none");
 
