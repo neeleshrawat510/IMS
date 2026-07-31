@@ -75,8 +75,16 @@ require_once "includes/auth_check.php";
                 height: 120px;
                 font-size: 48px;
             }
+        }
 
+        label.error {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
 
+        input.error {
+            border: 1px solid red;
         }
     </style>
 </head>
@@ -365,7 +373,12 @@ require_once "includes/auth_check.php";
                         email: true,
                         remote: {
                             url: "controller/check_user_email.php",
-                            type: "POST"
+                            type: "POST",
+                            data: {
+                                id: function () {
+                                    return $("#editUserId").val();
+                                }
+                            }
                         }
                     },
                     number: {
@@ -373,7 +386,12 @@ require_once "includes/auth_check.php";
                         phoneValid: true,
                         remote: {
                             url: "controller/check_user_number.php",
-                            type: "POST"
+                            type: "POST",
+                            data: {
+                                id: function () {
+                                    return $("#editUserId").val();
+                                }
+                            }
                         }
                     }
                 },
@@ -438,7 +456,8 @@ require_once "includes/auth_check.php";
                                 Swal.fire({
                                     icon: "error",
                                     title: "Error",
-                                    text: response.message || "Unable to update profile."
+                                    text: response.message ||
+                                        "Unable to update profile."
                                 });
 
                             }
