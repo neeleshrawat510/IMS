@@ -44,9 +44,9 @@
 
                     <div class="profile-avatar-wrapper">
 
-                        <img id="profileImage" class="avatar-sm rounded-circle d-none" src="" alt="Profile">
+                        <img id="userImage" class="avatar-sm rounded-circle d-none" src="" alt="Profile">
 
-                        <div id="profileAvatar" class="profile-avatar">
+                        <div id="userAvatar" class="profile-avatar">
                             U
                         </div>
 
@@ -122,24 +122,24 @@
                 // If profile photo exists
                 if (data.profile_photo && data.profile_photo.trim() !== "") {
 
-                    $("#profileImage")
+                    $("#userImage")
                         .attr("src", data.profile_photo)
                         .removeClass("d-none");
 
-                    $("#profileAvatar").addClass("d-none");
+                    $("#userAvatar").addClass("d-none");
 
                 } else {
 
-                    $("#profileAvatar")
+                    $("#userAvatar")
                         .text(data.name.charAt(0).toUpperCase())
                         .removeClass("d-none");
 
-                    $("#profileImage").addClass("d-none");
+                    $("#userImage").addClass("d-none");
                 }
 
             }
         });
-    });
+    }
     $(function () {
         loadHeaderUser();
     });
