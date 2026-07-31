@@ -67,14 +67,14 @@
                     </li>
 
                     <li>
-                        <a href="profile.php" class="dropdown-item">
+                        <a href="user_profile.php" class="dropdown-item">
                             <i class="bi bi-person"></i>
                             My Profile
                         </a>
                     </li>
 
                     <li>
-                        <a href="reset_password.php" class="dropdown-item">
+                        <a href="update_password.php" class="dropdown-item">
                             <i class="bi bi-key"></i>
                             Reset Password
                         </a>
