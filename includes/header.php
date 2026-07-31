@@ -107,7 +107,7 @@
 </nav>
 
 <script>
-    $(function () {
+    function loadHeaderUser() {
 
         $.ajax({
             url: "php/dashboard_user.php",
@@ -139,5 +139,8 @@
 
             }
         });
+    });
+    $(function () {
+        loadHeaderUser();
     });
 </script>

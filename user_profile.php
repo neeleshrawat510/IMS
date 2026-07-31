@@ -530,6 +530,9 @@ require_once "includes/auth_check.php";
 
                                 // Reload profile with latest values
                                 loadProfile();
+                                if (typeof loadHeaderUser === "function") {
+                                    loadHeaderUser();
+                                }
 
                             } else {
 
