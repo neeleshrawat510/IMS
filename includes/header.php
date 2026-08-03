@@ -80,9 +80,9 @@
                     </li>
 
                     <li>
-                        <a href="update_password.php" class="dropdown-item">
+                        <a href="change_user_password.php" class="dropdown-item">
                             <i class="bi bi-key"></i>
-                            Reset Password
+                            Change Password
                         </a>
                     </li>
 

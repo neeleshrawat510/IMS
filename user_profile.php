@@ -251,10 +251,10 @@ require_once "includes/auth_check.php";
 
                             </div>
 
-                            <button class="btn btn-outline-secondary mt-3 mt-md-0">
+                            <a class="btn btn-outline-secondary mt-3 mt-md-0" href="change_user_password.php">
                                 <i class="fas fa-key me-2"></i>
-                                Reset Password
-                            </button>
+                                Update Password
+</a>
 
                         </div>
 
