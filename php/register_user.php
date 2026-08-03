@@ -13,8 +13,9 @@ $number = trim(mysqli_real_escape_string($conn, $_POST['number']) ?? '');
 $email = trim(mysqli_real_escape_string($conn, $_POST['email']) ?? '');
 $plainPassword = trim($_POST['password'] ?? '');
 $hashedPassword = md5($plainPassword);
+$role = 'User' //By default
 
-$insertUser = mysqli_query($conn, "INSERT INTO `users` (`name`, `number`, `email`, `password`) VALUES ('$name','$number','$email','$hashedPassword')");
+$insertUser = mysqli_query($conn, "INSERT INTO `users` (`name`, `number`, `email`, `password`, `role`) VALUES ('$name','$number','$email','$hashedPassword', '$role')");
 
 if (!$insertUser) {
     echo json_encode([
