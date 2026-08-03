@@ -21,8 +21,7 @@ require_once "includes/auth_check.php";
     <!-- jQuery  -->
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/css/intlTelInput.css">
+
     <style>
         body {
             background: #f5f7fb;
@@ -254,7 +253,7 @@ require_once "includes/auth_check.php";
                             <a class="btn btn-outline-secondary mt-3 mt-md-0" href="change_user_password.php">
                                 <i class="fas fa-key me-2"></i>
                                 Update Password
-</a>
+                            </a>
 
                         </div>
 
@@ -278,7 +277,6 @@ require_once "includes/auth_check.php";
     <!-- DATATABLE -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <script>
         $(document).ready(function () {
 
@@ -353,29 +351,7 @@ require_once "includes/auth_check.php";
 
             });
 
-
-            //  Intl Tel Input
-            const phoneInput = document.querySelector("#number");
-
-            const iti = window.intlTelInput(phoneInput, {
-                initialCountry: "auto",
-                geoIpLookup: function (callback) {
-                    fetch("https://ipapi.co/json/")
-                        .then(res => res.json())
-                        .then(data => callback(data.country_code))
-                        .catch(() => callback("in"));
-                },
-                preferredCountries: ["in", "us", "gb"],
-                separateDialCode: true,
-                nationalMode: true,
-                autoPlaceholder: "aggressive",
-                loadUtilsOnInit: () =>
-                    import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")
-            });
-
-            // ----------------------------
             // Fetch Logged In User
-            // ----------------------------
             function loadProfile() {
                 $.ajax({
                     url: "php/dashboard_user.php",
@@ -423,24 +399,96 @@ require_once "includes/auth_check.php";
 
             loadProfile();
 
-            // ----------------------------
-            // Phone Validation
-            // ----------------------------
-            $.validator.addMethod("phoneValid", function (value) {
 
-                const country = iti.getSelectedCountryData().iso2;
 
-                if (country === "in") {
-                    return /^[6-9]\d{9}$/.test(value);
-                }
+            $("#saveProfilePhoto").click(function () {
 
-                return iti.isValidNumber();
+                if (!selectedPhoto) return;
 
-            }, "Please enter a valid phone number.");
+                let fd = new FormData();
+                fd.append("action", "upload_photo");
+                fd.append("photo", selectedPhoto);
 
-            // ----------------------------
+                $.ajax({
+                    url: "php/edit_profile.php",   // <-- your PHP file
+                    type: "POST",
+                    data: fd,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function (response) {
+
+                        if (response.status === "success") {
+
+                            bootstrap.Modal.getInstance(
+                                document.getElementById("photoPreviewModal")
+                            ).hide();
+
+                            selectedPhoto = null;
+                            $("#profilePhoto").val("");
+
+                            loadProfile();
+
+                            if (typeof loadHeaderUser === "function") {
+                                loadHeaderUser();
+                            }
+
+                            Swal.fire("Success", "Profile photo updated successfully.", "success");
+
+                        } else {
+
+                            Swal.fire("Error", response.message, "error");
+
+                        }
+
+                    }
+                });
+
+            });
+            //remove profile photo
+            $("#btnRemovePhoto").click(function () {
+
+                Swal.fire({
+                    title: "Remove photo?",
+                    text: "Your profile photo will be removed.",
+                    icon: "warning",
+                    showCancelButton: true
+                }).then((result) => {
+
+                    if (!result.isConfirmed) return;
+
+                    $.post("php/edit_profile.php", {
+                        action: "remove_photo"
+                    }, function (response) {
+
+                        if (response.status === "success") {
+
+                            loadProfile();
+
+                            if (typeof loadHeaderUser === "function") {
+                                loadHeaderUser();
+                            }
+
+                            Swal.fire("Success", "Photo removed successfully.", "success");
+
+                        } else {
+
+                            Swal.fire("Error", response.message, "error");
+
+                        }
+
+                    }, "json");
+
+                });
+
+            });            // Phone Validation
+            $.validator.addMethod("phoneValid", function (value, element) {
+                return this.optional(element) || /^[6-9]\d{9}$/.test(value);
+            }, "Please enter a valid 10-digit Indian mobile number.");
+
+
             // Form Validation
-            // ----------------------------
+
             $("#editUser").validate({
 
                 rules: {
@@ -504,10 +552,6 @@ require_once "includes/auth_check.php";
                 submitHandler: function (form) {
 
                     let formData = new FormData(form);
-
-                    // Send full international number
-                    formData.set("number", iti.getNumber());
-
                     $.ajax({
 
                         url: "php/edit_user.php",
