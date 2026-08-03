@@ -254,9 +254,14 @@ require_once "includes/auth_check.php";
                         required: true,
                         phoneValid: true,
                         remote: {
-                            url: "controller/check_user_number.php",
-                            type: "POST"
-                        }
+    url: "controller/check_user_number.php",
+    type: "POST",
+    data: {
+        number: function () {
+            return iti.getNumber();
+        }
+    }
+}
                     },
                     password: {
                         required: true,
