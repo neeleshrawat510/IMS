@@ -28,17 +28,7 @@ require_once "includes/auth_check.php";
             vertical-align: middle !important;
         }
 
-        /* Fix width of phone input */
-        /* Phone input wrapper */
-        .input-group .iti {
-            flex: 1 1 auto;
-            width: 1%;
-        }
 
-        /* Prevent shrinking */
-        .input-group .iti input {
-            width: 100% !important;
-        }
 
         /* Validation error */
         label.error {
@@ -49,11 +39,6 @@ require_once "includes/auth_check.php";
             font-size: 0.875rem;
         }
 
-        /* Place phone error below the field */
-        .iti+label.error {
-            display: block !important;
-            width: 100%;
-        }
 
         input.error {
             border: 1px solid red;
@@ -65,91 +50,94 @@ require_once "includes/auth_check.php";
     </style>
 </head>
 
-<div class="admin-shell">
+<body>
+    <div class="admin-shell">
 
-    <div class="sidebar-backdrop" data-sidebar-close></div>
+        <div class="sidebar-backdrop" data-sidebar-close></div>
 
-    <?php include("includes/sidebar.php"); ?>
+        <?php include("includes/sidebar.php"); ?>
 
-    <div class="admin-main">
+        <div class="admin-main">
 
-        <?php include("includes/header.php"); ?>
+            <?php include("includes/header.php"); ?>
 
-        <main class="dashboard-content">
+            <main class="dashboard-content">
 
-            <div class="container py-4">
+                <div class="container py-4">
 
-                <div class="row justify-content-center">
+                    <div class="row justify-content-center">
 
-                    <div class="col-lg-6">
+                        <div class="col-lg-6">
 
-                        <div class="card shadow border-0">
+                            <div class="card shadow border-0">
 
-                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <div class="card-header d-flex justify-content-between align-items-center">
 
-                                <h5 class="mb-0">
-                                    <i class="bi bi-shield-lock"></i>
-                                    Change Password
-                                </h5>
+                                    <h5 class="mb-0">
+                                        <i class="bi bi-shield-lock"></i>
+                                        Change Password
+                                    </h5>
 
-                                <button class="btn btn-outline-secondary btn-sm" onclick="history.back()">
-                                    <i class="bi bi-arrow-left"></i> Back
-                                </button>
-
-                            </div>
-
-                            <div class="card-body">
-
-                                <form id="changePasswordForm">
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Current Password</label>
-
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="bi bi-lock"></i>
-                                            </span>
-
-                                            <input type="password" class="form-control" name="current_password"
-                                                id="current_password">
-                                        </div>
-
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">New Password</label>
-
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="bi bi-key"></i>
-                                            </span>
-
-                                            <input type="password" class="form-control" name="new_password"
-                                                id="new_password">
-                                        </div>
-
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Confirm Password</label>
-
-                                        <div class="input-group">
-                                            <span class="input-group-text">
-                                                <i class="bi bi-key-fill"></i>
-                                            </span>
-
-                                            <input type="password" class="form-control" name="confirm_password"
-                                                id="confirm_password">
-                                        </div>
-
-                                    </div>
-
-                                    <button class="btn btn-primary w-100">
-                                        <i class="bi bi-check-circle"></i>
-                                        Update Password
+                                    <button class="btn btn-outline-secondary btn-sm" onclick="history.back()">
+                                        <i class="bi bi-arrow-left"></i> Back
                                     </button>
 
-                                </form>
+                                </div>
+
+                                <div class="card-body">
+
+                                    <form id="changePasswordForm">
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Current Password</label>
+
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="bi bi-lock"></i>
+                                                </span>
+
+                                                <input type="password" class="form-control" name="current_password"
+                                                    id="current_password">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">New Password</label>
+
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="bi bi-key"></i>
+                                                </span>
+
+                                                <input type="password" class="form-control" name="new_password"
+                                                    id="new_password">
+                                            </div>
+
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Confirm Password</label>
+
+                                            <div class="input-group">
+                                                <span class="input-group-text">
+                                                    <i class="bi bi-key-fill"></i>
+                                                </span>
+
+                                                <input type="password" class="form-control" name="confirm_password"
+                                                    id="confirm_password">
+                                            </div>
+
+                                        </div>
+
+                                        <button class="btn btn-primary w-100">
+                                            <i class="bi bi-check-circle"></i>
+                                            Update Password
+                                        </button>
+
+                                    </form>
+
+                                </div>
 
                             </div>
 
@@ -159,106 +147,104 @@ require_once "includes/auth_check.php";
 
                 </div>
 
-            </div>
+            </main>
 
-        </main>
+        </div>
 
     </div>
 
-</div>
+    <script src="assets/js/main.js"></script>
 
-<script src="assets/js/main.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="controller/logout.js"></script>
 
-<script src="controller/logout.js"></script>
+    <script>
 
-<script>
+        $("#changePasswordForm").validate({
 
-    $("#changePasswordForm").validate({
+            rules: {
 
-        rules: {
+                current_password: {
+                    required: true
+                },
 
-            current_password: {
-                required: true
+                new_password: {
+                    required: true,
+                    minlength: 6
+                },
+
+                confirm_password: {
+                    required: true,
+                    equalTo: "#new_password"
+                }
+
             },
 
-            new_password: {
-                required: true,
-                minlength: 6
+            messages: {
+
+                current_password: "Enter current password",
+
+                new_password: {
+                    required: "Enter new password",
+                    minlength: "Minimum 6 characters"
+                },
+
+                confirm_password: {
+                    required: "Confirm password",
+                    equalTo: "Passwords do not match"
+                }
+
             },
 
-            confirm_password: {
-                required: true,
-                equalTo: "#new_password"
-            }
+            submitHandler: function (form) {
 
-        },
+                $.ajax({
 
-        messages: {
+                    url: "php/change_password.php",
 
-            current_password: "Enter current password",
+                    type: "POST",
 
-            new_password: {
-                required: "Enter new password",
-                minlength: "Minimum 6 characters"
-            },
+                    data: $(form).serialize(),
 
-            confirm_password: {
-                required: "Confirm password",
-                equalTo: "Passwords do not match"
-            }
+                    dataType: "json",
 
-        },
+                    success: function (res) {
 
-        submitHandler: function (form) {
+                        if (res.status == "success") {
 
-            $.ajax({
-
-                url: "php/change_password.php",
-
-                type: "POST",
-
-                data: $(form).serialize(),
-
-                dataType: "json",
-
-                success: function (res) {
-
-                    if (res.status == "success") {
-
-                        Swal.fire({
-                            icon: "success",
-                            title: "Success",
-                            text: res.message
+                            Swal.fire({
+                                icon: "success",
+                                title: "Success",
+                                text: res.message,
                             confirmButtonText: "Login"
-                        }).then(() => {
+                            }).then(() => {
 
-                            window.location.href = "login.php";
+                                window.location.href = "login.php";
 
-                        });
+                            });
 
-                    } else {
+                        } else {
 
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: res.message
-                        });
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: res.message
+                            });
+
+                        }
 
                     }
 
-                }
+                });
 
-            });
+            }
 
-        }
+        });
 
-    });
-
-</script>
+    </script>
 
 </body>
 
