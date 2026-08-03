@@ -206,42 +206,29 @@ require_once "includes/auth_check.php";
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <script>
         $(document).ready(function () {
-
-            //country code
-            const phoneInput = document.querySelector("#number");
-
-            const iti = window.intlTelInput(phoneInput, {
-                initialCountry: "auto",
-                geoIpLookup: function (callback) {
-                    fetch("https://ipapi.co/json/")
-                        .then(res => res.json())
-                        .then(data => callback(data.country_code))
-                        .catch(() => callback("in"));
-                },
-                preferredCountries: ["in", "us", "gb"],
-                separateDialCode: true,
-                nationalMode: true,
-                autoPlaceholder: "aggressive",
-                loadUtilsOnInit: () =>
-                    import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")
-            });
-
-
-            // Add validator for strong password
+         // Add validator for strong password
             $.validator.addMethod("strongPassword", function (value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
             });
+            //country code
+            const phoneInput = document.querySelector("#number");
+
+const iti = window.intlTelInput(phoneInput, {
+    initialCountry: "in",
+    preferredCountries: ["in", "us", "gb"],
+    separateDialCode: true,
+    nationalMode: true,
+    autoPlaceholder: "aggressive",
+    loadUtilsOnInit: () =>
+        import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")
+});
+
+           
 
             //valid phone no
-            $.validator.addMethod("phoneValid", function (value) {
-                const country = iti.getSelectedCountryData().iso2;
-
-                if (country === "in") {
-                    return /^[6-9]\d{9}$/.test(value);
-                }
-
-                return iti.isValidNumber();
-            }, "Please enter a valid phone number.");
+            $.validator.addMethod("phoneValid", function () {
+    return iti.isValidNumber();
+}, "Please enter a valid phone number.");
 
 
             //validate form
@@ -306,6 +293,7 @@ require_once "includes/auth_check.php";
                 submitHandler: function (form) {
 
                     let formData = new FormData(form);
+                    formData.set("number", iti.getNumber());
                     $.ajax({
                         url: "php/register_user.php",
                         type: "POST",

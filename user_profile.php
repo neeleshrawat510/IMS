@@ -387,9 +387,8 @@ require_once "includes/auth_check.php";
                         $("#name").val(data.name);
                         $("#email").val(data.email);
 
-                        if (data.number) {
-                            iti.setNumber(data.number);
-                        }
+                        iti.setNumber(data.number);
+
 
                         $("#profileName").text(data.name);
                         $("#profileEmail").text(data.email);

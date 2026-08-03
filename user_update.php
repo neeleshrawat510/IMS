@@ -218,7 +218,7 @@ require_once "includes/auth_check.php";
                 success: function (data) {
                     $("#editUserId").val(data.id);
                     $("#name").val(data.name);
-                    $("#number").val(data.number);
+                    iti.setNumber(data.number);
                     $("#email").val(data.email);
                 }
             });
