@@ -81,14 +81,22 @@ $newHash = md5($new_password);
 $update = "UPDATE users SET password='$newHash' WHERE id='$user_id'";
 
 if (mysqli_query($conn, $update)) {
+
+    // Logout user
+    session_unset();
+    session_destroy();
+
     echo json_encode([
         "status" => "success",
-        "message" => "Password changed successfully."
+        "message" => "Password changed successfully. Please login again."
     ]);
+
 } else {
+
     echo json_encode([
         "status" => "error",
         "message" => "Failed to change password."
     ]);
+
 }
 ?>

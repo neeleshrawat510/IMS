@@ -233,9 +233,12 @@ require_once "includes/auth_check.php";
                             icon: "success",
                             title: "Success",
                             text: res.message
-                        });
+                            confirmButtonText: "Login"
+                        }).then(() => {
 
-                        form.reset();
+                            window.location.href = "login.php";
+
+                        });
 
                     } else {
 
