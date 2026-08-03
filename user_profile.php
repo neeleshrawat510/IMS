@@ -410,7 +410,7 @@ require_once "includes/auth_check.php";
                 fd.append("photo", selectedPhoto);
 
                 $.ajax({
-                    url: "php/edit_profile.php",   // <-- your PHP file
+                    url: "php/edit_user_profile.php",   
                     type: "POST",
                     data: fd,
                     processData: false,
