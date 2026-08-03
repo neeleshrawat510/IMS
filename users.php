@@ -20,8 +20,6 @@ require_once "includes/auth_check.php";
     <!-- jQuery  -->
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/css/intlTelInput.css">
     <style>
         #contactsTable th,
         #contactsTable td {
@@ -29,17 +27,6 @@ require_once "includes/auth_check.php";
             vertical-align: middle !important;
         }
 
-        /* Fix width of phone input */
-        /* Phone input wrapper */
-        .input-group .iti {
-            flex: 1 1 auto;
-            width: 1%;
-        }
-
-        /* Prevent shrinking */
-        .input-group .iti input {
-            width: 100% !important;
-        }
 
         /* Validation error */
         label.error {
@@ -50,11 +37,7 @@ require_once "includes/auth_check.php";
             font-size: 0.875rem;
         }
 
-        /* Place phone error below the field */
-        .iti+label.error {
-            display: block !important;
-            width: 100%;
-        }
+
 
         input.error {
             border: 1px solid red;
@@ -203,38 +186,17 @@ require_once "includes/auth_check.php";
     <!-- DATATABLE -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <script>
         $(document).ready(function () {
             // Add validator for strong password
             $.validator.addMethod("strongPassword", function (value, element) {
                 return this.optional(element) || /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(value);
             });
-            //country code
-            const phoneInput = document.querySelector("#number");
 
-            const iti = window.intlTelInput(phoneInput, {
-                initialCountry: "in",
-                preferredCountries: ["in", "us", "gb"],
-                separateDialCode: true,
-                nationalMode: true,
-                autoPlaceholder: "aggressive",
-                loadUtilsOnInit: () =>
-                    import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")
-            });
-
-
-
-            //valid phone no
+            //number validation
             $.validator.addMethod("phoneValid", function (value, element) {
-
-                if (this.optional(element)) {
-                    return true;
-                }
-
-                return iti.isValidNumber();
-
-            }, "Please enter a valid phone number.");
+                return this.optional(element) || /^[6-9]\d{9}$/.test(value);
+            }, "Please enter a valid 10-digit Indian mobile number.");
 
             //validate form
             $("#userForm").validate({
@@ -253,15 +215,11 @@ require_once "includes/auth_check.php";
                     number: {
                         required: true,
                         phoneValid: true,
+                        digits: true,
                         remote: {
-    url: "controller/check_user_number.php",
-    type: "POST",
-    data: {
-        number: function () {
-            return iti.getNumber();
-        }
-    }
-}
+                            url: "controller/check_user_number.php",
+                            type: "POST"
+                        }
                     },
                     password: {
                         required: true,
@@ -279,8 +237,10 @@ require_once "includes/auth_check.php";
                     },
                     number: {
                         required: "Number is required",
-                        phoneValid: "Please enter valid number",
+                        phoneValid: "Please enter a valid 10-digit Indian mobile number",
+                        digits: "Please enter numberic values",
                         remote: "Number already exist, Try another!"
+
                     },
                     password: {
                         required: "Password is required",
@@ -303,11 +263,7 @@ require_once "includes/auth_check.php";
                 submitHandler: function (form) {
 
                     let formData = new FormData(form);
-                    console.log("Input:", $("#number").val());
-                    console.log("Selected Country:", iti.getSelectedCountryData());
-                    console.log("International:", iti.getNumber());
-                    console.log("Valid:", iti.isValidNumber());
-                    formData.set("number", iti.getNumber());
+
                     $.ajax({
                         url: "php/register_user.php",
                         type: "POST",
