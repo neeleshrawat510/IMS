@@ -457,7 +457,7 @@ require_once "includes/auth_check.php";
 
                     if (!result.isConfirmed) return;
 
-                    $.post("php/edit_profile.php", {
+                    $.post("php/edit_user_profile.php", {
                         action: "remove_photo"
                     }, function (response) {
 
