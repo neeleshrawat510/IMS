@@ -10,7 +10,7 @@ require_once "includes/auth_check.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Invoice management System">
-    <title>Edit User | Invoice Management System</title>
+    <title>Update Password | Invoice Management System</title>
 
     <link rel="stylesheet" href="assets/css/bootstrap.min.css">
     <link rel="stylesheet" href="assets/vendors/bootstrap-icons/bootstrap-icons.css">
@@ -173,7 +173,7 @@ require_once "includes/auth_check.php";
 
                 new_password: {
                     required: true,
-                    minlength: 6
+                    minlength: 8
                 },
 
                 confirm_password: {
@@ -189,7 +189,7 @@ require_once "includes/auth_check.php";
 
                 new_password: {
                     required: "Enter new password",
-                    minlength: "Minimum 6 characters"
+                    minlength: "Minimum 8 characters"
                 },
 
                 confirm_password: {
