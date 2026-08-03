@@ -15,4 +15,5 @@ $sql = mysqli_query($conn, "SELECT * FROM `users` WHERE `id`= '$id'");
 $user = mysqli_fetch_array($sql);
 
 echo json_encode($user);
+
 ?>
