@@ -25,6 +25,7 @@ if (!$insertUser) {
     exit;
 }
 
+
 $emailSent = sendUserCredentials(
     $email,
     $name,
