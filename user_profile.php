@@ -386,8 +386,8 @@ require_once "includes/auth_check.php";
                         $("#editUserId").val(data.id);
                         $("#name").val(data.name);
                         $("#email").val(data.email);
+                        $("#number").val(data.number);
 
-                        iti.setNumber(data.number);
 
 
                         $("#profileName").text(data.name);

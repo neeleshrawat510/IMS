@@ -19,8 +19,6 @@ require_once "includes/auth_check.php";
     <!-- jQuery  -->
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <!-- css -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@24.6.1/build/css/intlTelInput.css">
     <style>
         #contactsTable th,
         #contactsTable td {
@@ -28,17 +26,7 @@ require_once "includes/auth_check.php";
             vertical-align: middle !important;
         }
 
-        /* Fix width of phone input */
-        /* Phone input wrapper */
-        .input-group .iti {
-            flex: 1 1 auto;
-            width: 1%;
-        }
 
-        /* Prevent shrinking */
-        .input-group .iti input {
-            width: 100% !important;
-        }
 
         /* Validation error */
         label.error {
@@ -49,11 +37,6 @@ require_once "includes/auth_check.php";
             font-size: 0.875rem;
         }
 
-        /* Place phone error below the field */
-        .iti+label.error {
-            display: block !important;
-            width: 100%;
-        }
 
         input.error {
             border: 1px solid red;
@@ -168,43 +151,13 @@ require_once "includes/auth_check.php";
     <!-- LOGOUT Redirect -->
     <script src="controller/logout.js"></script>
 
-    <!-- country code -->
-    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/intlTelInput.min.js"></script>
     <script>
         $(document).ready(function () {
 
-            //country code
-            const phoneInput = document.querySelector("#number");
-
-            const iti = window.intlTelInput(phoneInput, {
-                initialCountry: "auto",
-                geoIpLookup: function (callback) {
-                    fetch("https://ipapi.co/json/")
-                        .then(res => res.json())
-                        .then(data => callback(data.country_code))
-                        .catch(() => callback("in"));
-                },
-                preferredCountries: ["in", "us", "gb"],
-                separateDialCode: true,
-                nationalMode: true,
-                autoPlaceholder: "aggressive",
-                loadUtilsOnInit: () =>
-                    import("https://cdn.jsdelivr.net/npm/intl-tel-input@25.3.1/build/js/utils.js")
-            });
-
-
-            //valid phone no
-            $.validator.addMethod("phoneValid", function (value) {
-                const country = iti.getSelectedCountryData().iso2;
-
-                if (country === "in") {
-                    return /^[6-9]\d{9}$/.test(value);
-                }
-
-                return iti.isValidNumber();
-            }, "Please enter a valid phone number.");
-
-
+            //number validation
+            $.validator.addMethod("phoneValid", function (value, element) {
+                return this.optional(element) || /^[6-9]\d{9}$/.test(value);
+            }, "Please enter a valid 10-digit Indian mobile number.");
             let editUserId = new URLSearchParams(window.location.search).get('id');
 
             //get form data
@@ -218,7 +171,7 @@ require_once "includes/auth_check.php";
                 success: function (data) {
                     $("#editUserId").val(data.id);
                     $("#name").val(data.name);
-                    iti.setNumber(data.number);
+                    $("#number").val(data.number);
                     $("#email").val(data.email);
                 }
             });
@@ -255,7 +208,6 @@ require_once "includes/auth_check.php";
                             }
                         }
                     }
-
                 },
                 messages: {
                     name: {
