@@ -53,7 +53,7 @@
                     </div>
 
                     <span class="d-none d-lg-inline" id="userName">
-                        User
+                        <?= htmlspecialchars($_SESSION['user_name']) ?>
                     </span>
 
                     <i class="bi bi-chevron-down"></i>

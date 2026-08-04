@@ -7,7 +7,7 @@
       <span class="brand-copy">
         <span class="brand-title">InvoiceSys</span>
         <span class="brand-subtitle" id="sidebarUserName">
-          User
+          <?= htmlspecialchars($_SESSION['user_name']) ?>
         </span>
     </a>
   </div>
