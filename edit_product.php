@@ -253,9 +253,17 @@ require_once "includes/auth_check.php";
                                             title: "Successful",
                                             text: "Product Updated",
                                             icon: "success"
+                                        }).then(() => {
+                                            window.location.href = "manage_product.php";
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: "Failed",
+                                            text: "Product not updated",
+                                            icon: "error"
                                         });
                                     }
-                                    window.location.href = "manage_product.php"
+
                                 },
                                 error: function () {
                                     Swal.fire({
