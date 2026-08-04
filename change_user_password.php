@@ -219,7 +219,7 @@ require_once "includes/auth_check.php";
                                 icon: "success",
                                 title: "Success",
                                 text: res.message,
-                            confirmButtonText: "Login"
+                            confirmButtonText: "ok"
                             }).then(() => {
 
                                 window.location.href = "login.php";
