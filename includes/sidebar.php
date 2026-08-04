@@ -6,8 +6,8 @@
       <span class="brand-icon"><span class="brand-title">IMS</span></span>
       <span class="brand-copy">
         <span class="brand-title">InvoiceSys</span>
-        <span class="brand-subtitle">
-          <?= htmlspecialchars($_SESSION['user_name']) ?>
+        <span class="brand-subtitle" id="sidebarUserName">
+          User
         </span>
     </a>
   </div>

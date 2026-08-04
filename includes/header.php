@@ -118,6 +118,8 @@
                 $("#userName").text(data.name);
                 $("#dropdownUserName").text(data.name);
                 $("#userEmail").text(data.email);
+                $("#sidebarUserName").text(data.name);
+
 
                 // If profile photo exists
                 if (data.profile_photo && data.profile_photo.trim() !== "") {
