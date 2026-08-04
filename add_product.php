@@ -212,8 +212,16 @@ require_once "includes/auth_check.php";
                                     title: "Successful",
                                     text: "New Product added",
                                     icon: "success"
+                                }).then(() => {
+                                    window.location.href = "manage_product.php";
                                 });
-                                window.location.href = "manage_product.php"
+                            }else {
+
+                                Swal.fire({
+                                    title: "Product Not Added! Try Again",
+                                    icon: "error"
+                                });
+
                             }
                             $("#productForm")[0].reset();
                         },
