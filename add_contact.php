@@ -233,21 +233,24 @@ require_once "includes/auth_check.php";
 
                         success: function (response) {
                             if (response.trim() == 'success') {
+
                                 Swal.fire({
                                     title: "Successful",
                                     text: "New Contact added",
                                     icon: "success"
+                                }).then(() => {
+                                    window.location.href = "manage_contact.php";
                                 });
-                                window.location.href = "manage_contact.php"
+
                             } else {
-                                (response.trim() == 'failed');
+
                                 Swal.fire({
-                                    title: "Contact Not created! Try again",
-                                    icon: "error",
-                                    draggable: false
+                                    title: "Contact Not Created! Try Again",
+                                    icon: "error"
                                 });
 
                             }
+
                             $("#contactForm")[0].reset();
                         },
                         error: function () {
