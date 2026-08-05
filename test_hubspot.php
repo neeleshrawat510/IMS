@@ -1,13 +1,22 @@
 <?php
+
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
+
 require_once __DIR__ . '/vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+// Load .env only if it exists (for local development)
+if (file_exists(__DIR__ . '/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
+}
 
-$accessToken = getenv('HUBSPOT_ACCESS_TOKEN');
+$accessToken = $_ENV['HUBSPOT_ACCESS_TOKEN'] ?? getenv('HUBSPOT_ACCESS_TOKEN');
+
+if (!$accessToken) {
+    die("HUBSPOT_ACCESS_TOKEN not found.");
+}
+
 
 $url = "https://api.hubapi.com/crm/v3/objects/contacts";
 
