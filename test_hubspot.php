@@ -17,10 +17,13 @@ require_once __DIR__ . '/includes/HubSpotService.php';
 $hubspot = new HubSpotService();
 
 $result = $hubspot->createContact(
-    "Neelesh",
+    "Abhi",
     "Rawat",
     "neelesh." . time() . "@example.com",
-    "9876543210"
+    "9876543210",
+    "Baseline",
+    "Mohali"
+
 );
 
 echo "<pre>";

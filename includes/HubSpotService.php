@@ -67,14 +67,16 @@ class HubSpotService
         ];
     }
 
-    public function createContact($firstname, $lastname, $email, $phone)
+    public function createContact($firstname, $lastname, $email, $phone, $company, $address)
     {
         return $this->request("POST", "/contacts", [
             "properties" => [
                 "firstname" => $firstname,
                 "lastname" => $lastname,
                 "email" => $email,
-                "phone" => $phone
+                "phone" => $phone,
+                "company"   => $company,
+                "address"   => $address
             ]
         ]);
     }
