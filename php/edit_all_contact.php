@@ -59,7 +59,8 @@ if ($update) {
                 $number,
                 $company,
                 $address,
-                $gst
+                $gst,
+                $imsStatus = "Active"
             );
 
         }

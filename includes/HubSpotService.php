@@ -77,7 +77,8 @@ class HubSpotService
                 "phone" => $phone,
                 "company" => $company,
                 "address" => $address,
-                "gst_number" => $gst
+                "gst_number" => $gst,
+                "ims_status" => "Active"
             ]
         ]);
     }
@@ -90,7 +91,8 @@ class HubSpotService
         $phone,
         $company,
         $address,
-        $gst
+        $gst,
+        $imsStatus = "Active"
     ) {
         return $this->request(
             "PATCH",
@@ -103,9 +105,33 @@ class HubSpotService
                     "phone" => $phone,
                     "company" => $company,
                     "address" => $address,
-                    "gst_number" => $gst
+                    "gst_number" => $gst,
+                    "ims_status" => $imsStatus
                 ]
             ]
         );
     }
+
+// UPDATE STATUS
+    public function updateContactStatus($hubspotId, $status)
+{
+    return $this->request(
+        "PATCH",
+        "/contacts/" . $hubspotId,
+        [
+            "properties" => [
+                "ims_status" => $status
+            ]
+        ]
+    );
+}
+
+// ARCHIVE CONTACT
+public function archiveContact($hubspotId)
+{
+    return $this->request(
+        "DELETE",
+        "/contacts/" . $hubspotId
+    );
+}
 }

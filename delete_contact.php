@@ -1,18 +1,40 @@
 <?php
 
 require_once "includes/auth_check.php";
-
-//connection setup
+require_once "includes/HubSpotService.php";
 include("config/connection.php");
 
-$contactId = $_POST['id'];
+$contactId = intval($_POST['id']);
 
-$delete = mysqli_query($conn, "DELETE FROM `contacts` WHERE `id` = '$contactId'");
+$get = mysqli_query($conn, "SELECT hubspot_contact_id FROM contacts WHERE id='$contactId'");
+$row = mysqli_fetch_assoc($get);
 
-if($delete){
+$hubspotId = $row['hubspot_contact_id'] ?? null;
+
+$delete = mysqli_query($conn, "DELETE FROM contacts WHERE id='$contactId'");
+
+if ($delete) {
+
+    if (!empty($hubspotId)) {
+
+        try {
+
+            $hubspot = new HubSpotService();
+
+            $hubspot->archiveContact($hubspotId);
+
+        } catch (Exception $e) {
+
+            error_log($e->getMessage());
+
+        }
+
+    }
+
     echo "success";
-}else{
-    echo "failed";
-}
 
-?>
+} else {
+
+    echo "failed";
+
+}
