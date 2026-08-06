@@ -35,7 +35,7 @@ if ($insert) {
             $number,
             $company,
             $address,
-            $gst_number
+            $gst
         );
 
         $hubspotId = $hubspotResponse['response']['id'] ?? NULL;

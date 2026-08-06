@@ -67,7 +67,7 @@ class HubSpotService
         ];
     }
 
-    public function createContact($firstname, $lastname, $email, $phone, $company, $address, $gst_number)
+    public function createContact($firstname, $lastname, $email, $phone, $company, $address, $gst)
     {
         return $this->request("POST", "/contacts", [
             "properties" => [
@@ -77,7 +77,7 @@ class HubSpotService
                 "phone" => $phone,
                 "company"   => $company,
                 "address"   => $address,
-                "gst_number" => $gst_number
+                "gst_number" => $gst
             ]
         ]);
     }
