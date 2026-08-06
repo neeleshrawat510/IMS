@@ -75,10 +75,37 @@ class HubSpotService
                 "lastname" => $lastname,
                 "email" => $email,
                 "phone" => $phone,
-                "company"   => $company,
-                "address"   => $address,
+                "company" => $company,
+                "address" => $address,
                 "gst_number" => $gst
             ]
         ]);
+    }
+
+    public function updateContact(
+        $hubspotId,
+        $firstname,
+        $lastname,
+        $email,
+        $phone,
+        $company,
+        $address,
+        $gst
+    ) {
+        return $this->request(
+            "PATCH",
+            "/contacts/" . $hubspotId,
+            [
+                "properties" => [
+                    "firstname" => $firstname,
+                    "lastname" => $lastname,
+                    "email" => $email,
+                    "phone" => $phone,
+                    "company" => $company,
+                    "address" => $address,
+                    "gst_number" => $gst
+                ]
+            ]
+        );
     }
 }

@@ -2,7 +2,7 @@
 
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
-
+require_once "../includes/HubSpotService.php";
 
 $contactId = $_POST['id'] ?? null;
 
@@ -19,6 +19,14 @@ $gst = trim(mysqli_real_escape_string($conn, $_POST['gst']  ??  ''));
 $address = trim(mysqli_real_escape_string($conn, $_POST['address']  ??  ''));
 $todayDate = date('Y-m-d H:i:s'); //set update date & time
 
+$getHubspotId = mysqli_query(
+    $conn,
+    "SELECT hubspot_contact_id FROM contacts WHERE id='$contactId'"
+);
+
+$contact = mysqli_fetch_assoc($getHubspotId);
+
+$hubspotContactId = $contact['hubspot_contact_id'] ?? null;
 
 $update = mysqli_query($conn, "UPDATE `contacts` SET
                                                 `name` = '$name',
@@ -31,9 +39,43 @@ $update = mysqli_query($conn, "UPDATE `contacts` SET
                                             WHERE `id` = '$contactId'");
 
 if ($update) {
+
+    try {
+
+        if ($hubspotContactId) {
+
+            $hubspot = new HubSpotService();
+
+            $nameParts = explode(' ', trim($name), 2);
+
+            $firstName = $nameParts[0];
+            $lastName  = $nameParts[1] ?? '';
+
+            $hubspot->updateContact(
+                $hubspotContactId,
+                $firstName,
+                $lastName,
+                $email,
+                $number,
+                $company,
+                $address,
+                $gst
+            );
+
+        }
+
+    } catch (Exception $e) {
+
+        error_log("HubSpot Update Error : " . $e->getMessage());
+
+    }
+
     echo "success";
+
 } else {
+
     echo "failed";
+
 }
 
 ?>
