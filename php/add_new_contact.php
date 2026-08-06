@@ -32,7 +32,10 @@ if ($insert) {
             $firstName,
             $lastName,
             $email,
-            $number
+            $number,
+            $company,
+            $address,
+            $gst_number
         );
 
         $hubspotId = $hubspotResponse['response']['id'] ?? NULL;
