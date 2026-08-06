@@ -188,7 +188,11 @@ require_once "includes/auth_check.php";
                     },
                     gst: {
                         required: true,
-                        gstin: true
+                        gstin: true,
+                        remote: {
+                            url: "controller/check_contact_gst.php",
+                            type: "POST"
+                        }
                     },
                     address: {
                         required: true
@@ -215,7 +219,9 @@ require_once "includes/auth_check.php";
                     },
                     gst: {
                         required: "GST/VAT is required",
-                        gstin: "22ABCDE2222A1Z3 format required"
+                        gstin: "22ABCDE2222A1Z3 format required",
+                        remote: "This GST Number is already exist"
+
                     },
                     address: {
                         required: "Address is required"
