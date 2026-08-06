@@ -160,6 +160,14 @@ require_once "includes/auth_check.php";
     <script>
         $(document).ready(function () {
 
+        // Custom method for GST validation
+            $.validator.addMethod("gstin", function (value, element) {
+                value = value.toUpperCase().trim();
+                var gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/;
+                return this.optional(element) || gstRegex.test(value);
+            }, "Please enter a valid GSTIN");
+
+
             let editContactId = new URLSearchParams(window.location.search).get('id');
 
             //get form data
@@ -217,7 +225,17 @@ require_once "includes/auth_check.php";
                         required: true
                     },
                     gst: {
-                        required: true
+                        required: true,
+                        gstin: true,
+                        remote: {
+                            url: "controller/check_contact_gst.php",
+                            type: "POST",
+                            data: {
+                                id: function () {
+                                    return $("#editContactId").val();
+                                }
+                            }
+                        }
                     },
                     address: {
                         required: true,
@@ -243,7 +261,9 @@ require_once "includes/auth_check.php";
                         required: "Company Name is required"
                     },
                     gst: {
-                        required: "GST/VAT no. is required"
+                        required: "GST/VAT no. is required",
+                        gstin: "22ABCDE2222A1Z3 format required",
+                        remote: "This GST Number is already exist"
                     },
                     address: {
                         required: "Address is required"
