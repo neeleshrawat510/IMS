@@ -25,7 +25,7 @@ if (isset($_POST['ids']) && !empty($_POST['ids'])) {
 
                     $hubspot->updateContactStatus(
                         $row['hubspot_contact_id'],
-                        "Archived"
+                        "Archive"
                     );
 
                 } catch (Exception $e) {
