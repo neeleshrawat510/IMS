@@ -18,12 +18,7 @@ if ($archive) {
     if (!empty($hubspotId)) {
         try {
             $hubspot = new HubSpotService();
-            $result = $hubspot->updateContactStatus($hubspotId, "Archive");
-
-echo "<pre>";
-print_r($result);
-echo "</pre>";
-exit;
+            $hubspot->updateContactStatus($hubspotId, "Archived");
         } catch (Exception $e) {
             error_log($e->getMessage());
         }
