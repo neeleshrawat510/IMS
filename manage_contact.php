@@ -241,7 +241,7 @@ require_once "includes/auth_check.php";
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonColor: "#d33",
-                    confirmButtonText: "Yes, Archive"
+                    confirmButtonText: "Yes, Delete"
                 }).then((result) => {
 
                     if (result.isConfirmed) {
