@@ -134,4 +134,30 @@ public function deleteContact($hubspotId)
         "/contacts/" . $hubspotId
     );
 }
+
+// CREATE INVOICE
+public function createDeal(
+    $dealName,
+    $amount,
+    $closeDate,
+    $invoiceId,
+    $paymentStatus,
+    $invoiceStatus
+)
+{
+    return $this->request(
+        "POST",
+        "/deals",
+        [
+            "properties" => [
+                "dealname"            => $dealName,
+                "amount"              => $amount,
+                "closedate"           => $closeDate,
+                "invoice_id"          => $invoiceId,
+                "payment_status"      => $paymentStatus,
+                "ims_invoice_status"  => $invoiceStatus
+            ]
+        ]
+    );
+}
 }

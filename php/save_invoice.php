@@ -3,6 +3,7 @@
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
 require_once("../vendor/autoload.php");
+require_once "../includes/HubSpotService.php";
 require_once "../controller/invoice_pdf.php";
 require_once "../controller/send_email.php";
 
@@ -41,6 +42,60 @@ $insertInvoice = mysqli_query($conn, "
 
 // Get invoice ID 
 $invoice_id = mysqli_insert_id($conn);
+
+// Get HubSpot Contact ID
+$contactQuery = mysqli_query(
+    $conn,
+    "SELECT hubspot_contact_id
+     FROM contacts
+     WHERE id='$contact_id'"
+);
+
+$contactData = mysqli_fetch_assoc($contactQuery);
+
+$hubspotContactId = $contactData['hubspot_contact_id'] ?? null;
+
+$hubspotDealId = null;
+
+if (!empty($hubspotContactId)) {
+
+    try {
+
+        $hubspot = new HubSpotService();
+
+        $deal = $hubspot->createDeal(
+            $invoice_no,
+            $grand_total,
+            $due_date,
+            $invoice_id,
+            "Unpaid",
+            $status
+        );
+
+        if ($deal['status'] == 201) {
+
+            $hubspotDealId = $deal['response']['id'];
+
+        }
+
+    } catch (Exception $e) {
+
+        error_log($e->getMessage());
+
+    }
+
+}
+
+if (!empty($hubspotDealId)) {
+
+    mysqli_query(
+        $conn,
+        "UPDATE invoices
+         SET hubspot_deal_id='$hubspotDealId'
+         WHERE id='$invoice_id'"
+    );
+
+}
 
 // Save each product (loop)
 $count = count($product_id);
