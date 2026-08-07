@@ -75,7 +75,13 @@ if (!empty($hubspotContactId)) {
         if ($deal['status'] == 201) {
 
             $hubspotDealId = $deal['response']['id'];
+            $associate = $hubspot->associateDealWithContact(
+    $hubspotDealId,
+    $hubspotContactId
+);
 
+print_r($associate);
+exit;
         }
 
     } catch (Exception $e) {
