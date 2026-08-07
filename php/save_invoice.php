@@ -10,22 +10,22 @@ require_once "../controller/send_email.php";
 //Indian Timezone
 date_default_timezone_set('Asia/Kolkata');
 
-$contact_id   = $_POST['contact_id'];
-$invoice_no   = $_POST['invoice_no'];
+$contact_id = $_POST['contact_id'];
+$invoice_no = $_POST['invoice_no'];
 $invoice_date = $_POST['invoice_date'];
-$due_date     = $_POST['due_date'];
+$due_date = $_POST['due_date'];
 
-$subtotal     = $_POST['subtotal'];
-$tax_total    = $_POST['tax_total'];
-$grand_total  = $_POST['grand_total'];
+$subtotal = $_POST['subtotal'];
+$tax_total = $_POST['tax_total'];
+$grand_total = $_POST['grand_total'];
 
 // Get items
-$product_id  = $_POST['product_id'];
+$product_id = $_POST['product_id'];
 $description = $_POST['description'];
-$qty         = $_POST['qty'];
-$price       = $_POST['price'];
-$tax         = $_POST['tax'];
-$amount      = $_POST['amount'];
+$qty = $_POST['qty'];
+$price = $_POST['price'];
+$tax = $_POST['tax'];
+$amount = $_POST['amount'];
 $status = $_POST['status'];
 $isDraft = ($status === 'Draft');
 $dateToday = date('Y-m-d H:i:s');
@@ -72,16 +72,24 @@ if (!empty($hubspotContactId)) {
             $status
         );
 
-        if ($deal['status'] == 201) {
+        if (
+            $deal['status'] == 201 &&
+            !empty($deal['response']['id'])
+        ) {
 
             $hubspotDealId = $deal['response']['id'];
-            $associate = $hubspot->associateDealWithContact(
-    $hubspotDealId,
-    $hubspotContactId
-);
 
-print_r($associate);
-exit;
+            $hubspot->associateDealWithContact(
+                $hubspotDealId,
+                $hubspotContactId
+            );
+
+            mysqli_query(
+                $conn,
+                "UPDATE invoices
+         SET hubspot_deal_id='$hubspotDealId'
+         WHERE id='$invoice_id'"
+            );
         }
 
     } catch (Exception $e) {
@@ -92,28 +100,17 @@ exit;
 
 }
 
-if (!empty($hubspotDealId)) {
-
-    mysqli_query(
-        $conn,
-        "UPDATE invoices
-         SET hubspot_deal_id='$hubspotDealId'
-         WHERE id='$invoice_id'"
-    );
-
-}
-
 // Save each product (loop)
 $count = count($product_id);
 
 for ($i = 0; $i < $count; $i++) {
 
-    $p_id   = $product_id[$i];
-    $desc   = $description[$i];
-    $q      = $qty[$i];
-    $pr     = $price[$i];
-    $tx     = $tax[$i];
-    $amt    = $amount[$i];
+    $p_id = $product_id[$i];
+    $desc = $description[$i];
+    $q = $qty[$i];
+    $pr = $price[$i];
+    $tx = $tax[$i];
+    $amt = $amount[$i];
 
     mysqli_query($conn, "
         INSERT INTO invoice_items 
@@ -146,7 +143,7 @@ if ($isDraft) {
 
     echo json_encode([
         "status" => "success",
-        "type"   => "draft"
+        "type" => "draft"
     ]);
     exit;
 }
@@ -166,7 +163,8 @@ $emailSent = sendInvoiceEmail(
 
 if ($emailSent) {
 
-    mysqli_query($conn,
+    mysqli_query(
+        $conn,
         "UPDATE invoices
          SET email_status='Sent'
          WHERE id='$invoice_id'"
@@ -174,7 +172,8 @@ if ($emailSent) {
 
 } else {
 
-    mysqli_query($conn,
+    mysqli_query(
+        $conn,
         "UPDATE invoices
          SET email_status='Failed'
          WHERE id='$invoice_id'"
