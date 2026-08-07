@@ -126,8 +126,8 @@ class HubSpotService
     );
 }
 
-// ARCHIVE CONTACT
-public function archiveContact($hubspotId)
+// DELETE CONTACT
+public function deleteContact($hubspotId)
 {
     return $this->request(
         "DELETE",

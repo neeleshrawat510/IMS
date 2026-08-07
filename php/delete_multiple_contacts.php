@@ -23,7 +23,7 @@ if (isset($_POST['ids']) && !empty($_POST['ids'])) {
 
                 try {
 
-                    $hubspot->archiveContact(
+                    $hubspot->deleteContact(
                         $row['hubspot_contact_id']
                     );
 

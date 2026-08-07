@@ -21,7 +21,7 @@ if ($delete) {
 
             $hubspot = new HubSpotService();
 
-            $hubspot->archiveContact($hubspotId);
+            $hubspot->deleteContact($hubspotId);
 
         } catch (Exception $e) {
 
