@@ -161,8 +161,31 @@ public function createDeal(
     );
 }
 
-// ASSOCIATE DEAL WITH CONTACT
+// UPDATE INVOICE
+public function updateDeal(
+    $dealId,
+    $dealName,
+    $amount,
+    $closeDate,
+    $invoiceStatus
+)
+{
+    return $this->request(
+        "PATCH",
+        "/deals/" . $dealId,
+        [
+            "properties" => [
+                "dealname"           => $dealName,
+                "amount"             => $amount,
+                "closedate"          => $closeDate,
+                "ims_invoice_status" => $invoiceStatus
+            ]
+        ]
+    );
+}
 
+
+// ASSOCIATE DEAL WITH CONTACT
 public function associateDealWithContact($dealId, $contactId)
 {
     $url = "https://api.hubapi.com/crm/v4/objects/deals/{$dealId}/associations/default/contacts/{$contactId}";

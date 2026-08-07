@@ -8,6 +8,7 @@ date_default_timezone_set('Asia/Kolkata');
 include("../config/connection.php");
 
 require_once("../vendor/autoload.php");
+require_once "../includes/HubSpotService.php";
 require_once "../controller/invoice_pdf.php";
 require_once "../controller/send_email.php";
 
@@ -71,6 +72,43 @@ mysqli_query($conn, "
 
 // Get invoice ID 
 $invoice_id = $_POST['invoice_id'];
+
+// GET HUBSPOT ID
+$hubspotQuery = mysqli_query($conn, "
+    SELECT
+        i.hubspot_deal_id,
+        c.hubspot_contact_id
+    FROM invoices i
+    JOIN contacts c
+        ON i.contact_id = c.id
+    WHERE i.id = '$invoice_id'
+");
+
+$hubspotData = mysqli_fetch_assoc($hubspotQuery);
+
+$hubspotDealId = $hubspotData['hubspot_deal_id'] ?? null;
+$hubspotContactId = $hubspotData['hubspot_contact_id'] ?? null;
+
+if (!empty($hubspotDealId)) {
+
+    try {
+
+        $hubspot = new HubSpotService();
+
+        $hubspot->updateDeal(
+            $hubspotDealId,
+            $invoice_no,
+            $grand_total,
+            $due_date,
+            $newStatus
+        );
+
+    } catch (Exception $e) {
+
+        error_log($e->getMessage());
+
+    }
+}
 
 // Save each product (loop)
 $count = count($product_id);
