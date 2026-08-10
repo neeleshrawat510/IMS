@@ -219,9 +219,30 @@ public function associateDealWithContact($dealId, $contactId)
 // get pipeline stages id
 public function getDealPipelines()
 {
-    return $this->request(
-        "GET",
-        "/pipelines/deals"
-    );
+    $url = "https://api.hubapi.com/crm/v3/pipelines/deals";
+
+    $ch = curl_init($url);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer {$this->accessToken}",
+        "Content-Type: application/json"
+    ]);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        throw new Exception(curl_error($ch));
+    }
+
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    curl_close($ch);
+
+    return [
+        "status" => $status,
+        "response" => json_decode($response, true)
+    ];
 }
 }
