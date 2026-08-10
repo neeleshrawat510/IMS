@@ -231,4 +231,17 @@ class HubSpotService
         return $stageMap[$status] ?? "appointmentscheduled";
     }
 
+    // UPDATE DEAL PAYMENT STATUS
+    public function updateDealPaymentStatus($dealId, $paymentStatus)
+    {
+        return $this->request(
+            "PATCH",
+            "/deals/" . $dealId,
+            [
+                "properties" => [
+                    "payment_status" => $paymentStatus
+                ]
+            ]
+        );
+    }
 }

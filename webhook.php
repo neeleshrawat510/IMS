@@ -1,11 +1,9 @@
 <?php
 
-error_log("===== WEBHOOK FILE HIT =====");
-
-require_once 'vendor/autoload.php';
 
 require_once 'vendor/autoload.php';
 include 'config/connection.php';
+require_once 'includes/HubSpotService.php';
 require_once 'controller/send_receipt_email.php';
 require_once 'controller/payment_receipt.php';
 
@@ -104,7 +102,43 @@ SET
 WHERE id='$invoiceId'
 ");
 
-$sql = "
+    // Update HubSpot Deal payment status
+    $dealQuery = mysqli_query($conn, "
+    SELECT hubspot_deal_id
+    FROM invoices
+    WHERE id='$invoiceId'
+");
+
+    $dealData = mysqli_fetch_assoc($dealQuery);
+
+    $hubspotDealId = $dealData['hubspot_deal_id'] ?? null;
+
+    if (!empty($hubspotDealId)) {
+
+        try {
+
+            $hubspot = new HubSpotService();
+
+            $result = $hubspot->updateDealPaymentStatus(
+                $hubspotDealId,
+                'Paid'
+            );
+
+            if ($result['status'] >= 200 && $result['status'] < 300) {
+                error_log("HubSpot Deal payment status updated: $hubspotDealId");
+            } else {
+                error_log("HubSpot Deal update failed: " . json_encode($result));
+            }
+
+        } catch (Exception $e) {
+
+            error_log(
+                "HubSpot payment sync error: " . $e->getMessage()
+            );
+        }
+    }
+
+    $sql = "
 SELECT
     invoices.invoice_no,
     contacts.name,
@@ -115,25 +149,25 @@ ON contacts.id = invoices.contact_id
 WHERE invoices.id = '$invoiceId'
 ";
 
-$result = mysqli_query($conn, $sql);
+    $result = mysqli_query($conn, $sql);
 
-$customer = mysqli_fetch_assoc($result);
+    $customer = mysqli_fetch_assoc($result);
 
-$receiptPdf = generateReceiptPDF($conn, $invoiceId);
+    $receiptPdf = generateReceiptPDF($conn, $invoiceId);
 
-if ($receiptPdf === false) {
-    error_log("Receipt generation failed");
-}
-$emailSent = sendPaymentEmail(
-    $customer['email'],
-    $customer['name'],
-    $customer['invoice_no'],
-    'paid',
-    $transactionId,
-    null,
-    null,
-    $receiptPdf
-);
+    if ($receiptPdf === false) {
+        error_log("Receipt generation failed");
+    }
+    $emailSent = sendPaymentEmail(
+        $customer['email'],
+        $customer['name'],
+        $customer['invoice_no'],
+        'paid',
+        $transactionId,
+        null,
+        null,
+        $receiptPdf
+    );
 }
 
 //failed payment
@@ -147,6 +181,8 @@ if ($event->type == 'payment_intent.payment_failed') {
     $paymentIntentId = $paymentIntent->id;
 
     $transactionId = $paymentIntent->latest_charge ?? null;
+
+    $paymentMethod = $paymentIntent->payment_method_types[0] ?? 'card';
 
     $failureReason = '';
 
@@ -182,7 +218,7 @@ LIMIT 1
 
     mysqli_query($conn, $sql);
 
-$sql = "
+    $sql = "
 SELECT
         invoices.invoice_no,
     invoices.invoice_public_token,
@@ -194,26 +230,26 @@ ON contacts.id = invoices.contact_id
 WHERE invoices.id = '$invoiceId'
 ";
 
-$result = mysqli_query($conn, $sql);
+    $result = mysqli_query($conn, $sql);
 
-$customer = mysqli_fetch_assoc($result);
-$payUrl = getenv('APP_URL') . "/pay.php?token=" . $customer['invoice_public_token'];
+    $customer = mysqli_fetch_assoc($result);
+    $payUrl = getenv('APP_URL') . "/pay.php?token=" . $customer['invoice_public_token'];
 
-$emailSent = sendPaymentEmail(
-    $customer['email'],
-    $customer['name'],
-    $customer['invoice_no'],
-    'failed',
-    $transactionId,
-    $failureReason,
-    $payUrl
-);
+    $emailSent = sendPaymentEmail(
+        $customer['email'],
+        $customer['name'],
+        $customer['invoice_no'],
+        'failed',
+        $transactionId,
+        $failureReason,
+        $payUrl
+    );
 
-error_log(
-    "Payment Email: " .
-    ($emailSent ? "SUCCESS" : "FAILED")
-);
-    }
+    error_log(
+        "Payment Email: " .
+        ($emailSent ? "SUCCESS" : "FAILED")
+    );
+}
 
 
 // Expired session
