@@ -178,6 +178,17 @@ if ($event->type == 'payment_intent.payment_failed') {
 
     $invoiceId = $paymentIntent->metadata->invoice_id;
 
+    // Get HubSpot Deal ID
+    $dealQuery = mysqli_query($conn, "
+    SELECT hubspot_deal_id
+    FROM invoices
+    WHERE id='$invoiceId'
+");
+
+    $dealData = mysqli_fetch_assoc($dealQuery);
+
+    $hubspotDealId = $dealData['hubspot_deal_id'] ?? null;
+
     $paymentIntentId = $paymentIntent->id;
 
     $transactionId = $paymentIntent->latest_charge ?? null;
@@ -208,7 +219,7 @@ SET
     payment_method = '$paymentMethod',
     gateway_response='$gatewayResponse',
     failure_reason='$failureReason',
-    paid_at = NOW(),
+    paid_at = NULL,
     updated_at=NOW()
 WHERE invoice_id='$invoiceId'
 AND status='pending'
@@ -217,6 +228,41 @@ LIMIT 1
     ";
 
     mysqli_query($conn, $sql);
+
+    // Update HubSpot Deal payment status
+    if (!empty($hubspotDealId)) {
+
+        try {
+
+            $hubspot = new HubSpotService();
+
+            $hubspotResponse = $hubspot->updateDealPaymentStatus(
+                $hubspotDealId,
+                'Failed'
+            );
+
+            if (
+                $hubspotResponse['status'] >= 200 &&
+                $hubspotResponse['status'] < 300
+            ) {
+                error_log(
+                    "HubSpot Deal payment status updated to Failed: $hubspotDealId"
+                );
+            } else {
+                error_log(
+                    "HubSpot Deal failed-payment update failed: " .
+                    json_encode($hubspotResponse)
+                );
+            }
+
+        } catch (Exception $e) {
+
+            error_log(
+                "HubSpot failed-payment sync error: " .
+                $e->getMessage()
+            );
+        }
+    }
 
     $sql = "
 SELECT
@@ -259,6 +305,23 @@ if ($event->type === 'checkout.session.expired') {
 
     $checkoutSessionId = $session->id;
 
+    $invoiceId = $session->metadata->invoice_id ?? null;
+
+    $hubspotDealId = null;
+
+    if ($invoiceId) {
+
+        $dealQuery = mysqli_query($conn, "
+        SELECT hubspot_deal_id
+        FROM invoices
+        WHERE id='$invoiceId'
+    ");
+
+        $dealData = mysqli_fetch_assoc($dealQuery);
+
+        $hubspotDealId = $dealData['hubspot_deal_id'] ?? null;
+    }
+
     mysqli_query($conn, "
         UPDATE payments
         SET
@@ -267,7 +330,30 @@ if ($event->type === 'checkout.session.expired') {
         WHERE checkout_session_id='$checkoutSessionId' AND status='pending'
     ");
 
+    if (!empty($hubspotDealId)) {
 
+        try {
+
+            $hubspot = new HubSpotService();
+
+            $hubspotResponse = $hubspot->updateDealPaymentStatus(
+                $hubspotDealId,
+                'Failed'
+            );
+
+            error_log(
+                "HubSpot expired-payment sync: " .
+                json_encode($hubspotResponse)
+            );
+
+        } catch (Exception $e) {
+
+            error_log(
+                "HubSpot expired-payment sync error: " .
+                $e->getMessage()
+            );
+        }
+    }
 }
 
 
