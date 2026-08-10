@@ -215,4 +215,13 @@ public function associateDealWithContact($dealId, $contactId)
         "response" => json_decode($response, true)
     ];
 }
+
+// get pipeline stages id
+public function getDealPipelines()
+{
+    return $this->request(
+        "GET",
+        "/pipelines/deals"
+    );
+}
 }
