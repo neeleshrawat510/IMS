@@ -1,5 +1,9 @@
 <?php
 
+error_log("===== WEBHOOK FILE HIT =====");
+
+require_once 'vendor/autoload.php';
+
 require_once 'vendor/autoload.php';
 include 'config/connection.php';
 require_once 'controller/send_receipt_email.php';
