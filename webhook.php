@@ -294,6 +294,26 @@ LIMIT 1
         }
     }
 
+    // Update HubSpot Deal payment attempt status
+    $attemptResponse = $hubspot->updateDealPaymentAttemptStatus(
+        $hubspotDealId,
+        'Failed'
+    );
+
+    if (
+        $attemptResponse['status'] >= 200 &&
+        $attemptResponse['status'] < 300
+    ) {
+        error_log(
+            "HubSpot payment_attempt_status updated to Failed: $hubspotDealId"
+        );
+    } else {
+        error_log(
+            "HubSpot payment_attempt_status update failed: " .
+            json_encode($attemptResponse)
+        );
+    }
+
     $sql = "
 SELECT
         invoices.invoice_no,
