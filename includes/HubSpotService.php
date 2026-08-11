@@ -260,4 +260,47 @@ public function updateDealPaymentAttemptStatus($dealId, $attemptStatus)
         ]
     );
 }
+
+// CREATE HUBSPOT PRODUCT
+public function createProduct(
+    $name,
+    $sku,
+    $price,
+    $description = ''
+) {
+    return $this->request(
+        "POST",
+        "/products",
+        [
+            "properties" => [
+                "name" => $name,
+                "hs_sku" => $sku,
+                "price" => $price,
+                "description" => $description
+            ]
+        ]
+    );
+}
+
+// UPDATE HUBSPOT PRODUCT
+public function updateProduct(
+    $hubspotProductId,
+    $name,
+    $sku,
+    $price,
+    $description = ''
+) {
+    return $this->request(
+        "PATCH",
+        "/products/" . $hubspotProductId,
+        [
+            "properties" => [
+                "name" => $name,
+                "hs_sku" => $sku,
+                "price" => $price,
+                "description" => $description
+            ]
+        ]
+    );
+}
 }
