@@ -246,4 +246,18 @@ class HubSpotService
             ]
         );
     }
+
+// UPDATE DEAL PAYMENT ATTEMPT STATUS
+public function updateDealPaymentAttemptStatus($dealId, $attemptStatus)
+{
+    return $this->request(
+        "PATCH",
+        "/deals/" . $dealId,
+        [
+            "properties" => [
+                "payment_attempt_status" => $attemptStatus
+            ]
+        ]
+    );
+}
 }

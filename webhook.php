@@ -119,15 +119,45 @@ WHERE id='$invoiceId'
 
             $hubspot = new HubSpotService();
 
+            // Update HubSpot Deal payment status
             $result = $hubspot->updateDealPaymentStatus(
                 $hubspotDealId,
                 'Paid'
             );
 
             if ($result['status'] >= 200 && $result['status'] < 300) {
-                error_log("HubSpot Deal payment status updated: $hubspotDealId");
+
+                error_log(
+                    "HubSpot Deal payment_status updated to Paid: $hubspotDealId"
+                );
+
             } else {
-                error_log("HubSpot Deal update failed: " . json_encode($result));
+
+                error_log(
+                    "HubSpot payment_status update failed: " .
+                    json_encode($result)
+                );
+            }
+
+
+            // Update HubSpot Deal payment attempt status
+            $attemptResult = $hubspot->updateDealPaymentAttemptStatus(
+                $hubspotDealId,
+                'Paid'
+            );
+
+            if ($attemptResult['status'] >= 200 && $attemptResult['status'] < 300) {
+
+                error_log(
+                    "HubSpot payment_attempt_status updated to Paid: $hubspotDealId"
+                );
+
+            } else {
+
+                error_log(
+                    "HubSpot payment_attempt_status update failed: " .
+                    json_encode($attemptResult)
+                );
             }
 
         } catch (Exception $e) {
