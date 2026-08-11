@@ -266,7 +266,7 @@ public function createProduct(
     $name,
     $sku,
     $price,
-    $description = ''
+    $tax
 ) {
     return $this->request(
         "POST",
@@ -276,7 +276,7 @@ public function createProduct(
                 "name" => $name,
                 "hs_sku" => $sku,
                 "price" => $price,
-                "description" => $description
+                "tax" => $tax
             ]
         ]
     );
@@ -288,7 +288,7 @@ public function updateProduct(
     $name,
     $sku,
     $price,
-    $description = ''
+    $tax = ''
 ) {
     return $this->request(
         "PATCH",
@@ -298,7 +298,7 @@ public function updateProduct(
                 "name" => $name,
                 "hs_sku" => $sku,
                 "price" => $price,
-                "description" => $description
+                "tax" => $tax
             ]
         ]
     );

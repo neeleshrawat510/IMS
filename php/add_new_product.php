@@ -3,7 +3,6 @@
 require_once "../includes/api_auth.php";
 require_once "../includes/HubSpotService.php";
 
-// Indian Timezone
 date_default_timezone_set("ASIA/KOLKATA");
 
 include("../config/connection.php");
@@ -77,29 +76,19 @@ if ($insert) {
 
     $productId = mysqli_insert_id($conn);
 
-    error_log("IMS PRODUCT CREATED: " . $productId);
-
     try {
 
         $hubspot = new HubSpotService();
 
-        error_log("HUBSPOT SERVICE CREATED");
-
         $hubspotResponse = $hubspot->createProduct(
-            $product_code,
             $product_name,
+            $product_code,
             $selling_price,
             $tax
         );
 
-        error_log(
-            "HUBSPOT RESPONSE: " .
-            json_encode($hubspotResponse)
-        );
-
 
         if (
-            isset($hubspotResponse['status']) &&
             $hubspotResponse['status'] >= 200 &&
             $hubspotResponse['status'] < 300
         ) {
@@ -107,49 +96,21 @@ if ($insert) {
             $hubspotProductId =
                 $hubspotResponse['response']['id'] ?? null;
 
-            error_log(
-                "HUBSPOT PRODUCT ID: " .
-                ($hubspotProductId ?? 'NULL')
-            );
-
 
             if ($hubspotProductId) {
 
-                $updateSql = "
-                    UPDATE products
-                    SET hubspot_product_id = '$hubspotProductId'
-                    WHERE id = '$productId'
-                ";
-
-                $updateResult = mysqli_query($conn, $updateSql);
-
-
-                if ($updateResult) {
-
-                    error_log(
-                        "HUBSPOT PRODUCT ID SAVED: " .
-                        $hubspotProductId
-                    );
-
-                } else {
-
-                    error_log(
-                        "FAILED TO SAVE HUBSPOT PRODUCT ID: " .
-                        mysqli_error($conn)
-                    );
-                }
-
-            } else {
-
-                error_log(
-                    "HUBSPOT PRODUCT ID IS NULL"
+                mysqli_query(
+                    $conn,
+                    "UPDATE products
+                     SET hubspot_product_id='$hubspotProductId'
+                     WHERE id='$productId'"
                 );
             }
 
         } else {
 
             error_log(
-                "HUBSPOT PRODUCT CREATION FAILED: " .
+                "HubSpot product creation failed: " .
                 json_encode($hubspotResponse)
             );
         }
@@ -157,20 +118,17 @@ if ($insert) {
     } catch (Exception $e) {
 
         error_log(
-            "HUBSPOT EXCEPTION: " .
+            "HubSpot product sync error: " .
             $e->getMessage()
         );
     }
+
 
     echo "success";
 
 } else {
 
-    error_log(
-        "IMS PRODUCT INSERT FAILED: " .
-        mysqli_error($conn)
-    );
-
     echo "failed";
 }
+
 ?>
