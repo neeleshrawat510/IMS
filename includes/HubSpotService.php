@@ -225,7 +225,9 @@ class HubSpotService
             "Draft" => "appointmentscheduled",
             "Sent" => "4122041058",
             "Overdue" => "4122041059",
+            "Paid" => "4131113684",
             "Cancelled" => "4122041060"
+
         ];
 
         return $stageMap[$status] ?? "appointmentscheduled";
