@@ -75,13 +75,15 @@ $insert = mysqli_query(
 
 if ($insert) {
 
-    // Get newly created IMS product ID
     $productId = mysqli_insert_id($conn);
+
+    error_log("IMS PRODUCT CREATED: " . $productId);
 
     try {
 
-        // Create product in HubSpot
         $hubspot = new HubSpotService();
+
+        error_log("HUBSPOT SERVICE CREATED");
 
         $hubspotResponse = $hubspot->createProduct(
             $product_code,
@@ -90,9 +92,14 @@ if ($insert) {
             $tax
         );
 
+        error_log(
+            "HUBSPOT RESPONSE: " .
+            json_encode($hubspotResponse)
+        );
 
-        // Check HubSpot response
+
         if (
+            isset($hubspotResponse['status']) &&
             $hubspotResponse['status'] >= 200 &&
             $hubspotResponse['status'] < 300
         ) {
@@ -100,52 +107,70 @@ if ($insert) {
             $hubspotProductId =
                 $hubspotResponse['response']['id'] ?? null;
 
+            error_log(
+                "HUBSPOT PRODUCT ID: " .
+                ($hubspotProductId ?? 'NULL')
+            );
 
-            // Save HubSpot Product ID in IMS
+
             if ($hubspotProductId) {
 
-                mysqli_query(
-                    $conn,
-                    "UPDATE products
-                     SET hubspot_product_id='$hubspotProductId'
-                     WHERE id='$productId'"
-                );
+                $updateSql = "
+                    UPDATE products
+                    SET hubspot_product_id = '$hubspotProductId'
+                    WHERE id = '$productId'
+                ";
+
+                $updateResult = mysqli_query($conn, $updateSql);
+
+
+                if ($updateResult) {
+
+                    error_log(
+                        "HUBSPOT PRODUCT ID SAVED: " .
+                        $hubspotProductId
+                    );
+
+                } else {
+
+                    error_log(
+                        "FAILED TO SAVE HUBSPOT PRODUCT ID: " .
+                        mysqli_error($conn)
+                    );
+                }
+
+            } else {
 
                 error_log(
-                    "HubSpot product created successfully. " .
-                    "IMS Product ID: $productId, " .
-                    "HubSpot Product ID: $hubspotProductId"
+                    "HUBSPOT PRODUCT ID IS NULL"
                 );
             }
 
         } else {
 
             error_log(
-                "HubSpot product creation failed: " .
+                "HUBSPOT PRODUCT CREATION FAILED: " .
                 json_encode($hubspotResponse)
             );
         }
 
-
     } catch (Exception $e) {
 
-        // Do not fail IMS product creation
-        // if HubSpot sync fails
-
         error_log(
-            "HubSpot product sync error: " .
+            "HUBSPOT EXCEPTION: " .
             $e->getMessage()
         );
     }
 
-
-    // IMS product creation succeeded
     echo "success";
-
 
 } else {
 
+    error_log(
+        "IMS PRODUCT INSERT FAILED: " .
+        mysqli_error($conn)
+    );
+
     echo "failed";
 }
-
 ?>
