@@ -2,6 +2,7 @@
 
 require_once 'vendor/autoload.php';
 include "config/connection.php";
+require_once 'includes/HubSpotService.php';
 
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
@@ -91,7 +92,7 @@ try {
 
     // Create Checkout Session
     $session = Session::create([
-        
+
         'mode' => 'payment',
 
         'success_url' => getenv('APP_URL') . '/payment_success.php?session_id={CHECKOUT_SESSION_ID}',
@@ -123,11 +124,11 @@ try {
         ],
 
         'payment_intent_data' => [
-        'metadata' => [
-            'invoice_id' => $invoice['id'],
-            'invoice_no' => $invoice['invoice_no']
+            'metadata' => [
+                'invoice_id' => $invoice['id'],
+                'invoice_no' => $invoice['invoice_no']
+            ]
         ]
-    ]
     ]);
 } catch (Exception $e) {
     die($e->getMessage());
@@ -158,6 +159,47 @@ $result = mysqli_query($conn, $insertPaymentSql);
 
 if (!$result) {
     die(mysqli_error($conn));
+}
+
+// Update HubSpot payment attempt status to Pending
+
+$hubspotDealId = $invoice['hubspot_deal_id'] ?? null;
+
+if (!empty($hubspotDealId)) {
+
+    try {
+
+        $hubspot = new HubSpotService();
+
+        $hubspotResponse = $hubspot->updateDealPaymentAttemptStatus(
+            $hubspotDealId,
+            'Pending'
+        );
+
+        if (
+            $hubspotResponse['status'] >= 200 &&
+            $hubspotResponse['status'] < 300
+        ) {
+
+            error_log(
+                "HubSpot payment_attempt_status set to Pending: $hubspotDealId"
+            );
+
+        } else {
+
+            error_log(
+                "HubSpot Pending status update failed: " .
+                json_encode($hubspotResponse)
+            );
+        }
+
+    } catch (Exception $e) {
+
+        error_log(
+            "HubSpot Pending payment sync error: " .
+            $e->getMessage()
+        );
+    }
 }
 
 // Redirect Customer
