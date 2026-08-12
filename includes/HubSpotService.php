@@ -304,4 +304,67 @@ public function updateProduct(
     );
 }
 
+// CREATE HUBSPOT LINE ITEM
+public function createLineItem(
+    $productId,
+    $name,
+    $quantity,
+    $price,
+    $tax = null
+) {
+    $properties = [
+        "hs_product_id" => $productId,
+        "name" => $name,
+        "quantity" => $quantity,
+        "price" => $price
+    ];
+
+    // Add tax only if provided
+    if ($tax !== null && $tax !== '') {
+        $properties["ims_tax_rate"] = $tax;
+    }
+
+    return $this->request(
+        "POST",
+        "/line_items",
+        [
+            "properties" => $properties
+        ]
+    );
+}
+
+
+// ASSOCIATE LINE ITEM WITH DEAL
+public function associateLineItemWithDeal(
+    $lineItemId,
+    $dealId
+) {
+    $url = "https://api.hubapi.com/crm/v4/objects/line_items/{$lineItemId}/associations/default/deals/{$dealId}";
+
+    $ch = curl_init($url);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Authorization: Bearer {$this->accessToken}",
+        "Content-Type: application/json"
+    ]);
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+        throw new Exception(curl_error($ch));
+    }
+
+    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    curl_close($ch);
+
+    return [
+        "status" => $status,
+        "response" => json_decode($response, true)
+    ];
+}
+
 }
