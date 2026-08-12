@@ -89,29 +89,46 @@ if ($insert) {
 
 
         if (
-    $hubspotResponse['status'] >= 200 &&
-    $hubspotResponse['status'] < 300
-) {
+            $hubspotResponse['status'] >= 200 &&
+            $hubspotResponse['status'] < 300
+        ) {
 
-    $hubspotProductId =
-        $hubspotResponse['response']['id'] ?? null;
+            $hubspotProductId =
+                $hubspotResponse['response']['id'] ?? null;
 
-    if ($hubspotProductId) {
 
-        mysqli_query(
-            $conn,
-            "UPDATE products
-             SET hubspot_product_id='$hubspotProductId'
-             WHERE id='$productId'"
+            if ($hubspotProductId) {
+
+                mysqli_query(
+                    $conn,
+                    "UPDATE products
+                     SET hubspot_product_id='$hubspotProductId'
+                     WHERE id='$productId'"
+                );
+            }
+
+        } else {
+
+            error_log(
+                "HubSpot product creation failed: " .
+                json_encode($hubspotResponse)
+            );
+        }
+
+    } catch (Exception $e) {
+
+        error_log(
+            "HubSpot product sync error: " .
+            $e->getMessage()
         );
     }
 
+
+    echo "success";
+
 } else {
 
-    echo "<pre>";
-    print_r($hubspotResponse);
-    echo "</pre>";
-    exit;
+    echo "failed";
 }
 
 ?>
