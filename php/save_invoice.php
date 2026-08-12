@@ -112,12 +112,126 @@ for ($i = 0; $i < $count; $i++) {
     $tx = $tax[$i];
     $amt = $amount[$i];
 
-    mysqli_query($conn, "
-        INSERT INTO invoice_items 
-        (invoice_id, product_id, description, qty, price, tax, amount)
-        VALUES 
-        ('$invoice_id', '$p_id', '$desc', '$q', '$pr', '$tx', '$amt')
+
+    // Save invoice item in IMS
+    $itemInsert = mysqli_query($conn, "
+        INSERT INTO invoice_items
+        (
+            invoice_id,
+            product_id,
+            description,
+            qty,
+            price,
+            tax,
+            amount
+        )
+        VALUES
+        (
+            '$invoice_id',
+            '$p_id',
+            '$desc',
+            '$q',
+            '$pr',
+            '$tx',
+            '$amt'
+        )
     ");
+
+
+    // Create HubSpot Line Item
+    if ($itemInsert && !empty($hubspotDealId)) {
+
+        try {
+
+            // Get HubSpot Product ID
+            $productQuery = mysqli_query($conn, "
+                SELECT hubspot_product_id, product_name
+                FROM products
+                WHERE id='$p_id'
+            ");
+
+            $productData = mysqli_fetch_assoc($productQuery);
+
+            $hubspotProductId =
+                $productData['hubspot_product_id'] ?? null;
+
+            $productName =
+                $productData['product_name'] ?? $desc;
+
+
+            // Only create Line Item if
+            // the IMS product already exists in HubSpot
+            if (!empty($hubspotProductId)) {
+
+                $lineItem = $hubspot->createLineItem(
+                    $hubspotProductId,
+                    $productName,
+                    $q,
+                    $pr,
+                    $tx
+                );
+
+
+                if (
+                    $lineItem['status'] >= 200 &&
+                    $lineItem['status'] < 300 &&
+                    !empty($lineItem['response']['id'])
+                ) {
+
+                    $hubspotLineItemId =
+                        $lineItem['response']['id'];
+
+
+                    // Associate Line Item with Deal
+                    $association =
+                        $hubspot->associateLineItemWithDeal(
+                            $hubspotLineItemId,
+                            $hubspotDealId
+                        );
+
+
+                    if (
+                        $association['status'] >= 200 &&
+                        $association['status'] < 300
+                    ) {
+
+                        error_log(
+                            "HubSpot Line Item associated successfully: " .
+                            $hubspotLineItemId
+                        );
+
+                    } else {
+
+                        error_log(
+                            "HubSpot Line Item association failed: " .
+                            json_encode($association)
+                        );
+                    }
+
+                } else {
+
+                    error_log(
+                        "HubSpot Line Item creation failed: " .
+                        json_encode($lineItem)
+                    );
+                }
+
+            } else {
+
+                error_log(
+                    "HubSpot Product ID not found for IMS Product ID: " .
+                    $p_id
+                );
+            }
+
+        } catch (Exception $e) {
+
+            error_log(
+                "HubSpot Line Item sync error: " .
+                $e->getMessage()
+            );
+        }
+    }
 }
 
 
