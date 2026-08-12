@@ -4,8 +4,8 @@ $webhookUrl = $_ENV['ZAPIER_WEBHOOK_URL'] ?? getenv('ZAPIER_WEBHOOK_URL');
 ;
 
 $data = [
-    "name" => "Neelesh",
-    "email" => "neelesh@example.com",
+    "name" => "Neelesh Test",
+    "email" => "neeleshtest@example.com",
     "phone" => "9876543210"
 ];
 
