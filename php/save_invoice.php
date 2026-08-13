@@ -137,6 +137,7 @@ for ($i = 0; $i < $count; $i++) {
         )
     ");
 
+    $itemInsertId = mysqli_insert_id($conn);
 
     // Create HubSpot Line Item
     if ($itemInsert && !empty($hubspotDealId)) {
@@ -180,6 +181,10 @@ for ($i = 0; $i < $count; $i++) {
 
                     $hubspotLineItemId =
                         $lineItem['response']['id'];
+
+                    //save hubspot line item id
+                        mysqli_query(
+                        $conn, "UPDATE invoice_items SET hubspot_line_item_id='$hubspotLineItemId' WHERE id='$itemInsertId'");
 
 
                     // Associate Line Item with Deal
