@@ -141,6 +141,9 @@ class HubSpotService
         $amount,
         $closeDate,
         $invoiceId,
+        $createDate,
+        $invoiceSubtotal,
+        $invoiceTaxTotal,
         $paymentStatus,
         $invoiceStatus
     ) {
@@ -153,6 +156,9 @@ class HubSpotService
                     "amount" => $amount,
                     "closedate" => $closeDate,
                     "invoice_id" => $invoiceId,
+                    "createdate" => $createDate,
+                    "invoice_subtotal" => $invoiceSubtotal,
+                    "invoice_tax_total" => $invoiceTaxTotal,
                     "payment_status" => $paymentStatus,
                     "ims_invoice_status" => $invoiceStatus,
                     "pipeline" => "default",

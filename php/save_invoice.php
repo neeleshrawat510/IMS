@@ -68,6 +68,9 @@ if (!empty($hubspotContactId)) {
             $grand_total,
             $due_date,
             $invoice_id,
+            $issue_date,
+            $subtotal,
+            $tax_total,
             "Unpaid",
             $status
         );
