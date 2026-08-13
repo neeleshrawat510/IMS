@@ -95,18 +95,66 @@ if (!empty($hubspotDealId)) {
 
         $hubspot = new HubSpotService();
 
+        // Update HubSpot Deal
         $hubspot->updateDeal(
             $hubspotDealId,
             $invoice_no,
             $grand_total,
             $due_date,
+            $invoice_id,
+            $invoice_date,
+            $subtotal,
+            $tax_total,
             $newStatus
         );
 
+        // Get existing HubSpot Line Items
+        $oldLineItems = $hubspot->getDealLineItems($hubspotDealId);
+
+        if (
+            $oldLineItems['status'] >= 200 &&
+            $oldLineItems['status'] < 300
+        ) {
+
+            $existingItems = $oldLineItems['response']['results'] ?? [];
+
+            foreach ($existingItems as $oldItem) {
+
+                $oldLineItemId = $oldItem['toObjectId'] ?? null;
+
+                if (!empty($oldLineItemId)) {
+
+                    $deleteResult = $hubspot->deleteLineItem(
+                        $oldLineItemId
+                    );
+
+                    if (
+                        $deleteResult['status'] >= 200 &&
+                        $deleteResult['status'] < 300
+                    ) {
+
+                        error_log(
+                            "Old HubSpot Line Item deleted: " .
+                            $oldLineItemId
+                        );
+
+                    } else {
+
+                        error_log(
+                            "Failed to delete old HubSpot Line Item: " .
+                            json_encode($deleteResult)
+                        );
+                    }
+                }
+            }
+        }
+
     } catch (Exception $e) {
 
-        error_log($e->getMessage());
-
+        error_log(
+            "HubSpot Deal/Line Item sync error: " .
+            $e->getMessage()
+        );
     }
 }
 
