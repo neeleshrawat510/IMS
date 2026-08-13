@@ -113,6 +113,26 @@ if (!empty($hubspotDealId)) {
 // Save each product (loop)
 $count = count($product_id);
 
+//fetch existing items
+$oldItemsQuery = mysqli_query($conn, "
+    SELECT
+        id,
+        product_id,
+        qty,
+        price,
+        tax,
+        amount,
+        hubspot_line_item_id
+    FROM invoice_items
+    WHERE invoice_id = '$invoice_id'
+");
+
+$oldItems = [];
+
+while ($row = mysqli_fetch_assoc($oldItemsQuery)) {
+    $oldItems[$row['id']] = $row;
+}
+
 mysqli_query($conn, "
     DELETE FROM invoice_items
     WHERE invoice_id = '$invoice_id'

@@ -174,6 +174,10 @@ class HubSpotService
         $dealName,
         $amount,
         $closeDate,
+        $invoiceId,
+        $createDate,
+        $invoiceSubtotal,
+        $invoiceTaxTotal,
         $invoiceStatus
     ) {
         return $this->request(
@@ -184,6 +188,10 @@ class HubSpotService
                     "dealname" => $dealName,
                     "amount" => $amount,
                     "closedate" => $closeDate,
+                    "invoice_id" => $invoiceId,
+                    "createdate" => $createDate,
+                    "invoice_subtotal" => $invoiceSubtotal,
+                    "invoice_tax_total" => $invoiceTaxTotal,
                     "ims_invoice_status" => $invoiceStatus,
                     "pipeline" => "default",
                     "dealstage" => $this->getDealStageId($invoiceStatus)
@@ -253,124 +261,164 @@ class HubSpotService
         );
     }
 
-// UPDATE DEAL PAYMENT ATTEMPT STATUS
-public function updateDealPaymentAttemptStatus($dealId, $attemptStatus)
-{
-    return $this->request(
-        "PATCH",
-        "/deals/" . $dealId,
-        [
-            "properties" => [
-                "payment_attempt_status" => $attemptStatus
+    // UPDATE DEAL PAYMENT ATTEMPT STATUS
+    public function updateDealPaymentAttemptStatus($dealId, $attemptStatus)
+    {
+        return $this->request(
+            "PATCH",
+            "/deals/" . $dealId,
+            [
+                "properties" => [
+                    "payment_attempt_status" => $attemptStatus
+                ]
             ]
-        ]
-    );
-}
-
-// CREATE HUBSPOT PRODUCT
-public function createProduct(
-    $name,
-    $sku,
-    $price,
-    $tax
-) {
-    return $this->request(
-        "POST",
-        "/products",
-        [
-            "properties" => [
-                "name" => $name,
-                "hs_sku" => $sku,
-                "price" => $price,
-                "ims_tax_rate" => $tax
-            ]
-        ]
-    );
-}
-
-// UPDATE HUBSPOT PRODUCT
-public function updateProduct(
-    $hubspotProductId,
-    $name,
-    $sku,
-    $price,
-    $tax = ''
-) {
-    return $this->request(
-        "PATCH",
-        "/products/" . $hubspotProductId,
-        [
-            "properties" => [
-                "name" => $name,
-                "hs_sku" => $sku,
-                "price" => $price,
-                "ims_tax_rate" => $tax
-            ]
-        ]
-    );
-}
-
-// CREATE HUBSPOT LINE ITEM
-public function createLineItem(
-    $productId,
-    $name,
-    $quantity,
-    $price,
-    $tax = null
-) {
-    $properties = [
-        "hs_product_id" => $productId,
-        "name" => $name,
-        "quantity" => $quantity,
-        "price" => $price
-    ];
-
-    // Add tax only if provided
-    if ($tax !== null && $tax !== '') {
-        $properties["ims_tax_rate"] = $tax;
+        );
     }
 
-    return $this->request(
-        "POST",
-        "/line_items",
-        [
-            "properties" => $properties
-        ]
-    );
-}
-
-
-// ASSOCIATE LINE ITEM WITH DEAL
-public function associateLineItemWithDeal(
-    $lineItemId,
-    $dealId
-) {
-    $url = "https://api.hubapi.com/crm/v4/objects/line_items/{$lineItemId}/associations/default/deals/{$dealId}";
-
-    $ch = curl_init($url);
-
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Authorization: Bearer {$this->accessToken}",
-        "Content-Type: application/json"
-    ]);
-
-    $response = curl_exec($ch);
-
-    if (curl_errno($ch)) {
-        throw new Exception(curl_error($ch));
+    // CREATE HUBSPOT PRODUCT
+    public function createProduct(
+        $name,
+        $sku,
+        $price,
+        $tax
+    ) {
+        return $this->request(
+            "POST",
+            "/products",
+            [
+                "properties" => [
+                    "name" => $name,
+                    "hs_sku" => $sku,
+                    "price" => $price,
+                    "ims_tax_rate" => $tax
+                ]
+            ]
+        );
     }
 
-    $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    // UPDATE HUBSPOT PRODUCT
+    public function updateProduct(
+        $hubspotProductId,
+        $name,
+        $sku,
+        $price,
+        $tax = ''
+    ) {
+        return $this->request(
+            "PATCH",
+            "/products/" . $hubspotProductId,
+            [
+                "properties" => [
+                    "name" => $name,
+                    "hs_sku" => $sku,
+                    "price" => $price,
+                    "ims_tax_rate" => $tax
+                ]
+            ]
+        );
+    }
 
-    curl_close($ch);
+    // CREATE HUBSPOT LINE ITEM
+    public function createLineItem(
+        $productId,
+        $name,
+        $quantity,
+        $price,
+        $tax = null
+    ) {
+        $properties = [
+            "hs_product_id" => $productId,
+            "name" => $name,
+            "quantity" => $quantity,
+            "price" => $price
+        ];
 
-    return [
-        "status" => $status,
-        "response" => json_decode($response, true)
-    ];
-}
+        // Add tax only if provided
+        if ($tax !== null && $tax !== '') {
+            $properties["ims_tax_rate"] = $tax;
+        }
 
+        return $this->request(
+            "POST",
+            "/line_items",
+            [
+                "properties" => $properties
+            ]
+        );
+    }
+
+
+    // ASSOCIATE LINE ITEM WITH DEAL
+    public function associateLineItemWithDeal(
+        $lineItemId,
+        $dealId
+    ) {
+        $url = "https://api.hubapi.com/crm/v4/objects/line_items/{$lineItemId}/associations/default/deals/{$dealId}";
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer {$this->accessToken}",
+            "Content-Type: application/json"
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            throw new Exception(curl_error($ch));
+        }
+
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        return [
+            "status" => $status,
+            "response" => json_decode($response, true)
+        ];
+    }
+
+
+    // GET LINE ITEMS ASSOCIATED WITH DEAL
+    public function getDealLineItems($dealId)
+    {
+        $url = "https://api.hubapi.com/crm/v4/objects/deals/{$dealId}/associations/line_items";
+
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: Bearer {$this->accessToken}",
+            "Content-Type: application/json"
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            throw new Exception(curl_error($ch));
+        }
+
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+
+        return [
+            "status" => $status,
+            "response" => json_decode($response, true)
+        ];
+    }
+
+
+    // DELETE HUBSPOT LINE ITEM
+    public function deleteLineItem($lineItemId)
+    {
+        return $this->request(
+            "DELETE",
+            "/line_items/" . $lineItemId
+        );
+    }
 }
