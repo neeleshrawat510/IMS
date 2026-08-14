@@ -161,37 +161,46 @@ WHERE id='$invoiceId'
             }
 
 
+            error_log(
+                "HubSpot Deal ID fetched: " . ($hubspotDealId ?? 'NULL')
+            );
+
             if (!empty($hubspotDealId)) {
+
+                error_log("HubSpot Deal ID is NOT empty");
 
                 try {
 
                     $hubspot = new HubSpotService();
 
-                    // Update HubSpot Deal payment status
+                    // payment status
                     $result = $hubspot->updateDealPaymentStatus(
                         $hubspotDealId,
                         'Paid'
                     );
 
                     error_log(
-                        "HubSpot Payment Status Response: " .
+                        "Payment Status Response: " .
                         json_encode($result)
                     );
 
-
-                    // Update HubSpot Deal payment attempt status
+                    // payment attempt status
                     $attemptResult = $hubspot->updateDealPaymentAttemptStatus(
                         $hubspotDealId,
                         'Paid'
                     );
 
                     error_log(
-                        "HubSpot Payment Attempt Response: " .
+                        "Payment Attempt Response: " .
                         json_encode($attemptResult)
                     );
 
+                    // stage
+                    error_log(
+                        "BEFORE STAGE UPDATE - Deal ID: " .
+                        $hubspotDealId
+                    );
 
-                    // Update HubSpot Deal stage to Paid
                     $stageResult = $hubspot->updateDealStage(
                         $hubspotDealId,
                         'Paid'
@@ -209,6 +218,12 @@ WHERE id='$invoiceId'
                         $e->getMessage()
                     );
                 }
+
+            } else {
+
+                error_log(
+                    "HubSpot Deal ID is EMPTY - Stage update skipped"
+                );
             }
         }
     }
