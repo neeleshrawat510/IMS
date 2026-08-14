@@ -200,6 +200,22 @@ class HubSpotService
         );
     }
 
+    // UPDATE DEAL STAGE
+    public function updateDealStage($dealId, $invoiceStatus)
+    {
+        return $this->request(
+            "PATCH",
+            "/deals/" . $dealId,
+            [
+                "properties" => [
+                    "ims_invoice_status" => $invoiceStatus,
+                    "pipeline" => "default",
+                    "dealstage" => $this->getDealStageId($invoiceStatus)
+                ]
+            ]
+        );
+    }
+
 
     // ASSOCIATE DEAL WITH CONTACT
     public function associateDealWithContact($dealId, $contactId)

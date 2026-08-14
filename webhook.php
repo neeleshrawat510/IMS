@@ -160,6 +160,31 @@ WHERE id='$invoiceId'
                 );
             }
 
+
+            // Update HubSpot Deal stage to Paid
+            $stageResult = $hubspot->updateDealStage(
+                $hubspotDealId,
+                'Paid'
+            );
+
+            if (
+                $stageResult['status'] >= 200 &&
+                $stageResult['status'] < 300
+            ) {
+
+                error_log(
+                    "HubSpot Deal stage updated to Paid: $hubspotDealId"
+                );
+
+            } else {
+
+                error_log(
+                    "HubSpot Deal stage update failed: " .
+                    json_encode($stageResult)
+                );
+            }
+
+
         } catch (Exception $e) {
 
             error_log(
@@ -382,38 +407,38 @@ if ($event->type === 'checkout.session.expired') {
 
     if (!empty($hubspotDealId)) {
 
-    try {
+        try {
 
-        $hubspot = new HubSpotService();
+            $hubspot = new HubSpotService();
 
-        // Payment attempt status
-        $attemptResponse = $hubspot->updateDealPaymentAttemptStatus(
-            $hubspotDealId,
-            'Expired'
-        );
-
-        if (
-            $attemptResponse['status'] >= 200 &&
-            $attemptResponse['status'] < 300
-        ) {
-            error_log(
-                "HubSpot payment_attempt_status updated to Expired: $hubspotDealId"
+            // Payment attempt status
+            $attemptResponse = $hubspot->updateDealPaymentAttemptStatus(
+                $hubspotDealId,
+                'Expired'
             );
-        } else {
+
+            if (
+                $attemptResponse['status'] >= 200 &&
+                $attemptResponse['status'] < 300
+            ) {
+                error_log(
+                    "HubSpot payment_attempt_status updated to Expired: $hubspotDealId"
+                );
+            } else {
+                error_log(
+                    "HubSpot payment_attempt_status Expired update failed: " .
+                    json_encode($attemptResponse)
+                );
+            }
+
+        } catch (Exception $e) {
+
             error_log(
-                "HubSpot payment_attempt_status Expired update failed: " .
-                json_encode($attemptResponse)
+                "HubSpot expired-payment sync error: " .
+                $e->getMessage()
             );
         }
-
-    } catch (Exception $e) {
-
-        error_log(
-            "HubSpot expired-payment sync error: " .
-            $e->getMessage()
-        );
     }
-}
 }
 
 
