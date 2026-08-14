@@ -117,62 +117,60 @@ WHERE id='$invoiceId'
         "HubSpot Deal ID fetched: " . ($hubspotDealId ?? 'NULL')
     );
 
-    if (!empty($hubspotDealId)) {
+if (!empty($hubspotDealId)) {
 
-        try {
+    try {
 
-            $hubspot = new HubSpotService();
+        $hubspot = new HubSpotService();
 
+        // 1. Update payment status
+        $result = $hubspot->updateDealPaymentStatus(
+            $hubspotDealId,
+            'Paid'
+        );
 
-            // 1. Update HubSpot Deal payment status
-            $result = $hubspot->updateDealPaymentStatus(
-                $hubspotDealId,
-                'Paid'
-            );
-
-            error_log(
-                "HubSpot Payment Status Response: " .
-                json_encode($result)
-            );
-
-
-            // 2. Update HubSpot payment attempt status
-            $attemptResult = $hubspot->updateDealPaymentAttemptStatus(
-                $hubspotDealId,
-                'Paid'
-            );
-
-            error_log(
-                "HubSpot Payment Attempt Response: " .
-                json_encode($attemptResult)
-            );
+        error_log(
+            "HubSpot Payment Status Response: " .
+            json_encode($result)
+        );
 
 
-            // 3. Update HubSpot Deal stage
-            error_log(
-                "BEFORE STAGE UPDATE - Deal ID: " .
-                $hubspotDealId
-            );
+        // 2. Update payment attempt status
+        $attemptResult = $hubspot->updateDealPaymentAttemptStatus(
+            $hubspotDealId,
+            'Paid'
+        );
 
-            $stageResult = $hubspot->updateDealStage(
-                $hubspotDealId,
-                'Paid'
-            );
-
-            error_log(
-                "HubSpot Stage Update Response: " .
-                json_encode($stageResult)
-            );
+        error_log(
+            "HubSpot Payment Attempt Response: " .
+            json_encode($attemptResult)
+        );
 
 
-        } catch (Exception $e) {
+        // 3. Update Deal stage
+        error_log(
+            "BEFORE STAGE UPDATE - Deal ID: " .
+            $hubspotDealId
+        );
 
-            error_log(
-                "HubSpot payment sync error: " .
-                $e->getMessage()
-            );
-        }
+        $stageResult = $hubspot->updateDealStage(
+            $hubspotDealId,
+            'Paid'
+        );
+
+        error_log(
+            "HubSpot Stage Update Response: " .
+            json_encode($stageResult)
+        );
+
+    } catch (Exception $e) {
+
+        error_log(
+            "HubSpot payment sync error: " .
+            $e->getMessage()
+        );
     }
+}
 
     $sql = "
 SELECT
