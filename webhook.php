@@ -161,35 +161,55 @@ WHERE id='$invoiceId'
             }
 
 
-            // Update HubSpot Deal stage to Paid
-            $stageResult = $hubspot->updateDealStage(
-                $hubspotDealId,
-                'Paid'
-            );
+            if (!empty($hubspotDealId)) {
 
-            if (
-                $stageResult['status'] >= 200 &&
-                $stageResult['status'] < 300
-            ) {
+                try {
 
-                error_log(
-                    "HubSpot Deal stage updated to Paid: $hubspotDealId"
-                );
+                    $hubspot = new HubSpotService();
 
-            } else {
+                    // Update HubSpot Deal payment status
+                    $result = $hubspot->updateDealPaymentStatus(
+                        $hubspotDealId,
+                        'Paid'
+                    );
 
-                error_log(
-                    "HubSpot Deal stage update failed: " .
-                    json_encode($stageResult)
-                );
+                    error_log(
+                        "HubSpot Payment Status Response: " .
+                        json_encode($result)
+                    );
+
+
+                    // Update HubSpot Deal payment attempt status
+                    $attemptResult = $hubspot->updateDealPaymentAttemptStatus(
+                        $hubspotDealId,
+                        'Paid'
+                    );
+
+                    error_log(
+                        "HubSpot Payment Attempt Response: " .
+                        json_encode($attemptResult)
+                    );
+
+
+                    // Update HubSpot Deal stage to Paid
+                    $stageResult = $hubspot->updateDealStage(
+                        $hubspotDealId,
+                        'Paid'
+                    );
+
+                    error_log(
+                        "HubSpot Stage Update Response: " .
+                        json_encode($stageResult)
+                    );
+
+                } catch (Exception $e) {
+
+                    error_log(
+                        "HubSpot payment sync error: " .
+                        $e->getMessage()
+                    );
+                }
             }
-
-
-        } catch (Exception $e) {
-
-            error_log(
-                "HubSpot payment sync error: " . $e->getMessage()
-            );
         }
     }
 
