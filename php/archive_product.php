@@ -31,6 +31,10 @@ if (!empty($hubspotProductId)) {
             $hubspotProductId,
             "Archive"
         );
+        error_log(
+    "HubSpot Product Status Response: " .
+    json_encode($hubspotResponse)
+);
 
         if (
             $hubspotResponse['status'] < 200 ||
