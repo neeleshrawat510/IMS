@@ -37,6 +37,7 @@ if (!empty($hubspotId)) {
             $hubspotResponse['status'] < 200 ||
             $hubspotResponse['status'] >= 300
         ) {
+            
 
             error_log(
                 "HubSpot contact archive failed: " .
