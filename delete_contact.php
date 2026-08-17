@@ -6,35 +6,78 @@ include("config/connection.php");
 
 $contactId = intval($_POST['id']);
 
-$get = mysqli_query($conn, "SELECT hubspot_contact_id FROM contacts WHERE id='$contactId'");
+// Get HubSpot contact ID
+$get = mysqli_query(
+    $conn,
+    "SELECT hubspot_contact_id
+     FROM contacts
+     WHERE id='$contactId'"
+);
+
 $row = mysqli_fetch_assoc($get);
 
 $hubspotId = $row['hubspot_contact_id'] ?? null;
 
-$delete = mysqli_query($conn, "DELETE FROM contacts WHERE id='$contactId'");
 
-if ($delete) {
+// Archive contact in HubSpot first
+if (!empty($hubspotId)) {
 
-    if (!empty($hubspotId)) {
+    try {
 
-        try {
+        $hubspot = new HubSpotService();
 
-            $hubspot = new HubSpotService();
+        $hubspotResponse = $hubspot->deleteContact($hubspotId);
 
-            $hubspot->deleteContact($hubspotId);
+        // Check HubSpot response
+        if (
+            $hubspotResponse['status'] < 200 ||
+            $hubspotResponse['status'] >= 300
+        ) {
 
-        } catch (Exception $e) {
+            error_log(
+                "HubSpot contact archive failed: " .
+                json_encode($hubspotResponse)
+            );
 
-            error_log($e->getMessage());
-
+            echo "failed";
+            exit;
         }
 
+        error_log(
+            "HubSpot contact archived successfully: " .
+            $hubspotId
+        );
+
+    } catch (Exception $e) {
+
+        error_log(
+            "HubSpot contact archive error: " .
+            $e->getMessage()
+        );
+
+        echo "failed";
+        exit;
     }
+}
+
+
+// Delete contact from IMS
+$delete = mysqli_query(
+    $conn,
+    "DELETE FROM contacts
+     WHERE id='$contactId'"
+);
+
+if ($delete) {
 
     echo "success";
 
 } else {
 
-    echo "failed";
+    error_log(
+        "IMS contact deletion failed: " .
+        mysqli_error($conn)
+    );
 
+    echo "failed";
 }
