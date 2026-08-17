@@ -27,6 +27,11 @@ if (!empty($hubspotId)) {
 
         $hubspot = new HubSpotService();
 
+        error_log(
+            "IMS Contact ID: " . $contactId .
+            " | HubSpot Contact ID: " . $hubspotId
+        );
+
         $hubspotResponse = $hubspot->updateContactStatus(
             $hubspotId,
             "Archive"
@@ -37,7 +42,7 @@ if (!empty($hubspotId)) {
             $hubspotResponse['status'] < 200 ||
             $hubspotResponse['status'] >= 300
         ) {
-            
+
 
             error_log(
                 "HubSpot contact archive failed: " .
