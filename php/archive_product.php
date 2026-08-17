@@ -29,7 +29,7 @@ if (!empty($hubspotProductId)) {
 
         $hubspotResponse = $hubspot->updateProductStatus(
             $hubspotProductId,
-            "Archive"
+            "Inactive"
         );
         error_log(
     "HubSpot Product Status Response: " .

@@ -363,7 +363,7 @@ public function updateProductStatus($hubspotProductId, $status)
         "/products/" . $hubspotProductId,
         [
             "properties" => [
-                "ims_status" => $status
+                "status" => $status
             ]
         ]
     );
