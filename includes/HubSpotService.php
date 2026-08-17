@@ -112,7 +112,7 @@ class HubSpotService
         );
     }
 
-    // UPDATE STATUS
+    // ARCHIVE CONTACT
     public function updateContactStatus($hubspotId, $status)
     {
         return $this->request(
@@ -345,6 +345,29 @@ class HubSpotService
             ]
         );
     }
+
+    // DELETE PRODUCT
+public function deleteProduct($hubspotProductId)
+{
+    return $this->request(
+        "DELETE",
+        "/products/" . $hubspotProductId
+    );
+}
+
+    // ARCHIVE PRODUCT
+public function updateProductStatus($hubspotProductId, $status)
+{
+    return $this->request(
+        "PATCH",
+        "/products/" . $hubspotProductId,
+        [
+            "properties" => [
+                "ims_status" => $status
+            ]
+        ]
+    );
+}
 
     // CREATE HUBSPOT LINE ITEM
     public function createLineItem(
