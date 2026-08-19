@@ -17,6 +17,71 @@ $created_by = $_SESSION['user_name'];
 $insert = mysqli_query($conn, "INSERT INTO `contacts` (`name`, `number`, `email`,`company`, `gst`, `address`, `created_at`, `created_by`) VALUES('$name', '$number', '$email', '$company', '$gst', '$address', '$todayDate', '$created_by')");
 
 if ($insert) {
+    // Get newly created IMS contact ID
+    $contactId = mysqli_insert_id($conn);
+
+    // Send new contact to Zapier
+    try {
+
+        $zapierUrl = "ZAPIER_WEBHOOK_URL";
+
+        $zapierData = [
+            "event" => "contact.created",
+            "contact_id" => $contactId,
+            "name" => $name,
+            "email" => $email,
+            "phone" => $number,
+            "company" => $company,
+            "gst" => $gst,
+            "address" => $address,
+            "created_at" => $todayDate,
+            "created_by" => $created_by
+        ];
+
+        $ch = curl_init($zapierUrl);
+
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($zapierData));
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json"
+        ]);
+
+        $zapierResponse = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+
+            error_log(
+                "Zapier Webhook Error: " .
+                curl_error($ch)
+            );
+
+        } else {
+
+            $zapierStatus = curl_getinfo(
+                $ch,
+                CURLINFO_HTTP_CODE
+            );
+
+            error_log(
+                "Zapier Webhook Response: HTTP " .
+                $zapierStatus .
+                " | " .
+                $zapierResponse
+            );
+        }
+
+        curl_close($ch);
+
+    } catch (Exception $e) {
+
+        // Zapier failure should NOT stop contact creation
+        error_log(
+            "Zapier Error: " .
+            $e->getMessage()
+        );
+    }
 
     try {
 
@@ -43,7 +108,6 @@ if ($insert) {
         //update hubspot contact id in DB
         if ($hubspotId) {
 
-            $contactId = mysqli_insert_id($conn);
 
             mysqli_query(
                 $conn,
