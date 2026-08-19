@@ -23,7 +23,7 @@ if ($insert) {
     // Send new contact to Zapier
     try {
 
-        $zapierUrl = "ZAPIER_WEBHOOK_URL";
+        $zapierUrl = getenv('ZAPIER_WEBHOOK_URL');
 
         $zapierData = [
             "event" => "contact.created",
