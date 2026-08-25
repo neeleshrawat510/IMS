@@ -57,6 +57,59 @@ $hubspotContactId = $contactData['hubspot_contact_id'] ?? null;
 
 $hubspotDealId = null;
 
+
+function sendInvoiceToZapier($data)
+{
+    $webhookUrl = getenv('ZAPIER_WEBHOOK_URL_INVOICE');
+
+    if (!$webhookUrl) {
+        error_log("Zapier invoice webhook URL not configured.");
+        return false;
+    }
+
+    $ch = curl_init($webhookUrl);
+
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        "Content-Type: application/json"
+    ]);
+
+    curl_setopt(
+        $ch,
+        CURLOPT_POSTFIELDS,
+        json_encode($data)
+    );
+
+    $response = curl_exec($ch);
+
+    if (curl_errno($ch)) {
+
+        error_log(
+            "Zapier Invoice Webhook Error: " .
+            curl_error($ch)
+        );
+
+        curl_close($ch);
+        return false;
+    }
+
+    $httpCode = curl_getinfo(
+        $ch,
+        CURLINFO_HTTP_CODE
+    );
+
+    curl_close($ch);
+
+    error_log(
+        "Zapier Invoice Webhook Response: " .
+        $httpCode . " " . $response
+    );
+
+    return $httpCode >= 200 && $httpCode < 300;
+}
+
 if (!empty($hubspotContactId)) {
 
     try {
