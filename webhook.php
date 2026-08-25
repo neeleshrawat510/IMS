@@ -147,7 +147,7 @@ WHERE id='$invoiceId'
 // Get invoice + payment details for Zapier
 $zapierQuery = mysqli_query($conn, "
     SELECT
-        invoices.invoice_id,
+        invoices.id,
         invoices.invoice_no,
         invoices.due_date,
         invoices.grand_total,
