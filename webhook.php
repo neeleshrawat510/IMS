@@ -12,6 +12,48 @@ use Stripe\Webhook;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 
+//zapier payment status
+function sendPaymentToZapier($data)
+{
+    $webhookUrl = getenv('ZAPIER_PAYMENT_WEBHOOK_URL');
+
+    if (empty($webhookUrl)) {
+        error_log("Zapier payment webhook URL not configured");
+        return false;
+    }
+
+    $ch = curl_init($webhookUrl);
+
+    curl_setopt_array($ch, [
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => json_encode($data),
+        CURLOPT_HTTPHEADER => [
+            'Content-Type: application/json'
+        ],
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT => 10
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+    if (curl_errno($ch)) {
+        error_log(
+            "Zapier payment webhook error: " .
+            curl_error($ch)
+        );
+    }
+
+    curl_close($ch);
+
+    error_log(
+        "Zapier Payment Webhook Response: HTTP " .
+        $httpCode . " | " . $response
+    );
+
+    return $httpCode >= 200 && $httpCode < 300;
+}
+
 // Read Stripe request body
 $payload = @file_get_contents('php://input');
 
@@ -101,6 +143,52 @@ SET
     payment_status='Paid'
 WHERE id='$invoiceId'
 ");
+
+// Get invoice + payment details for Zapier
+$zapierQuery = mysqli_query($conn, "
+    SELECT
+        invoices.invoice_id,
+        invoices.invoice_no,
+        invoices.due_date,
+        invoices.grand_total,
+        invoices.payment_status,
+        invoices.status,
+        invoices.created_at,
+        invoices.created_by,
+        invoices.hubspot_deal_id
+    FROM invoices
+    WHERE invoices.id='$invoiceId'
+");
+
+$zapierInvoice = mysqli_fetch_assoc($zapierQuery);
+
+$zapierData = [
+    'event' => 'payment.updated',
+
+    'invoice_id' => $invoiceId,
+    'invoice_no' => $zapierInvoice['invoice_no'] ?? null,
+
+    'hubspot_deal_id' =>
+        $zapierInvoice['hubspot_deal_id'] ?? null,
+
+    'payment_status' => 'Paid',
+    'payment_attempt_status' => 'Paid',
+
+    'amount' =>
+        $zapierInvoice['grand_total'] ?? null,
+
+    'currency' => 'INR',
+
+    'gateway' => 'stripe',
+
+    'payment_intent_id' => $paymentIntentId,
+    'transaction_id' => $transactionId,
+    'payment_method' => $paymentMethod,
+
+    'paid_at' => date('Y-m-d H:i:s')
+];
+
+sendPaymentToZapier($zapierData);
 
     // Get HubSpot Deal ID
     $dealQuery = mysqli_query($conn, "
