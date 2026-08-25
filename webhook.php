@@ -15,7 +15,7 @@ use Stripe\PaymentIntent;
 //zapier payment status
 function sendPaymentToZapier($data)
 {
-    $webhookUrl = getenv('ZAPIER_PAYMENT_WEBHOOK_URL');
+    $webhookUrl = getenv('ZAPIER_WEBHOOK_URL_PAYMENT');
 
     if (empty($webhookUrl)) {
         error_log("Zapier payment webhook URL not configured");
