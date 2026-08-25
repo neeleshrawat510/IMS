@@ -195,6 +195,39 @@ for ($i = 0; $i < $count; $i++) {
 
     $itemInsertId = mysqli_insert_id($conn);
 
+    // Send invoice data to Zapier
+$zapierData = [
+    "event" => "invoice.created",
+
+    "invoice_id" => $invoice_id,
+    "invoice_no" => $invoice_no,
+
+    "contact_id" => $contact_id,
+    "hubspot_contact_id" => $hubspotContactId,
+    "hubspot_deal_id" => $hubspotDealId,
+
+    "invoice_date" => $invoice_date,
+    "due_date" => $due_date,
+
+    "subtotal" => $subtotal,
+    "tax_total" => $tax_total,
+    "grand_total" => $grand_total,
+
+    "status" => $status,
+    "payment_status" => "Unpaid",
+
+    "created_at" => $dateToday,
+    "created_by" => $created_by
+];
+
+error_log(
+    "INVOICE ZAPIER DATA: " .
+    json_encode($zapierData)
+);
+
+sendInvoiceToZapier($zapierData);
+sendInvoiceToZapier($zapierData);
+
     // Create HubSpot Line Item
     if ($itemInsert && !empty($hubspotDealId)) {
 
