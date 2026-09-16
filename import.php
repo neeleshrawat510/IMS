@@ -5,16 +5,15 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $host = "altaria.proxy.rlwy.net";
-$port = "26495";
+$port = "49440";
 $user = "root";
-$password = "BGJxGiLWOUQDEwYUCLloQkUbuWOypkGg";
+$password = "KHVoRcqQiKYVMfnFmExEtjyNnFHpwxUT";
 $database = "railway";
 $conn = new mysqli($host, $user, $password, $database, $port);
 
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
-
 
 $conn->set_charset("utf8mb4");
 
