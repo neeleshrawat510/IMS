@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 31, 2026 at 12:14 PM
+-- Generation Time: Sep 16, 2026 at 06:24 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -38,7 +38,8 @@ CREATE TABLE `contacts` (
   `created_at` varchar(20) DEFAULT NULL,
   `updated_by` varchar(100) DEFAULT NULL,
   `updated_at` varchar(20) DEFAULT NULL,
-  `remove` tinyint(1) NOT NULL DEFAULT 0
+  `remove` tinyint(1) NOT NULL DEFAULT 0,
+  `hubspot_contact_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -70,7 +71,8 @@ CREATE TABLE `invoices` (
   `remove` tinyint(1) NOT NULL DEFAULT 0,
   `payment_status` enum('Unpaid','Partial','Paid','Refunded') NOT NULL DEFAULT 'Unpaid',
   `amount_paid` decimal(10,2) NOT NULL DEFAULT 0.00,
-  `amount_due` decimal(10,2) NOT NULL DEFAULT 0.00
+  `amount_due` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `hubspot_deal_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -87,7 +89,8 @@ CREATE TABLE `invoice_items` (
   `qty` decimal(10,2) NOT NULL,
   `price` decimal(50,2) NOT NULL,
   `tax` decimal(10,2) NOT NULL,
-  `amount` decimal(50,2) NOT NULL
+  `amount` decimal(50,2) NOT NULL,
+  `hubspot_line_item_id` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -180,6 +183,7 @@ CREATE TABLE `products` (
   `selling_price` decimal(50,2) NOT NULL,
   `tax` decimal(10,2) NOT NULL,
   `stock` varchar(100) DEFAULT '0',
+  `hubspot_product_id` varchar(255) DEFAULT NULL,
   `created_by` varchar(100) DEFAULT NULL,
   `created_at` varchar(50) DEFAULT NULL,
   `updated_by` varchar(100) DEFAULT NULL,
