@@ -4,10 +4,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$host = "tokaido.proxy.rlwy.net";
-$port = "53035";
+$host = "altaria.proxy.rlwy.net";
+$port = "26495";
 $user = "root";
-$password = "wVgFKWwYKTLccWtXSwMVykPeneDhHwTG";
+$password = "BGJxGiLWOUQDEwYUCLloQkUbuWOypkGg";
 $database = "railway";
 $conn = new mysqli($host, $user, $password, $database, $port);
 
