@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2026 at 06:24 AM
+-- Generation Time: Oct 22, 2026 at 04:29 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,6 +33,7 @@ CREATE TABLE `contacts` (
   `number` varchar(20) NOT NULL,
   `email` varchar(200) NOT NULL,
   `company` varchar(100) NOT NULL,
+  `gst` varchar(20) NOT NULL,
   `address` varchar(255) NOT NULL,
   `created_by` varchar(100) DEFAULT NULL,
   `created_at` varchar(20) DEFAULT NULL,
