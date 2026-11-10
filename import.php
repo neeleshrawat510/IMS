@@ -5,7 +5,7 @@ ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 $host = "mysql.railway.internal";
-$port = "8080";
+$port = "3306";
 $user = "root";
 $password = "aWwdYdaPTfxrUjPbsctCZbXnddskgoUH";
 $database = "railway";
