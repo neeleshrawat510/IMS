@@ -1,11 +1,15 @@
 <?php
-$host = "mysql.railway.internal";
-foreach ([3306, 8080] as $p) {
-    $s = @fsockopen($host, $p, $errno, $errstr, 3);
-    if (!$s) { echo "$p: can't connect ($errstr)<br>"; continue; }
-    stream_set_timeout($s, 3);
-    $banner = fread($s, 50);
-    echo "$p: open, banner = " . htmlspecialchars(bin2hex(substr($banner, 0, 20))) . "<br>";
-    fclose($s);
-}
-echo "DB_HOST=" . getenv('DB_HOST') . " DB_PORT=" . getenv('DB_PORT');
+$host = getenv('DB_HOST'); $port = (int)getenv('DB_PORT');
+echo "Resolved: " . gethostbyname($host) . "<br>";
+
+$s = @fsockopen($host, $port, $errno, $errstr, 5);
+if (!$s) { die("TCP connect failed: $errno $errstr"); }
+stream_set_timeout($s, 5);
+$data = fread($s, 64);
+echo "Greeting bytes received: " . strlen($data) . "<br>";
+fclose($s);
+
+mysqli_report(MYSQLI_REPORT_OFF);
+$c = mysqli_init();
+$c->real_connect($host, getenv('DB_USERNAME'), getenv('DB_PASSWORD'), getenv('DB_DATABASE'), $port);
+echo $c->connect_errno ? "mysqli error: " . $c->connect_error : "mysqli connected OK";
