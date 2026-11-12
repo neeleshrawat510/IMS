@@ -5,4 +5,6 @@ api.zip
 api/jwt/jwt.php
 api/jwt/jwt.zip
 .env
+import.php
+config/dump.sql
 
