@@ -4,8 +4,8 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$host = "mysql.railway.internal";
-$port = "3306";
+$host = "tokaido.proxy.rlwy.net";
+$port = "17175";
 $user = "root";
 $password = "aWwdYdaPTfxrUjPbsctCZbXnddskgoUH";
 $database = "railway";
