@@ -35,7 +35,7 @@ function syncContactToAttio(AttioClient $attio, array $c): string
         $values['gst_number'] = [['value' => trim($c['gst'])]];
     }
     if (!empty($c['address'])) {
-        $values['address_text'] = [['value' => trim($c['address'])]];
+        $values['address'] = [['value' => trim($c['address'])]];
     }
     $phone = normalizePhone($c['number'] ?? '');
     if ($phone !== null) {
