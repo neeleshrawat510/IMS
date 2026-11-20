@@ -3,6 +3,7 @@
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
 require_once "../includes/HubSpotService.php";
+require_once "../includes/attio_sync.php";
 
 $contactId = $_POST['id'] ?? null;
 
@@ -70,6 +71,8 @@ if ($update) {
         error_log("HubSpot Update Error : " . $e->getMessage());
 
     }
+
+    attioSyncContactById($conn, (int)$contactId);
 
     echo "success";
 

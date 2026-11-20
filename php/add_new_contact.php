@@ -3,6 +3,7 @@
 require_once "../includes/api_auth.php";
 include("../config/connection.php");
 require_once "../includes/HubSpotService.php";
+require_once "../includes/attio_sync.php";
 
 $name = trim(mysqli_real_escape_string($conn, $_POST['name'] ?? ''));
 $number = trim(mysqli_real_escape_string($conn, $_POST['number'] ?? ''));
@@ -127,6 +128,8 @@ if ($insert) {
         error_log("HubSpot Error: " . $e->getMessage());
 
     }
+
+    attioSyncContactById($conn, (int)$contactId);
 
     echo "success";
 

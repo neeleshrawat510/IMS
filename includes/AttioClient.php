@@ -20,7 +20,7 @@ class AttioClient
 
     public function __construct(?string $token = null)
     {
-        $this->token = $token ?? (getenv('ATTIO_API_KEY') ?: '');
+        $this->token = $token ?? ($_ENV['ATTIO_API_KEY'] ?? (getenv('ATTIO_API_KEY') ?: ''));
         if ($this->token === '') {
             throw new RuntimeException('ATTIO_API_KEY is not set');
         }

@@ -46,7 +46,7 @@ function syncContactToAttio(AttioClient $attio, array $c): string
     $res = $attio->put(
         '/objects/people/records',
         ['data' => ['values' => $values]],
-        ['matching_attribute' => 'email_addresses']
+        ['matching_attribute' => 'ims_contact_id']
     );
 
     return $res['data']['id']['record_id'];
@@ -61,4 +61,35 @@ function normalizePhone(string $raw): ?string
     if (strlen($digits) === 10) return '+91' . $digits;
     if (strlen($digits) === 12 && str_starts_with($digits, '91')) return '+' . $digits;
     return null; 
+}
+
+function attioSyncContactById(mysqli $conn, int $contactId): void
+{
+    try {
+        $stmt = $conn->prepare(
+            "SELECT id, name, number, email, gst, address, remove FROM contacts WHERE id = ?"
+        );
+        $stmt->bind_param('i', $contactId);
+        $stmt->execute();
+        $contact = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$contact) {
+            error_log("Attio sync: contact {$contactId} not found");
+            return;
+        }
+        if ((int)$contact['remove'] === 1) {
+            return;
+        }
+
+        $attio = new AttioClient();
+        $recordId = syncContactToAttio($attio, $contact);
+
+        $stmt = $conn->prepare("UPDATE contacts SET attio_record_id = ? WHERE id = ?");
+        $stmt->bind_param('si', $recordId, $contactId);
+        $stmt->execute();
+        $stmt->close();
+    } catch (Throwable $e) {
+        error_log("Attio sync error (contact {$contactId}): " . $e->getMessage());
+    }
 }
